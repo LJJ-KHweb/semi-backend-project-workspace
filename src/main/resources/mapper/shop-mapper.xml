@@ -38,7 +38,18 @@
 				WHERE
 					 	PRODUCT_NO = #{productNo}
 	</select>
-
+		
+	<select id="findByInventory" resultType="InventoryDto">
+		SELECT
+				PRODUCT_NO
+			  , AMOUNT
+			  , IMAGE
+			FROM
+				INVENTORY
+			WHERE
+				PRODUCT_NO = #{productNo}
+	</select>	
+	
 	<update id="decrease">
 		
 		UPDATE
@@ -49,6 +60,34 @@
 				PRODUCT_NO = #{productNo}
 		
 	</update>
-		
+	
+	<insert id="insertHistoryMileage">
+		INSERT
+			INTO
+				HISTORY_MILEAGE
+				(
+					USER_ID
+				  , CHANGE
+				  , PRODUCT_NO
+				)
+			VALUES
+				(
+					#{user.userId()}
+			  	  , #{product.price()}
+			  	  , #{product.produdctNo()}
+				)
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

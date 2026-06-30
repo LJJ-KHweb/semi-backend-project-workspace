@@ -39,6 +39,8 @@ import com.tri.evre.global.exception.charger.ChargerUpdateException;
 import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
+import com.tri.evre.global.exception.shop.InsufficientInventoryException;
+import com.tri.evre.global.exception.shop.InventoryUpdateException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.InvalidStationFormatException;
 import com.tri.evre.global.exception.station.MissingStationFieldException;
@@ -461,7 +463,30 @@ public class GlobalExceptionHandler {
 	            .status(CustomHttpStatus.PRODUCT_NOT_FOUND.getCode())
 	            .body(new ApiResponse(7000, e.getMessage(), null));
 	}
+	// 상품 구매때 상품 재고가 부족할 때
+	@ExceptionHandler(InsufficientInventoryException.class)
+	public ResponseEntity<ApiResponse> InsufficientInventory(InsufficientInventoryException e) {
 
+	    return ResponseEntity
+	            .status(CustomHttpStatus.INSUFFICIENT_RESOURCE.getCode())
+	            .body(new ApiResponse(7009, e.getMessage(), null));
+	}
+	
+	// 인벤토리 업데이트 실패
+		@ExceptionHandler(InventoryUpdateException.class)
+		public ResponseEntity<ApiResponse> InventoryUpdate(InventoryUpdateException e) {
+
+		    return ResponseEntity
+		            .status(CustomHttpStatus.INVENTORY_CRUD_FAILED.getCode())
+		            .body(new ApiResponse(7017, e.getMessage(), null));
+		}
+	
+	
+	
+	
+	
+	
+	
 }
 
 
