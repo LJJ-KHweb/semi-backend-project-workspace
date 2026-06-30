@@ -28,4 +28,11 @@
 			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
+	<update id="decrease" resultType="int">
+	
+	</update>
+	
+	
+	
+	
 </mapper>

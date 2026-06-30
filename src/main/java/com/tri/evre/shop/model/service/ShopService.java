@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
@@ -31,6 +32,13 @@ public class ShopService {
 		}
 		
 		return new ProductListResponse(pageInfo, products);
+		
+	}
+
+	//------------------------------구매-------------
+	public void purchase(Long productNo, CustomUserDetails user) {
+		
+		int result = shopMapper.decrease(productNo);
 		
 	}
 

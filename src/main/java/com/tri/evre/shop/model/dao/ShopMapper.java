@@ -12,4 +12,6 @@ public interface ShopMapper {
 
 	List<ProductListDto> findAll(PageInfo pageInfo);
 
+	int decrease(Long productNo);
+
 }

@@ -34,6 +34,16 @@ public class ShopController {
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", productResponse));
 	}
 	
+	@PatchMapping
+	public ResponseEntity<ApiResponse<Void>> purchase(@RequestBody Long productNo,
+													  @AuthenticationPrincipal CustomUserDetails user){
+		
+		shopService.purchase(productNo, user);
+		
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(null);
+	}
 
 	
 }
+
+
