@@ -38,7 +38,7 @@ public class BoardService {
 		pageInfo.setPage(page);
 		pageInfo.setSize(2);
 		pageInfo.setOffset(page * 2);
-		List<BoardDto> boards = boardMapper.findAll(pageInfo);
+		List<BoardDto> boards = boardMapper.findAll(pageInfo);	
 		if (boards == null) {
 			throw new BoardNotFoundException("조회 결과가 없습니다.");
 		}

@@ -33,12 +33,10 @@ public interface BoardMapper {
 
 	int delete(Board board);
 
-
 	List<BoardDto> adminFindAll(@Param(value="pageInfo") PageInfo pageInfo);
 
 
 	int findAllBoardsCount();
-
 	
 	
 }

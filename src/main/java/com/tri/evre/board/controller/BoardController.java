@@ -73,11 +73,9 @@ public class BoardController {
 		boardService.delete(boardNo, user);
 		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("삭제함ㅋ", null));
 	}
-	
+
 	
 	//----------------------------------- 06/30 재준추가 --------------------------------------
-	
-	
 	
 	
 	

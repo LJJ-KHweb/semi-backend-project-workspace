@@ -1,8 +1,4 @@
-package com.tri.evre.board.model.dto;
-
-import java.util.List;
-
-import com.tri.evre.common.model.dto.PageInfo;
+package com.tri.evre.station.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +11,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BoardListResponse {
-	private PageInfo pageInfo;
-	private List<BoardDto> boards;
+public class SearchInfo {
+	private double lat;
+	private double lng;
+	private int distance;
 }
