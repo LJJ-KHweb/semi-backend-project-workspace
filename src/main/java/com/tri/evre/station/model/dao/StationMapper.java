@@ -92,5 +92,24 @@ public interface StationMapper {
 			""")
 	int findChargerCount(Long stationNo);
 
+	@Select("""
+				SELECT
+					   STATION_NO
+					 , STATION_NAME
+					 , REGION
+					 , ADDRESS
+					 , STATION_DESC
+					 , LAT
+					 , LNG
+					 , CREATE_DATE
+				  FROM
+				  	   STATION
+				 WHERE
+				 	   STATUS = 'Y'
+				   AND
+				   	   STATION_NO = #{stationNo}
+			""")
+	StationDto findByStationNo(Long stationNo);
+
 
 }

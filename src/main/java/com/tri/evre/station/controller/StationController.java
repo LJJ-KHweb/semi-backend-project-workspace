@@ -33,5 +33,8 @@ public class StationController {
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", searchResponse));
 	}
 	
-	
+	@GetMapping("/{stationNo}")
+	public ResponseEntity<ApiResponse<StationDto>> findByStationNo(@PathVariable(name="stationNo") Long stationNo) {
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", stationService.findByStationNo(stationNo)));
+	}
 }
