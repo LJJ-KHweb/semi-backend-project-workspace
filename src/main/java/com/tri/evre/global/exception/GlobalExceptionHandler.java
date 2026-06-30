@@ -39,6 +39,7 @@ import com.tri.evre.global.exception.charger.ChargerUpdateException;
 import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
+import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.InvalidStationFormatException;
 import com.tri.evre.global.exception.station.MissingStationFieldException;
 import com.tri.evre.global.exception.station.StationCreateException;
@@ -452,6 +453,14 @@ public class GlobalExceptionHandler {
 	
 	//----------------------------------------------------------------------------------------
 	
+	// 상품 조회때 일치하는 상품이 없을때
+	@ExceptionHandler(ProductNotFoundException.class)
+	public ResponseEntity<ApiResponse> ProductNotFound(ProductNotFoundException e) {
+
+	    return ResponseEntity
+	            .status(CustomHttpStatus.PRODUCT_NOT_FOUND.getCode())
+	            .body(new ApiResponse(7000, e.getMessage(), null));
+	}
 
 }
 
