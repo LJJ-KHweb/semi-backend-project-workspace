@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.shop.model.dao.ShopMapper">
+
+
+
+	<select id="findAll" resultType="ProductListDto">
+			
+		SELECT
+					P.PRODUCT_NO
+				  , P.PRODUCT_NAME
+				  , I.AMOUNT
+				  , P.PRICE
+				  , I.IMAGE
+			  FROM 
+			  		PRODUCT P
+			  JOIN
+			  		INVENTORY I
+			  	ON
+			  		P.PRODUCT_NO = I.PRODUCT_NO
+			  	WHERE 
+			  		P.PRICE &lt; 0
+			  	ORDER
+			  	   BY
+			  	   	P.PRODUCT_NO
+			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+</mapper>
