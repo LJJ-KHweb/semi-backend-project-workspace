@@ -1,6 +1,5 @@
-<<<<<<< HEAD
+
 /.metadata/
-=======
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -47,4 +46,3 @@ $RECYCLE.BIN/
 # Linux
 *~
 .directory
->>>>>>> 1022f3070fae52547f43673060f8ddd87fda44d4
