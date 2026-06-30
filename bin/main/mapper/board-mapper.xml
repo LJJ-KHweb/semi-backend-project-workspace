@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.board.model.dao.BoardMapper">
+	<insert id="save"
+			parameterType="Board">
+			
+	<selectKey keyProperty="boardNo"
+               resultType="Long"
+               order="BEFORE">
+        SELECT SEQ_BNO.NEXTVAL FROM DUAL
+    </selectKey>
+    
+	 	INSERT
+				  INTO
+				  		BOARD
+				  		(
+				  		BOARD_NO
+				  	 ,	BOARD_TITLE
+				  	 ,	BOARD_CONTENT
+				  	 ,	USER_ID
+				  	 ,  VIEWS
+				  	 	)
+				VALUES
+						(
+						#{boardNo}
+					 ,	#{boardTitle}
+					 ,	#{boardContent}
+					 ,	#{userId}
+					 ,  0
+					 	)
+	</insert>
+	
+	<sql id="boardColumn">
+			SELECT
+					  BOARD_NO
+					, BOARD_TITLE
+					, USER_NAME
+					, BOARD.CREATE_DATE
+					, VIEWS
+	</sql>
+	
+	<select id="findAll" resultType="BoardDto">
+		<include refid="boardColumn"/>
+		  FROM
+				      BOARD
+				 JOIN
+				 	  SEMI_USER USING(USER_ID)
+				WHERE
+					  BOARD.STATUS = 'Y'
+			    ORDER
+			       BY
+			       	  BOARD.CREATE_DATE ASC
+	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<select id="findByBoardNo" resultType="BoardDto">
+		<include refid="boardColumn"/>
+				 ,	BOARD_CONTENT
+				  FROM
+				  		BOARD
+				  JOIN
+				  		SEMI_USER USING(USER_ID)
+				 WHERE
+				 		BOARD_NO = #{boardNo}
+	</select>
+	
+	<update id="plusViews">
+				UPDATE
+						BOARD
+				   SET
+				   		VIEWS = VIEWS +1
+				 WHERE
+				 		STATUS = 'Y'
+				   AND
+				   		BOARD_NO = #{boardNo}
+	</update>
+	
+	<select id="findBoardsCount">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		BOARD
+		 WHERE
+		 		STATUS = 'Y'
+	</select>
+
+	<update id="update">
+		UPDATE
+				BOARD
+		   SET
+		   		BOARD_TITLE = #{boardTitle}
+		   	 ,	BOARD_CONTENT = #{boardContent}
+	  	 WHERE
+	  	 		USER_ID = #{userId}
+	  	   AND
+	  	   		STATUS = 'Y'
+	  	   AND
+	  	   		BOARD_NO = #{boardNo}
+	</update>
+
+	<update id="delete">
+		UPDATE
+				BOARD
+		   SET
+		   		STATUS = 'N'
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+		   AND
+		   	    USER_ID = #{userId}
+	</update>
+	
+</mapper>
