@@ -80,7 +80,30 @@ public enum CustomHttpStatus {
     // 충전기 CRUD 처리 실패 (등록/수정/삭제/조회 통합)
     CHARGER_CRUD_FAILED(500),
     // 이미 해당 충전소에 속한 충전기
-    DUPLICATE_CHARGER(409);
+    DUPLICATE_CHARGER(409),
+	
+	//----------------------------------------------
+    // 상품이 존재하지 않음
+    PRODUCT_NOT_FOUND(404),
+    // 상품 입력값 검증 실패 (형식 오류, 필수값 누락 등)
+    INVALID_PRODUCT(400),
+    // 재고 입력값 검증 실패 (수량, 가격, 이미지 등)
+    INVALID_INVENTORY(400),
+    // 상품 관련 권한 없음 (등록/수정/삭제)
+    PRODUCT_FORBIDDEN(403),
+    // 이미 등록된 상품
+    DUPLICATE_PRODUCT(409),
+    // 재고 또는 마일리지 부족
+    INSUFFICIENT_RESOURCE(409),
+    // 마일리지 내역이 존재하지 않음
+    MILEAGE_HISTORY_NOT_FOUND(404),
+    // 상품 CRUD 처리 실패 (등록/수정/삭제/조회)
+    PRODUCT_CRUD_FAILED(500),
+    // 재고 처리 실패 (등록/수정)
+    INVENTORY_CRUD_FAILED(500),
+    // 마일리지 내역 저장 실패
+    MILEAGE_HISTORY_CREATE_FAILED(500);
+	
 	
 	
     private final int code;

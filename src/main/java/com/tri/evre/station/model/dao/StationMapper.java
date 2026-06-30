@@ -80,5 +80,17 @@ public interface StationMapper {
 			""")
 	int findStationCount(StationSearchRequest searchRequest);
 
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+					   STATION S
+				  JOIN
+					   CHARGER C ON S.STATION_NO = C.STATION_NO
+				 WHERE
+			 		   S.STATION_NO = #{stationNo}
+			""")
+	int findChargerCount(Long stationNo);
+
 
 }

@@ -1,29 +1,29 @@
 spring:
-  application:
-    name: semi
-  datasource:
-    url: jdbc:oracle:thin:@192.168.51.12:1521:XE
-    username: C##SM
-    password: SM
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-  web:
-    resources:
-      static-locations: file:uploads/
-  mvc:
-    static-path-pattern: /uploads/**
-  servlet:
-    multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
-       
+    application:
+        name: semi
+    datasource:
+        url: jdbc:oracle:thin:@192.168.51.12:1521:XE
+        username: C##SM
+        password: SM
+        driver-class-name: oracle.jdbc.driver.OracleDriver
+    web:
+        resources:
+            static-locations: file:uploads/
+    mvc:
+        static-path-pattern: /uploads/**
+    servlet:
+        multipart:
+            max-file-size: 100MB
+            max-request-size: 100MB
+
 server:
-  port: 80
+    port: 80
 mybatis:
-  configuration:
-    jdbc-type-for-null: VARCHAR
-    map-underscore-to-camel-case: true 
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.tri.evre.board.model.dto, com.tri.evre.board.model.vo
+    configuration:
+        jdbc-type-for-null: VARCHAR
+        map-underscore-to-camel-case: true
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.tri.evre.board.model.dto, com.tri.evre.board.model.vo, com.tri.evre.shop.model.dto
 jwt:
-  secret: D9uLKVc4FE0IEheN3pLLEb8GKhHRsG8cdOxazHnEkRm3CGAeB+xVbt8Dbob1QhRB
+    secret: D9uLKVc4FE0IEheN3pLLEb8GKhHRsG8cdOxazHnEkRm3CGAeB+xVbt8Dbob1QhRB

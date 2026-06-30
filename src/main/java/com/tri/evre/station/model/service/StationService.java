@@ -29,30 +29,24 @@ public class StationService {
 		
 		StationSearchRequest searchResponse = new StationSearchRequest();
 		searchResponse.setPageInfo(pageInfo);
-		SearchInfo searchInfo = new SearchInfo();
-		searchInfo.setLat(lat);
-		searchInfo.setLng(lng);
-		searchInfo.setDistance(dist);
+		SearchInfo searchInfo = new SearchInfo(lat,lng,dist);
 		searchResponse.setSearchInfo(searchInfo);
 		
 		List<StationDto> stations = stationMapper.findAll(searchResponse);
-		
-		// log.info("stations : {}", stations);
-		
 		if(stations == null) {
 			throw new StationNotFoundException("조회 결과가 없습니다.");
 		}
 		
-		
-		
-		searchResponse.setStations(stations);
-		
 		pageInfo.setBoardCounts(stationMapper.findStationCount(searchResponse));
-		// log.info("boardCounts : {}", pageInfo.getBoardCounts());
 		if (pageInfo.getBoardCounts() < 1) {
 			throw new StationNotFoundException("조회 결과가 없습니다.");
 		}
 		
+		for(StationDto station : stations) {
+			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
+			station.setChargerCount(chargerCount);
+		}
+		searchResponse.setStations(stations);
 		
 		return searchResponse;
 	}

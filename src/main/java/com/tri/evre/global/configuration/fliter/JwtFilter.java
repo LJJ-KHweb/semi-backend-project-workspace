@@ -87,9 +87,6 @@ public class JwtFilter extends OncePerRequestFilter {
 			response.getWriter().write(String.format("유효하지 않은 토큰"));
 		}
 		filterChain.doFilter(request, response);
-		
-		filterChain.doFilter(request, response);
-		
 	}
 
 }
