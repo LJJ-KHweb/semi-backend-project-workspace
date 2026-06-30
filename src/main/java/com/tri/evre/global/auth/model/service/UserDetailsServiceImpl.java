@@ -34,13 +34,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 			throw new UsernameNotFoundException("요거 있다구요잇");
 		}
 		
-		
 		return CustomUserDetails.builder().username(user.getUserId())
 											.password(user.getUserPwd())
 											.name(user.getUserName())
 											.authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getRole())))
 											.email(user.getEmail())
 											.status(user.getStatus())
+											//userRole이 필요함 admin할때 검사할때 일단 mapper에서 role도 조회해오니까 넣어줄게 06/30 재준 추가
+											.role(user.getRole())
 											.build();
 	}
 

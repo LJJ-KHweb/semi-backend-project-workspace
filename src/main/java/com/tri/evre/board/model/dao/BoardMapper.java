@@ -2,10 +2,8 @@ package com.tri.evre.board.model.dao;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Param;
 
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.vo.Board;
@@ -35,6 +33,10 @@ public interface BoardMapper {
 
 	int delete(Board board);
 
+	List<BoardDto> adminFindAll(@Param(value="pageInfo") PageInfo pageInfo);
+
+
+	int findAllBoardsCount();
 	
 	
 }

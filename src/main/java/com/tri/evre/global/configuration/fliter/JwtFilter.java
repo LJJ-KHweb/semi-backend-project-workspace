@@ -66,6 +66,13 @@ public class JwtFilter extends OncePerRequestFilter {
 			
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			
+			
+			authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+			
+			
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			
+			
 		} catch (ExpiredJwtException e) {
 			log.info("토큰의 유효기간 만료");
 			response.setStatus(401);
@@ -79,6 +86,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			response.setContentType("application/json; charset=UTF-8");
 			response.getWriter().write(String.format("유효하지 않은 토큰"));
 		}
+		filterChain.doFilter(request, response);
+		
 		filterChain.doFilter(request, response);
 		
 	}

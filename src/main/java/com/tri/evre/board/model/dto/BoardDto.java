@@ -28,6 +28,8 @@ public class BoardDto {
 	private String boardContent;
 	private String userName;
 	private String userId;
+	// 추가 6/30 재준
+	private String status;
 	private List<FileDto> files;
 	private Date createDate;
 	private Long views;

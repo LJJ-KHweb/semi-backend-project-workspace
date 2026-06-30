@@ -50,7 +50,6 @@ public class LocalFileService implements FileService {
 		
 		Path targetLocation = this.fileLocation.resolve(changeName);
 		
-		log.info("filefilefilefilefilefilefilefilefilefilefilefilefilefilefile{}",changeName);
 		try {
 			
 			Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);

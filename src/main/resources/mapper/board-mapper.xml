@@ -110,5 +110,25 @@
 		   AND
 		   	    USER_ID = #{userId}
 	</update>
+	<!--6/30 재준 추가 -->
+	<select id="adminFindAll">
+		<include refid="boardColumn"/>
+			 ,	BOARD.STATUS
+		  FROM
+		  		BOARD
+		  JOIN
+		  		SEMI_USER USING(USER_ID)
+		 ORDER
+			BY
+			    BOARD.CREATE_DATE ASC
+	    OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	</select>	
+	
+	<select id="findAllBoardsCount">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		BOARD
+	</select>
 	
 </mapper>

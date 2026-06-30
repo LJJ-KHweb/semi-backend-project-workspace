@@ -43,13 +43,16 @@ public class StationService {
 			throw new StationNotFoundException("조회 결과가 없습니다.");
 		}
 		
+		
+		
+		searchResponse.setStations(stations);
+		
 		pageInfo.setBoardCounts(stationMapper.findStationCount(searchResponse));
 		// log.info("boardCounts : {}", pageInfo.getBoardCounts());
 		if (pageInfo.getBoardCounts() < 1) {
 			throw new StationNotFoundException("조회 결과가 없습니다.");
 		}
 		
-		searchResponse.setStations(stations);
 		
 		return searchResponse;
 	}

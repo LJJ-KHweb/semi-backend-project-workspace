@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.board.model.dao.BoardMapper;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RestController
 @RequiredArgsConstructor
 public class BoardService {
 
