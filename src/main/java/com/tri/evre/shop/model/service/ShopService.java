@@ -22,9 +22,7 @@ public class ShopService {
 	
 	public ProductListResponse findAll(int page, int size) {
 		
-		PageInfo pageInfo = new PageInfo();
-		pageInfo.setPage(page-1);
-		pageInfo.setSize(size);
+		PageInfo pageInfo = new PageInfo(page, size);
 		pageInfo.setOffset(pageInfo.getPage() * pageInfo.getSize());
 		
 		List<ProductListDto> products = shopMapper.findAll(pageInfo);
