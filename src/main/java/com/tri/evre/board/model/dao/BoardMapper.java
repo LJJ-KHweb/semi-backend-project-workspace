@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.vo.Board;
 import com.tri.evre.common.model.dto.PageInfo;
@@ -31,7 +32,7 @@ public interface BoardMapper {
 	int update(Board boardEntity);
 
 
-	int delete(Board board);
+	int delete(BoardDeleteDto board);
 
 	List<BoardDto> adminFindAll(@Param(value="pageInfo") PageInfo pageInfo);
 
