@@ -23,5 +23,7 @@ public interface ShopMapper {
 	InventoryDto findByInventory(Long productNo);
 
 	int insertHistoryMileage(@Param("user") CustomUserDetails user, @Param("product") ProductDto product);
+
+	int useMileage(CustomUserDetails user, ProductDto product);
 	
 }

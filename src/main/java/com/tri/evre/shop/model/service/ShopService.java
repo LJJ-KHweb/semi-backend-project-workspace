@@ -8,6 +8,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.shop.InsufficientInventoryException;
 import com.tri.evre.global.exception.shop.InventoryUpdateException;
+import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.InventoryDto;
@@ -65,6 +66,12 @@ public class ShopService {
 		if(result < 1) {
 			throw new MileageHistoryCreateException("마일리지 내역 추가에 실패했습니다.");
 		}
+		
+		result = shopMapper.useMileage(user, product);
+		
+		
+		
+		
 		
 	}
 
