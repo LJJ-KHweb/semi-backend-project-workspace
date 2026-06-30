@@ -35,6 +35,16 @@ public class AdminService {
 		return new BoardListResponse(pageInfo,boards);
 	}
 
+	@Transactional
+	public BoardDto findByBoard(Long boardNo) {
+		
+		BoardDto board = boardMapper.findByBoardNo(boardNo);
+		if(board == null) {
+			throw new BoardNotFoundException("게시글 정보가 없습니다.");
+		}
+		return board;
+	}
+
 	
 
 }
