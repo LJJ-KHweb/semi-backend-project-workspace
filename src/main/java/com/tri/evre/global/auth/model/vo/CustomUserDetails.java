@@ -18,5 +18,9 @@ public class CustomUserDetails implements UserDetails {
 	private String status;
 	
 	
+	// CustomUserDetails에 role 추가함 --06/30 재준
+	private String role;
+	
+	
 
 }
