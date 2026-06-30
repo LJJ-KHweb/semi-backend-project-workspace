@@ -1,4 +1,4 @@
-package com.tri.evre.board.model.dto;
+package com.tri.evre.station.model.dto;
 
 import java.util.List;
 
@@ -15,7 +15,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BoardListResponse {
+public class StationSearchRequest {
 	private PageInfo pageInfo;
-	private List<BoardDto> boards;
+	private SearchInfo searchInfo;
+	private List<StationDto> stations;
 }

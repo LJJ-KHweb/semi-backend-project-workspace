@@ -26,7 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		//log.info("과연?? > {}", username);
 		// 여기선 우리가 무엇을 해야하는가?
 		
-		
 		UserDto user = authMapper.loadUser(username);
 		 
 		log.info("조회된 정보 : {}", user);
@@ -34,8 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		if(user == null) {
 			throw new UsernameNotFoundException("요거 있다구요잇");
 		}
-		
-
 		
 		return CustomUserDetails.builder().username(user.getUserId())
 											.password(user.getUserPwd())
