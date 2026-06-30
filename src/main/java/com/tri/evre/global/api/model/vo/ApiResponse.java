@@ -13,12 +13,14 @@ public class ApiResponse<T> {
 	private String msg;
 	private T data;
 	//insert
-	public static ApiResponse<Void> created(String msg) {
-		return new ApiResponse<>(, msg, null);
+	public static<T> ApiResponse<T> created(String msg, T data) {
+		return new ApiResponse<T>(201, msg, data);
 	}
+	
 	
 	public static<T> ApiResponse<T> success(String msg, T data) {
 		return new ApiResponse<T>(200,msg,data);	
 	}
+	
 	
 }

@@ -1,0 +1,92 @@
+package com.tri.evre.global.api.model.vo;
+
+import lombok.Getter;
+
+@Getter
+public enum CustomHttpStatus {
+	
+	// 생성 성공
+	CREATE_SUCCESS(201),
+	// 조회 성공
+	SELECT_SUCCESS(200),
+	// 업데이트 성공
+	UPDATE_SUCCESS(201),
+	// 삭제 성공
+	DELETE_SUCCESS(200),
+
+    // ------------------------------
+    // 로그인 정보가 일치하지 않음
+    INVALID_USER_DATA(401),
+    // 요청 데이터의 형식이 올바르지 않음
+    INVALID_REQUEST(400),
+    // 필수 입력값이 누락됨
+    MISSING_REQUIRED_FIELD(400),
+    // 이미 존재하는 리소스
+    DUPLICATE_RESOURCE(409),
+    // Access Token 만료
+    ACCESS_TOKEN_EXPIRED(400),
+    // Refresh Token 만료
+    REFRESH_TOKEN_EXPIRED(400),
+    
+	//---------------------------------------
+    // 게시글이 존재하지 않음
+    BOARD_NOT_FOUND(404),
+    // 게시글 입력 형식이 올바르지 않음
+    INVALID_POST(400),
+    // 게시글 필수 입력값이 누락됨
+    MISSING_POST_FIELD(400),
+    // 게시글 작성,수정,삭제 권한이 없음
+    BOARD_CUD_FORBIDDEN(403),
+    // 이미 삭제된 게시글
+    ALREADY_DELETED_BOARD(409),
+    // 게시글 CRUD 실패
+    BOARD_CRUD_FAILED(500),
+    
+    //----------------------------------------
+    // 파일이 존재하지 않음
+    BOARD_FILE_NOT_FOUND(404),
+    // 파일 입력값 형식 오류
+    INVALID_BOARD_FILE(400),
+    // 파일 CRUD 처리 실패 (등록/수정/삭제/조회 통합)
+    BOARD_FILE_CRUD_FAILED(500),
+	
+	//-------------------------------------
+    // 답변이 존재하지 않음
+    ANSWER_NOT_FOUND(404),
+    // 답변 입력 형식이 올바르지 않음
+    INVALID_ANSWER(400),
+    // 답변 필수 입력값이 누락됨
+    MISSING_ANSWER_FIELD(400),
+    // 답변 CRUD 실패
+    ANSWER_CRUD_FAILED(500),
+    
+	//------------------------------------
+    // 충전소가 존재하지 않음
+    STATION_NOT_FOUND(404),
+    // 충전소 입력값 형식 오류
+    INVALID_STATION(400),
+    // 충전소 필수 입력값 누락
+    MISSING_STATION_FIELD(400),
+    // 충전소 생성 실패
+    STATION_CRUD_FAILED(500),
+    
+    //------------------------------------------
+    // 충전기가 존재하지 않음
+    CHARGER_NOT_FOUND(404),
+    // 충전기 입력값 형식 오류
+    INVALID_CHARGER(400),
+    // 충전기 필수 입력값 누락
+    MISSING_CHARGER_FIELD(400),
+    // 충전기 CRUD 처리 실패 (등록/수정/삭제/조회 통합)
+    CHARGER_CRUD_FAILED(500),
+    // 이미 해당 충전소에 속한 충전기
+    DUPLICATE_CHARGER(409);
+	
+	
+    private final int code;
+
+    CustomHttpStatus(int  code) {
+        this.code = code;
+    }
+	
+}
