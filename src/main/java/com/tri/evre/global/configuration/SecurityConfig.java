@@ -43,6 +43,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/boards/**","/uploads/**").permitAll();
 					requests.requestMatchers(HttpMethod.PATCH,"/api/boards/**").authenticated();
 					requests.requestMatchers(HttpMethod.POST, "/api/boards").authenticated();
+					requests.requestMatchers(HttpMethod.GET,"/api/shop").permitAll();
 					
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
