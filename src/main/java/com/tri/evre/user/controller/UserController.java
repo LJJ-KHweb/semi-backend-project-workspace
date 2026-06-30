@@ -26,6 +26,6 @@ public class UserController {
 	public ResponseEntity<?> signup(@RequestBody UserDto user){
 		log.info("{}",user);
 		userService.signup(user);
-		return ResponseEntity.status(200).body(ApiResponse.userCreated("회원가입에 성공했습니다."));
+		return ResponseEntity.status(200).body(ApiResponse.created("회원가입에 성공했습니다.",null));
 	}
 }
