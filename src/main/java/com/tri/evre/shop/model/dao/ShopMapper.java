@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.shop.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListDto;
 
 @Mapper
@@ -14,4 +15,5 @@ public interface ShopMapper {
 
 	int decrease(Long productNo);
 
+	ProductDto findByProductNo(Long productNo);
 }

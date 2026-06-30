@@ -27,12 +27,28 @@
 			  	   	P.PRODUCT_NO
 			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
+
 	
-	<update id="decrease" resultType="int">
-	
+	<select id="findByProductNo" resultType="ProductDto">
+			SELECT
+						PRODUCT_NO
+					  , CREATE_DATE
+					  , PRODUCT_NAME
+					  , PRICE	
+				WHERE
+					 	PRODUCT_NO = #{productNo}
+	</select>
+
+	<update id="decrease">
+		
+		UPDATE
+				INVENTORY
+			SET	
+				AMOUNT = AMOUNT - 1
+			WHERE
+				PRODUCT_NO = #{productNo}
+		
 	</update>
-	
-	
-	
+		
 	
 </mapper>

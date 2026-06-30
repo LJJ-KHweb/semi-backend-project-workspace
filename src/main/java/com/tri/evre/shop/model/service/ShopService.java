@@ -8,6 +8,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
+import com.tri.evre.shop.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 
@@ -38,8 +39,13 @@ public class ShopService {
 	//------------------------------구매-------------
 	public void purchase(Long productNo, CustomUserDetails user) {
 		
-		int result = shopMapper.decrease(productNo);
+		ProductDto product = shopMapper.findByProductNo(productNo);
 		
+		if(product == null) {
+			throw new ProductNotFoundException("없는 상품을 구매하시려고 하네요");
+		}
+		
+		shopMapper.findAmount(productNo);
 	}
 
 }
