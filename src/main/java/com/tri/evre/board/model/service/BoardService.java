@@ -2,11 +2,13 @@ package com.tri.evre.board.model.service;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.board.model.dao.BoardMapper;
+import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.board.model.vo.Board;
@@ -108,7 +110,9 @@ public class BoardService {
 	public void delete(Long boardNo, CustomUserDetails user) {
 		findByBoardNo(boardNo);
 		
-		Board board = Board.builder().boardNo((boardNo)).userId(user.getUsername()).build();
+		BoardDeleteDto board = new BoardDeleteDto();
+		board.setBoardNo(boardNo);
+		board.setUserId(user.getUsername());
 		
 		int result = boardMapper.delete(board);
 		

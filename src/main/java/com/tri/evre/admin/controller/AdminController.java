@@ -1,6 +1,8 @@
 package com.tri.evre.admin.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
+import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +39,11 @@ public class AdminController {
 	public ResponseEntity<ApiResponse<BoardDto>> findByBoard(@PathVariable(name="boardNo") Long boardNo){
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시판 상세조회 성공", adminService.findByBoard(boardNo)));
+	}
+	
+	@DeleteMapping("/boards/{boardNo}")
+	public ResponseEntity<ApiResponse<Void>> deleteBoard(@PathVariable(name="boardNo") Long boardNo, @AuthenticationPrincipal CustomUserDetails user){
+		adminService.deleteBoard(boardNo,user);
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("게시글 삭제 성공", null));
 	}
 }

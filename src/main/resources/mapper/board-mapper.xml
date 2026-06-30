@@ -11,7 +11,6 @@
                order="BEFORE">
         SELECT SEQ_BNO.NEXTVAL FROM DUAL
     </selectKey>
-    
 	 	INSERT
 				  INTO
 				  		BOARD
@@ -108,7 +107,17 @@
 		 WHERE
 		 		BOARD_NO = #{boardNo}
 		   AND
-		   	    USER_ID = #{userId}
+		   		(
+		   	    	USER_ID = #{userId}
+		   	    OR
+		   	    	'ROLE_ADMIN' = (SELECT
+		   	    							ROLE
+		   	    					  FROM
+		   	    					  		SEMI_USER
+		   	    					 WHERE
+		   	    					 		USER_ID = #{userId}
+		   	    					)
+		   	    )
 	</update>
 	<!--6/30 재준 추가 -->
 	<select id="adminFindAll">

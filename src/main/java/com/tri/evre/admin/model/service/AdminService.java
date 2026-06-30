@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tri.evre.board.model.dao.BoardMapper;
+import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -44,6 +47,18 @@ public class AdminService {
 		}
 		return board;
 	}
+
+	public void deleteBoard(Long boardNo,CustomUserDetails user) {
+		
+		BoardDeleteDto board = new BoardDeleteDto(boardNo, user.getUsername(), user.getRole());
+		
+		
+		int result = boardMapper.delete(board);
+		if(result < 1) {
+			throw new BoardDeleteException("게시글 삭제 실패");
+		}
+		
+	} 
 
 	
 
