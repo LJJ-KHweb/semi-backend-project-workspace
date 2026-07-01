@@ -59,6 +59,8 @@ public class SecurityConfig {
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE, "/api/admin/boards/**").hasRole("ADMIN");
+					// 07/01 재준 추가
+					requests.requestMatchers(HttpMethod.POST,"/api/rasp").permitAll();
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
