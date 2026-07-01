@@ -5,13 +5,13 @@ import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HistoryMileage {
-	private String userId;
-	private Date createDate;
+public class HistoryPurchaseDto {
+	private String productName; 
 	private int change;
-	private Long productNo;
+	private Date createDate;
 }

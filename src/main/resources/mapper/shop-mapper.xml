@@ -99,7 +99,26 @@
 				USER_ID = #{username}
 	</select>
 	
-	
+	<select id="findByHistoryPurchase" resultType="HistoryPurchaseDto">
+		SELECT
+				H.CHANGE
+			  , P.PRODUCT_NAME
+			  , H.CREATE_DATE
+			 FROM
+			 	HISTORY_MILEAGE H
+			 JOIN
+			 	PRODUCT P
+			   ON
+			   	H.PRODUCT_NO = P.PRODUCT_NO
+			WHERE
+				H.USER_ID = #{user.username}
+			AND
+				H.CHANGE &lt; 0	
+			ORDER
+			   BY
+				H.CREATE_DATE
+			OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	</select>
 	
 	
 	

@@ -1,6 +1,7 @@
 package com.tri.evre.shop.model.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,8 @@ import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.shop.MileageHistoryNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
+import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
+import com.tri.evre.shop.model.dto.HistoryPurchaseListDto;
 import com.tri.evre.shop.model.dto.InventoryDto;
 import com.tri.evre.shop.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListDto;
@@ -32,7 +35,6 @@ public class ShopService {
 	public ProductListResponse findAll(int page, int size) {
 		
 		PageInfo pageInfo = new PageInfo(page, size);
-		pageInfo.setOffset(pageInfo.getPage() * pageInfo.getSize());
 		
 		List<ProductListDto> products = shopMapper.findAll(pageInfo);
 		if(products == null) {
@@ -69,8 +71,8 @@ public class ShopService {
 		}
 		
 		
-		
 		InventoryDto inventory = shopMapper.findByInventory(productNo);
+		
 		
 		if(inventory.getAmount() <= 0) {
 			throw new InsufficientInventoryException("상품 재고가 부족합니다.");
@@ -92,10 +94,34 @@ public class ShopService {
 			throw new MileageHistoryCreateException("마일리지 내역 추가에 실패했습니다.");
 		}
 		
-		
 	
+	}
+	
+	//------------------------------------07/01---------------------------------------------
+	
+	// 상품 구매 내역 조회하기
+
+	public HistoryPurchaseListDto findByHistoryPurchase(int page, int size, CustomUserDetails user) {
+		
+		PageInfo pageInfo = new PageInfo(page, size);
 		
 		
+		List<HistoryPurchaseDto> history = shopMapper.findByHistoryPurchase(pageInfo, user);
+		
+		//----서버 오류로 마일리지 내역 정보를 가져오지 못했을때 오류 발생하는 구문----
+		
+		if(history == null) {
+			throw new MileageHistoryNotFoundException("상품 구매 내역 조회에 실패했습니다.");
+		}
+		
+		//------ 마일리지 내역에 아무것도 없을때 페이지 정보도 넘길 필요가 없으니 ----------------
+		
+		if(history.stream().allMatch(Objects::isNull)) {
+			throw new MileageHistoryNotFoundException("상품 구매 이력이 없습니다.");
+		}
+		
+		
+		return new HistoryPurchaseListDto(pageInfo, history);
 	}
 
 }
