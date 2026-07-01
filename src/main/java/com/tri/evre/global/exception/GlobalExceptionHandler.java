@@ -44,6 +44,7 @@ import com.tri.evre.global.exception.shop.InsufficientMileageException;
 import com.tri.evre.global.exception.shop.InventoryUpdateException;
 import com.tri.evre.global.exception.shop.MileageHistoryNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.shop.ProductReadException;
 import com.tri.evre.global.exception.station.InvalidStationFormatException;
 import com.tri.evre.global.exception.station.MissingStationFieldException;
 import com.tri.evre.global.exception.station.StationCreateException;
@@ -471,12 +472,19 @@ public class GlobalExceptionHandler {
 	}
 	
 	// 보유한 마일리지가 구매할 상품의 가격보다 적습니다.
-		@ExceptionHandler(MileageHistoryNotFoundException.class)
-		public ResponseEntity<ApiResponse> MileageHistoryNotFound(MileageHistoryNotFoundException e) {
+	@ExceptionHandler(MileageHistoryNotFoundException.class)
+	public ResponseEntity<ApiResponse> MileageHistoryNotFound(MileageHistoryNotFoundException e) {
 
-			return ResponseEntity.status(CustomHttpStatus.MILEAGE_HISTORY_NOT_FOUND.getCode())
-					.body(new ApiResponse(7010, e.getMessage(), null));
-		}
+		return ResponseEntity.status(CustomHttpStatus.MILEAGE_HISTORY_NOT_FOUND.getCode())
+				.body(new ApiResponse(7010, e.getMessage(), null));
+	}
+	// 상품 관리에서 상품 전체 조회에 실패했습니다.
+	@ExceptionHandler(ProductReadException.class)
+	public ResponseEntity<ApiResponse> ProductRead(ProductReadException e) {
+
+		return ResponseEntity.status(CustomHttpStatus.PRODUCT_CRUD_FAILED.getCode())
+				.body(new ApiResponse(7015, e.getMessage(), null));
+	}
 	
 
 }

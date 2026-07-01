@@ -14,6 +14,7 @@ import com.tri.evre.global.exception.shop.InventoryUpdateException;
 import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.shop.MileageHistoryNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.shop.ProductReadException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseListDto;
@@ -40,6 +41,9 @@ public class ShopService {
 		if(products == null) {
 			throw new ProductNotFoundException("조회된 상품이 없습니다.");
 		}
+		if(products.stream().allMatch(Objects :: isNull)) {
+			throw new ProductReadException("상품 테이블에 아무것도 없습니다.");
+		}
 		
 		return new ProductListResponse(pageInfo, products);
 		
@@ -50,7 +54,7 @@ public class ShopService {
 	public void purchase(Long productNo, CustomUserDetails user) {
 		
 		ProductDto product = shopMapper.findByProductNo(productNo);
-		
+			
 		if(product == null) {
 			throw new ProductNotFoundException("없는 상품을 구매하시려고 하네요");
 		}

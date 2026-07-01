@@ -129,7 +129,7 @@
 					P.PRODUCT_NO
 				  , P.PRODUCT_NAME
 				  , I.AMOUNT
-				  , P.CHANGE
+				  , P.PRICE
 				  , I.IMAGE
 				FROM
 					PRODUCT P	
@@ -137,7 +137,7 @@
 					INVENTORY I
 				  ON
 				  	P.PRODUCT_NO = I.PRODUCT_NO
-				OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+				OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
 	

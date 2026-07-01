@@ -53,7 +53,7 @@ public class SecurityConfig {
 					
 					//07/01
 					requests.requestMatchers(HttpMethod.GET,"/api/shop/his-products").authenticated();
-					requests.requestMatchers(HttpMethod.GET,"/api/admin/proudcts").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/proudcts/**").hasRole("ADMIN");
 					
 					
 					

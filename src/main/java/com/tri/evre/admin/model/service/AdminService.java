@@ -1,6 +1,7 @@
 package com.tri.evre.admin.model.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
+import com.tri.evre.global.exception.shop.ProductReadException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
@@ -68,12 +70,18 @@ public class AdminService {
 	//------------------07/01 김선겸---------
 	public ProductListResponse findAllProduct(PageInfo pageInfo) {
 		
-		
 		List<ProductListDto> products = shopMapper.findAllProduct(pageInfo);
 		
+		// 서버 오류로 조회 실패
+		if(products==null) {
+			throw new ProductReadException("상품 조회에 실패했습니다.");
+		}
+		// 조회했는데 상품 정보가 아무것도 없음
+		if(products.stream().allMatch(Objects :: isNull)) {
+			throw new ProductReadException("상품 정보가 하나도 없습니다.");
+		}
 		
-		
-		return null;
+		return new ProductListResponse(pageInfo, products);
 	} 
 
 	

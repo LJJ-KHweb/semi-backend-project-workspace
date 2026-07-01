@@ -32,7 +32,7 @@ public interface ShopMapper {
 	
 	
 	
-	//----07/01 김선겸
+	//----07/01 김선겸-----------------------------------------------------
 	
 	List<HistoryPurchaseDto> findByHistoryPurchase(@Param("pageInfo")PageInfo pageInfo, 
 												   @Param("user") CustomUserDetails user);

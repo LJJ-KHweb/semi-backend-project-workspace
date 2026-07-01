@@ -51,16 +51,14 @@ public class AdminController {
 	
 	
 	
-	// -------------07-01--김선겸---------------------------------
+	// -------------07-01--김선겸-- 상품관리 기능중 전체 조회------------------------------- 
 	@GetMapping("/proudcts")
-	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam("page") int page
-																   ,@RequestParam("size") int size){
+	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page") int page
+																   		  ,@RequestParam(name="size") int size){
 		
 		ProductListResponse response = adminService.findAllProduct(new PageInfo(page, size));
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("사용내역 전체 조회 성공", response));
-		
-		
 		
 	}
 	
