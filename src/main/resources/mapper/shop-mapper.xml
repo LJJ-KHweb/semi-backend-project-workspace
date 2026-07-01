@@ -27,5 +27,83 @@
 			  	   	P.PRODUCT_NO
 			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
+
+	
+	<select id="findByProductNo" resultType="ProductDto">
+			SELECT
+						PRODUCT_NO
+					  , PRODUCT_NAME
+					  , PRICE
+					  , USER_ID
+				FROM
+						PRODUCT	  		
+				WHERE
+					 	PRODUCT_NO = #{productNo}
+	</select>
+		
+	<select id="findByInventory" resultType="InventoryDto">
+		SELECT
+				PRODUCT_NO
+			  , AMOUNT
+			  , IMAGE
+			FROM
+				INVENTORY
+			WHERE
+				PRODUCT_NO = #{productNo}
+	</select>	
+	
+	<update id="decrease">
+		
+		UPDATE
+				INVENTORY
+			SET	
+				AMOUNT = AMOUNT - 1
+			WHERE
+				PRODUCT_NO = #{productNo}
+		
+	</update>
+	
+	<insert id="insertHistoryMileage">
+		INSERT
+			INTO
+				HISTORY_MILEAGE
+				(
+					USER_ID
+				  , CHANGE
+				  , PRODUCT_NO
+				)
+			VALUES
+				(
+					#{user.username}
+			  	  , #{product.price}
+			  	  , #{product.productNo}
+				)
+	</insert>
+	
+	<select id="findTotalMileage" resultType="int">
+		SELECT
+				SUM(CHANGE)
+			FROM
+				HISTORY_MILEAGE
+			WHERE
+				USER_ID = #{username}
+	</select>
+	
+	
+	<select id="findHistoryMileage" resultType="int">
+		SELECT
+				COUNT(*)
+			FROM
+				HISTORY_MILEAGE
+			WHERE
+				USER_ID = #{username}
+	</select>
+	
+	
+	
+	
+	
+	
+	
 	
 </mapper>

@@ -47,7 +47,9 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/boards/**","/uploads/**").permitAll();
 					requests.requestMatchers(HttpMethod.PATCH,"/api/boards/**").authenticated();
 					requests.requestMatchers(HttpMethod.POST, "/api/boards").authenticated();
+					//---------------------- 상점 ----------------------------------- 06/30
 					requests.requestMatchers(HttpMethod.GET,"/api/shop").permitAll();
+					requests.requestMatchers(HttpMethod.PATCH,"/api/shop/**").authenticated();
 					
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");
