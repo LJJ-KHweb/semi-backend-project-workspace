@@ -13,6 +13,9 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
+import com.tri.evre.shop.model.dao.ShopMapper;
+import com.tri.evre.shop.model.dto.ProductListDto;
+import com.tri.evre.shop.model.dto.ProductListResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminService {
 
 	private final BoardMapper boardMapper;
+	private final ShopMapper shopMapper;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -58,6 +62,18 @@ public class AdminService {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
 		
+	}
+
+	
+	//------------------07/01 김선겸---------
+	public ProductListResponse findAllProduct(PageInfo pageInfo) {
+		
+		
+		List<ProductListDto> products = shopMapper.findAllProduct(pageInfo);
+		
+		
+		
+		return null;
 	} 
 
 	

@@ -16,6 +16,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.shop.model.dto.ProductListResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,4 +47,22 @@ public class AdminController {
 		adminService.deleteBoard(boardNo,user);
 		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("게시글 삭제 성공", null));
 	}
+	
+	
+	
+	
+	// -------------07-01--김선겸---------------------------------
+	@GetMapping("/proudcts")
+	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam("page") int page
+																   ,@RequestParam("size") int size){
+		
+		ProductListResponse response = adminService.findAllProduct(new PageInfo(page, size));
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("사용내역 전체 조회 성공", response));
+		
+		
+		
+	}
+	
+	
 }

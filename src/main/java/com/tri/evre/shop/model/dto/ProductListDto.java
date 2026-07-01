@@ -11,6 +11,6 @@ public class ProductListDto {
 	private Long productNo;
 	private String productName;
 	private int amount;
-	private int price;
+	private int change;
 	private String iamge;
 }

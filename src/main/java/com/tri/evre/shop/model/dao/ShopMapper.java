@@ -29,8 +29,15 @@ public interface ShopMapper {
 
 	int findHistoryMileage(CustomUserDetails user);
 
+	
+	
+	
+	//----07/01 김선겸
+	
 	List<HistoryPurchaseDto> findByHistoryPurchase(@Param("pageInfo")PageInfo pageInfo, 
 												   @Param("user") CustomUserDetails user);
+
+	List<ProductListDto> findAllProduct(PageInfo pageInfo);
 
 	
 }
