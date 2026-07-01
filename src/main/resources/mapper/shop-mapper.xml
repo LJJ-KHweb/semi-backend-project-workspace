@@ -32,9 +32,11 @@
 	<select id="findByProductNo" resultType="ProductDto">
 			SELECT
 						PRODUCT_NO
-					  , CREATE_DATE
 					  , PRODUCT_NAME
-					  , PRICE	
+					  , PRICE
+					  , USER_ID
+				FROM
+						PRODUCT	  		
 				WHERE
 					 	PRODUCT_NO = #{productNo}
 	</select>
@@ -72,18 +74,30 @@
 				)
 			VALUES
 				(
-					#{user.userId()}
-			  	  , #{product.price()}
-			  	  , #{product.produdctNo()}
+					#{user.username}
+			  	  , #{product.price}
+			  	  , #{product.productNo}
 				)
 	</insert>
 	
-	<update id="useMileage">
-		
-	</update>
+	<select id="findTotalMileage" resultType="int">
+		SELECT
+				SUM(CHANGE)
+			FROM
+				HISTORY_MILEAGE
+			WHERE
+				USER_ID = #{username}
+	</select>
 	
 	
-	
+	<select id="findHistoryMileage" resultType="int">
+		SELECT
+				COUNT(*)
+			FROM
+				HISTORY_MILEAGE
+			WHERE
+				USER_ID = #{username}
+	</select>
 	
 	
 	

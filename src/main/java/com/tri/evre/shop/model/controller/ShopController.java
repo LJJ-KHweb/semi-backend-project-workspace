@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.shop.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.service.ShopService;
 
@@ -30,17 +31,16 @@ public class ShopController {
 	public ResponseEntity<ApiResponse<ProductListResponse>> findAll(@RequestParam("page") int page,
 																	@RequestParam("size") int size){
 		ProductListResponse productResponse = shopService.findAll(page, size);
-		log.info("--------------------------------------------{}",productResponse);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", productResponse));
 	}
 	
-	@PatchMapping
-	public ResponseEntity<ApiResponse<Void>> purchase(@RequestBody Long productNo,
+	@PatchMapping("{productNo}")
+	public ResponseEntity<ApiResponse<Void>> purchase(@PathVariable(name="productNo") Long productNo,
 													  @AuthenticationPrincipal CustomUserDetails user){
 		
 		shopService.purchase(productNo, user);
 		
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(null);
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("구매 성공", null));
 	}
 
 	

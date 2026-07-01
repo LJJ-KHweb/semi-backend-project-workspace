@@ -24,6 +24,9 @@ public interface ShopMapper {
 
 	int insertHistoryMileage(@Param("user") CustomUserDetails user, @Param("product") ProductDto product);
 
-	int useMileage(CustomUserDetails user, ProductDto product);
+	int findTotalMileage(CustomUserDetails user);
+
+	int findHistoryMileage(CustomUserDetails user);
+
 	
 }
