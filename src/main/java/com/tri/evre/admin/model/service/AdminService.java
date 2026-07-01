@@ -73,12 +73,8 @@ public class AdminService {
 		List<ProductListDto> products = shopMapper.findAllProduct(pageInfo);
 		
 		// 서버 오류로 조회 실패
-		if(products==null) {
+		if(products==null || products.isEmpty()) {
 			throw new ProductReadException("상품 조회에 실패했습니다.");
-		}
-		// 조회했는데 상품 정보가 아무것도 없음
-		if(products.stream().allMatch(Objects :: isNull)) {
-			throw new ProductReadException("상품 정보가 하나도 없습니다.");
 		}
 		
 		return new ProductListResponse(pageInfo, products);
