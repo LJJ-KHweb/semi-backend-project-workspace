@@ -1,7 +1,6 @@
 package com.tri.evre.admin.model.service;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
-import com.tri.evre.global.exception.shop.ProductReadException;
+import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
@@ -72,9 +71,10 @@ public class AdminService {
 		
 		List<ProductListDto> products = shopMapper.findAllProduct(pageInfo);
 		
-		// 서버 오류로 조회 실패
+		
+		// 테이블에 아무것도 없을때
 		if(products==null || products.isEmpty()) {
-			throw new ProductReadException("상품 조회에 실패했습니다.");
+			throw new ProductNotFoundException("상품을 하나도 찾을 수 없습니다.");
 		}
 		
 		return new ProductListResponse(pageInfo, products);

@@ -65,15 +65,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-	
-	@ExceptionHandler(DataAccessException.class)
-	public ResponseEntity<ApiResponse> handleDBError(DataAccessException e) {
-
-	    return ResponseEntity
-	            .status(CustomHttpStatus.SERVER_ERROR.getCode())
-	            .body(new ApiResponse(9999, "DB 오류가 발생했습니다.", null));
-	}
-
 	/*
 	 * @ExceptionHandler(MethodArgumentNotValidException.class) public
 	 * ResponseEntity<ErrorResponse>
