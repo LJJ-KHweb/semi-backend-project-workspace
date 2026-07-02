@@ -21,22 +21,63 @@
 			 ,	#{currentTime}
 				)
 	</insert>
+	
+	<!-- TO_CHAR(R.CURRENT_TIME, 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY, 
+			
+		R.CURRENT_TIME 	: DATE 타입의 컬럼
+		DY 				: 요일의 약어(요일별로 뽑겠다)
+		NLS_DATE_LANGUAGE=KOREAN : 기본 언어 설정에 따라 요일을 출력 EX) 월, 화, 수, 목, 금, 토, 일
+	-->
 	<select id="findAll" resultType="RaspDayOfWeek">
 			SELECT
-    				TO_CHAR(CURRENT_TIME, 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY,
+					TO_CHAR(TRUNC(R.CURRENT_TIME), 'MM/DD') AS DAY_DATE,
+    				TO_CHAR(TRUNC(R.CURRENT_TIME), 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY,
     				SUM(DISTANCE) AS DISTANCE_SUM,
     				SUM(KILOWATT) AS KILOWATT_SUM
 			  FROM
-   					RASP
+   					RASP R
 			 WHERE
     				CURRENT_TIME >= TRUNC(SYSDATE) - 6
 			 GROUP 
 			 	BY
-    				TRUNC(CURRENT_TIME),
-    				TO_CHAR(CURRENT_TIME, 'DY', 'NLS_DATE_LANGUAGE=KOREAN')
+    				TRUNC(CURRENT_TIME)
 			 ORDER 
 			 	BY
     				TRUNC(CURRENT_TIME)
 	</select>
+	
+	
+	<!--
+		TO_CHAR(TRUNC(R.CURRENT_TIME), 'MM/DD') AS DAY_DATE,
+		사용자의 데이터를 라즈베리 파이를 조회 할때 요일만 있다면 구별하기가 힘들거 같아서 날짜도 추가해서 보내주게 설계를 바꿈
+		따라서 위에 select문도 수정함 	
+	-->
+	<select id="findMyRaspAll">
+	SELECT
+			TO_CHAR(TRUNC(R.CURRENT_TIME), 'MM/DD') AS DAY_DATE,
+    		TO_CHAR(TRUNC(R.CURRENT_TIME), 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY,
+    		SUM(R.DISTANCE) AS DISTANCE_SUM,
+    		SUM(R.KILOWATT) AS KILOWATT_SUM
+	  FROM
+    		RASP R
+	  JOIN 
+	  		CAR C
+    	ON 	R.CAR_NUM = C.CAR_NO
+	  JOIN 
+	  		BOARD B
+        ON 
+        	C.BOARD_NO = B.BOARD_NO
+	 WHERE
+    		B.USER_ID = #{userId}
+	   AND
+    		R.CURRENT_TIME BETWEEN C.START_TIME AND C.FINISH_TIME
+	 GROUP 
+	  	BY
+    		TRUNC(R.CURRENT_TIME)
+	 ORDER 
+	 	BY
+    		TRUNC(R.CURRENT_TIME)
+   </select>
+	
 	
 </mapper>
