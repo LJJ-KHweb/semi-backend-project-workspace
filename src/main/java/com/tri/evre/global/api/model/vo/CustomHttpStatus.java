@@ -105,7 +105,10 @@ public enum CustomHttpStatus {
     // 재고 처리 실패 (등록/수정)
     INVENTORY_CRUD_FAILED(500),
     // 마일리지 내역 저장 실패
-    MILEAGE_HISTORY_CREATE_FAILED(500);
+    MILEAGE_HISTORY_CREATE_FAILED(500) ,
+    
+    // 07/02 재준 추가 
+    RASP_CRUD_FAILED(500);
 	
 	
 	
