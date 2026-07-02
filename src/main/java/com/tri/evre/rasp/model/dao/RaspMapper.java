@@ -14,4 +14,6 @@ public interface RaspMapper {
 
 	List<RaspDayOfWeek> findAll();
 
+	List<RaspDayOfWeek> findMyRaspAll(String userId);
+
 }

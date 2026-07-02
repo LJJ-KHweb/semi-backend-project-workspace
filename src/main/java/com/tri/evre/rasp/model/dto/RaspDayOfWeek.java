@@ -13,14 +13,16 @@ import lombok.ToString;
 @ToString
 public class RaspDayOfWeek {
 	
+	private String dayDate;		// 날짜 월 일만 조회해옴 변수명date로 할려했는데 DB DATE가 예약어라 dayDate로 결정함
 	private String day; 		// 요일의 정보를 담을 변수
 	private double distanceSum; // 거리 총합
 	private double kilowattSum; // 전기 소모량 총
 	private double carbonReduction ;
 	
 	// 매개변수 생성자를 통해 Mybatis로 값을 매핑해줘서 만들어줌
-	public RaspDayOfWeek(String day, double distanceSum, double kilowattSum) {
+	public RaspDayOfWeek(String dayDate, String day, double distanceSum, double kilowattSum) {
 		super();
+		this.dayDate =dayDate;
 		this.day = day;
 		this.distanceSum = distanceSum;
 		this.kilowattSum = kilowattSum;

@@ -65,6 +65,8 @@ public class SecurityConfig {
 					// 07/01 재준 추가 밑에 rasp관련
 					requests.requestMatchers(HttpMethod.POST,"/api/rasp").permitAll();
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp").permitAll();
+					// 07/02 재준 추가
+					requests.requestMatchers(HttpMethod.GET,"/api/rasp/mypage").authenticated();
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
