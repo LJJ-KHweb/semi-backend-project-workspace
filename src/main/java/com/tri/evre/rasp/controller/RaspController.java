@@ -44,8 +44,8 @@ public class RaspController {
 	}
 	
 	@GetMapping("/mypage") // 사용자의 마이페이지 라즈베리파이 
-	public ResponseEntity<ApiResponse<List<RaspDayOfWeek>>> findMyRaspAll(@AuthenticationPrincipal CustomUserDetails user, @RequestParam(name="page", defaultValue="1") int page, @RequestParam(name="size") int size){
-		List<RaspDayOfWeek> results = raspService.findMyRaspAll(user, new PageInfo(page, size));
+	public ResponseEntity<ApiResponse<List<RaspDayOfWeek>>> findMyRaspAll(@AuthenticationPrincipal CustomUserDetails user){
+		List<RaspDayOfWeek> results = raspService.findMyRaspAll(user);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("마이페이지 라즈베리파이 조회 성공", results));
 	}
 	

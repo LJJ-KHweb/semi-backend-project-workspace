@@ -50,8 +50,8 @@ public class RaspService {
 		return results;
 	}
 
-	public List<RaspDayOfWeek> findMyRaspAll(CustomUserDetails user, PageInfo pageInfo) {
-		List<RaspDayOfWeek> results = raspMapper.findMyRaspAll(user.getUsername(), pageInfo);
+	public List<RaspDayOfWeek> findMyRaspAll(CustomUserDetails user) {
+		List<RaspDayOfWeek> results = raspMapper.findMyRaspAll(user.getUsername());
 		if (results == null) {
 			throw new RaspNotFoundException("라즈베리디비 조회 실패했습니다.");
 		}
