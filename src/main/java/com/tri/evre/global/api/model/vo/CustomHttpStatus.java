@@ -14,6 +14,9 @@ public enum CustomHttpStatus {
 	// 삭제 성공
 	DELETE_SUCCESS(200),
 
+	//---------- 서버 오류--------
+	SERVER_ERROR(500),
+	
     // ------------------------------
     // 로그인 정보가 일치하지 않음
     INVALID_USER_DATA(401),
