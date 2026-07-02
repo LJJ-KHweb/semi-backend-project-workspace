@@ -38,7 +38,7 @@ public class RaspService {
 	public List<RaspDayOfWeek> findAll() {
 
 		List<RaspDayOfWeek> results = raspMapper.findAll();
-		if (results == null) {
+		if (results.isEmpty()) {
 			throw new RaspNotFoundException("라즈베리디비 조회 실패했습니다.");
 		}
 		if (results.size() < 7) {
@@ -52,7 +52,7 @@ public class RaspService {
 
 	public List<RaspDayOfWeek> findMyRaspAll(CustomUserDetails user) {
 		List<RaspDayOfWeek> results = raspMapper.findMyRaspAll(user.getUsername());
-		if (results == null) {
+		if (results.isEmpty()) {
 			throw new RaspNotFoundException("라즈베리디비 조회 실패했습니다.");
 		}
 		calculateCarbonReduction(results);
