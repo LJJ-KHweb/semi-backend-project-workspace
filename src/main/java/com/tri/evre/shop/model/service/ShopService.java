@@ -14,6 +14,7 @@ import com.tri.evre.global.exception.shop.InventoryUpdateException;
 import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.shop.MileageHistoryNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.shop.ProductReadException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseListDto;
@@ -37,7 +38,8 @@ public class ShopService {
 		PageInfo pageInfo = new PageInfo(page, size);
 		
 		List<ProductListDto> products = shopMapper.findAll(pageInfo);
-		if(products == null) {
+		
+		if(products == null||products.isEmpty()) {
 			throw new ProductNotFoundException("조회된 상품이 없습니다.");
 		}
 		
@@ -50,8 +52,9 @@ public class ShopService {
 	public void purchase(Long productNo, CustomUserDetails user) {
 		
 		ProductDto product = shopMapper.findByProductNo(productNo);
-		
+			
 		if(product == null) {
+
 			throw new ProductNotFoundException("없는 상품을 구매하시려고 하네요");
 		}
 		
@@ -108,18 +111,9 @@ public class ShopService {
 		
 		List<HistoryPurchaseDto> history = shopMapper.findByHistoryPurchase(pageInfo, user);
 		
-		//----서버 오류로 마일리지 내역 정보를 가져오지 못했을때 오류 발생하는 구문----
-		
-		if(history == null) {
-			throw new MileageHistoryNotFoundException("상품 구매 내역 조회에 실패했습니다.");
-		}
-		
-		//------ 마일리지 내역에 아무것도 없을때 페이지 정보도 넘길 필요가 없으니 ----------------
-		
-		if(history.stream().allMatch(Objects::isNull)) {
+		if(history == null||history.isEmpty()) {
 			throw new MileageHistoryNotFoundException("상품 구매 이력이 없습니다.");
 		}
-		
 		
 		return new HistoryPurchaseListDto(pageInfo, history);
 	}
