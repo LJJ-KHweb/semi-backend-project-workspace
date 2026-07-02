@@ -21,5 +21,22 @@
 			 ,	#{currentTime}
 				)
 	</insert>
+	<select id="findAll" resultType="RaspDayOfWeek">
+			SELECT
+    				TO_CHAR(CURRENT_TIME, 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY,
+    				SUM(DISTANCE) AS DISTANCE_SUM,
+    				SUM(KILOWATT) AS KILOWATT_SUM
+			  FROM
+   					RASP
+			 WHERE
+    				CURRENT_TIME >= TRUNC(SYSDATE) - 6
+			 GROUP 
+			 	BY
+    				TRUNC(CURRENT_TIME),
+    				TO_CHAR(CURRENT_TIME, 'DY', 'NLS_DATE_LANGUAGE=KOREAN')
+			 ORDER 
+			 	BY
+    				TRUNC(CURRENT_TIME)
+	</select>
 	
 </mapper>
