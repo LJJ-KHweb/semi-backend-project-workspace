@@ -491,7 +491,7 @@ public class GlobalExceptionHandler {
 	// 재준 추가 0701 라지베리 디비 조회 실패
 		@ExceptionHandler(RaspNotFoundException.class)
 		public ResponseEntity<ApiResponse> RaspNotFound(RaspNotFoundException e){
-			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(new ApiResponse(8001, e.getMessage(), null));
+			return ResponseEntity.status(CustomHttpStatus.RASP_CRUD_FAILED.getCode()).body(new ApiResponse(8001, e.getMessage(), null));
 		}
 
 }
