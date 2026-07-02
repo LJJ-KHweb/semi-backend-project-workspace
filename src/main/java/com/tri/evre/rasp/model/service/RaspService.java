@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class RaspService {
-	private final double ICE_CO2_EMISSION = 0.15;   // kgCO₂/km
-	private final double ELECTRICITY_EMISSION_FACTOR = 0.46; // kgCO₂/kWh
+	private final double ICE_CO2_EMISSION = 0.15;   //내연기간 자동차 탄소 배출 평균
+	private final double ELECTRICITY_EMISSION_FACTOR = 0.46; // 전력을 만들때의 탄소 배출 평균
 	private final RaspMapper raspMapper;
 	
 	public void save(RaspDto rasp) {
@@ -35,12 +35,13 @@ public class RaspService {
 		}
 		
 		for(RaspDayOfWeek r : results) {
-			test(r);
+			calculateCarbonReduction(r);
 		}
 		return results;
 	}
 	
-	private void test(RaspDayOfWeek r) {
+	//탄소절감량 계산 공식
+	private void calculateCarbonReduction(RaspDayOfWeek r) {
 		double efficiency = r.getDistanceSum() / r.getKilowattSum();
 		r.setCarbonReduction (r.getDistanceSum() * (ICE_CO2_EMISSION - (ELECTRICITY_EMISSION_FACTOR / efficiency)));
 	}

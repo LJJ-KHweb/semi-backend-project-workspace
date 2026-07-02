@@ -17,6 +17,8 @@ public class RaspDayOfWeek {
 	private double distanceSum; // 거리 총합
 	private double kilowattSum; // 전기 소모량 총
 	private double carbonReduction ;
+	
+	// 매개변수 생성자를 통해 Mybatis로 값을 매핑해줘서 만들어줌
 	public RaspDayOfWeek(String day, double distanceSum, double kilowattSum) {
 		super();
 		this.day = day;

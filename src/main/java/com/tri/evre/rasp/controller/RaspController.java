@@ -27,11 +27,8 @@ public class RaspController {
 	private final RaspService raspService;
 	
 	
-	//하하호호
 	@PostMapping
 	public ResponseEntity<ApiResponse> save(@RequestBody RaspDto rasp){
-		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@{}", rasp);
-		
 		raspService.save(rasp);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("라즈베리 저장 성공", null));
 	}
@@ -39,7 +36,6 @@ public class RaspController {
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<RaspDayOfWeek>>> findAll(){
 		List<RaspDayOfWeek> results = raspService.findAll(); 
-		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@{}",results);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("라즈베리 조회에 성공했습니다.", results));
 	}
 	
