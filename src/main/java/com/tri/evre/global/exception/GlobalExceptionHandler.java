@@ -39,6 +39,7 @@ import com.tri.evre.global.exception.charger.ChargerUpdateException;
 import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
+import com.tri.evre.global.exception.rasp.RaspNotFoundException;
 import com.tri.evre.global.exception.shop.InsufficientInventoryException;
 import com.tri.evre.global.exception.shop.InsufficientMileageException;
 import com.tri.evre.global.exception.shop.InventoryUpdateException;
@@ -478,5 +479,11 @@ public class GlobalExceptionHandler {
 					.body(new ApiResponse(7010, e.getMessage(), null));
 		}
 	
+		
+	// 재준 추가 0701 라지베리 디비 조회 실패
+		@ExceptionHandler(RaspNotFoundException.class)
+		public ResponseEntity<ApiResponse> RaspNotFound(RaspNotFoundException e){
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(new ApiResponse(8001, e.getMessage(), null));
+		}
 
 }
