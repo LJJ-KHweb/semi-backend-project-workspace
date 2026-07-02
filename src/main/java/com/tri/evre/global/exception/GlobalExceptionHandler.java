@@ -1,12 +1,15 @@
 package com.tri.evre.global.exception;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
@@ -81,7 +84,7 @@ public class GlobalExceptionHandler {
 	 * 
 	 * return ResponseEntity.badRequest().body(new (400,"유효하지 않은 값입니다", errors)); }
 	 */
-
+/*
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleValid(MethodArgumentNotValidException e) {
 
@@ -94,8 +97,47 @@ public class GlobalExceptionHandler {
 	        ))
 	        .toList();
 
+	    log.info("================= errors : {}",errors);
+	    	
 	    return ResponseEntity.badRequest().body(
 	        Map.of("code", "DTO_VALIDATION_ERROR", "errors", errors)
+	    );
+	}
+	*/
+	
+/*
+	
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<?> handle(MethodArgumentTypeMismatchException e,
+	                                HandlerMethod handlerMethod) {
+
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    return ResponseEntity.badRequest().body(
+	        Map.of(
+	            "controller", controller,
+	            "method", method,
+	            "field", e.getName()
+	        )
+	    );
+	}
+	
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<?> handleJson(HttpMessageNotReadableException e) {
+
+	    return ResponseEntity.badRequest().body(
+	        Map.of("code", "JSON_PARSE_ERROR")
+	    );
+	}
+	
+	
+	@ExceptionHandler(BindException.class)
+	public ResponseEntity<?> handleBind(BindException e) {
+
+	    return ResponseEntity.badRequest().body(
+	        Map.of("code", "BIND_ERROR")
 	    );
 	}
 	
@@ -105,10 +147,96 @@ public class GlobalExceptionHandler {
 	
 	
 	
+	 
+	 	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<?> handle(MethodArgumentNotValidException e,
+	                                HandlerMethod handlerMethod) {
+
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    String field = e.getBindingResult()
+	                    .getFieldError()
+	                    .getField();
+
+	    String message = e.getBindingResult()
+	                       .getFieldError()
+	                       .getDefaultMessage();
+
+	    return ResponseEntity.badRequest().body(
+	        Map.of(
+	            "controller", controller,
+	            "method", method,
+	            "field", field,
+	            "message", message
+	        )
+	    );
+	}
+	 
+	 	
+ */
+	 	
 	
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
+	        MethodArgumentTypeMismatchException e,
+	        HandlerMethod handlerMethod) {
+
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    String message = String.format(
+	        "%s.%s - field '%s' type mismatch",
+	        controller, method, e.getName()
+	    );
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(400, message));
+	}
 	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e) {
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(400, "JSON_PARSE_ERROR"));
+	}
 	
-	
+	@ExceptionHandler(BindException.class)
+	public ResponseEntity<ApiResponse<Void>> handleBind(BindException e) {
+
+	    String field = e.getFieldError() != null
+	            ? e.getFieldError().getField()
+	            : "unknown";
+
+	    String message = e.getFieldError() != null
+	            ? e.getFieldError().getDefaultMessage()
+	            : "BIND_ERROR";
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(400, field + " : " + message));
+	}
+	 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ApiResponse<Void>> handleValid(
+	        MethodArgumentNotValidException e,
+	        HandlerMethod handlerMethod) {
+
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    var fieldError = e.getBindingResult().getFieldError();
+
+	    String field = fieldError != null ? fieldError.getField() : "unknown";
+	    String message = fieldError != null ? fieldError.getDefaultMessage() : "VALIDATION_ERROR";
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(400,
+	                    controller + "." + method + " | " + field + " : " + message));
+	}
 	
 	
 	
