@@ -2,7 +2,6 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,8 +15,8 @@ import com.tri.evre.file.service.FileService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
-import com.tri.evre.global.exception.product.ProductCreateException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
@@ -25,6 +24,9 @@ import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.station.model.dao.StationMapper;
+import com.tri.evre.station.model.dto.StationDto;
+import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ public class AdminService {
 
 	private final BoardMapper boardMapper;
 	private final ShopMapper shopMapper;
+	private final StationMapper stationMapper;
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
 	private final FileService fileService;
@@ -118,6 +121,39 @@ public class AdminService {
 		}
 		return results;
 	}
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
+	@Transactional
+	public StationSearchRequest findAllStations(PageInfo pageInfo) {
+		
+		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
+		if(pageInfo.getBoardCounts() < 1) {
+			throw new StationNotFoundException("충전소가 없습니다.");
+		}
+		
+		List<StationDto> stations = stationMapper.findAllStation(pageInfo);
+		
+		for(StationDto station : stations) {
+			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
+			station.setChargerCount(chargerCount);
+		}
+		
+		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
+		
+		return searchResponse;
+	} 
 }

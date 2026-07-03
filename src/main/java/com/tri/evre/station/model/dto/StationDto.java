@@ -33,4 +33,5 @@ public class StationDto {
 	private double lat;
 	private double lng;
 	private Date createDate;
+	private String status;
 }

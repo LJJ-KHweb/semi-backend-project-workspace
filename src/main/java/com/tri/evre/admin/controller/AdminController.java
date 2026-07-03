@@ -25,6 +25,7 @@ import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +106,25 @@ public class AdminController {
 		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("구매 수량 조회 성공", response));
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	//------07/03---심영도 - 충전소 전체 조회
+	@GetMapping("/chargeStations")
+	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
+											  							   , @RequestParam(name="size") int size) {
+		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+	}
+	
+	
+	
 	
 	
 	
