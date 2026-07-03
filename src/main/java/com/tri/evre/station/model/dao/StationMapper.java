@@ -140,5 +140,21 @@ public interface StationMapper {
 			""")
 	List<StationDto> findAllStation(PageInfo pageInfo);
 
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+					   STATION S
+				  JOIN
+					   CHARGER C ON S.STATION_NO = C.STATION_NO
+				 WHERE
+			 		   S.STATION_NO = #{stationNo}
+			 	   AND
+			 	   	   C.STATUS = 'N'
+			""")
+	int findUnableCharger(Long stationNo);
 
+
+	
+	
 }
