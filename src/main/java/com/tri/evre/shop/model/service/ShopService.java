@@ -50,9 +50,8 @@ public class ShopService {
 	public void purchase(Long productNo, CustomUserDetails user) {
 		
 		ProductDto product = shopMapper.findByProductNo(productNo);
-			
-		if(product == null) {
-
+		
+		if(product == null || product.getStatus().equals("N")) {
 			throw new ProductNotFoundException("없는 상품을 구매하시려고 하네요");
 		}
 		

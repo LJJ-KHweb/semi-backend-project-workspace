@@ -42,5 +42,19 @@
 					)
 	</insert>
 	
+	<!-- =========== 07/03 김선겸 -->
+	<!-- 삭제-->
+
+	<update id ="deleteProduct" >
+		UPDATE 
+				PRODUCT
+			SET
+				STATUS = 'N'
+			WHERE
+				PRODUCT_NO = #{productNo}
+	</update>
+
+
+
 	
 </mapper>
