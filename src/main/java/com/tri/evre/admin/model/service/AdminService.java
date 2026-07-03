@@ -16,6 +16,7 @@ import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.station.StationCreateException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
@@ -30,7 +31,6 @@ import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -172,7 +172,19 @@ public class AdminService {
 	}
 
 	@Transactional
-	public void insertStation(Station station, CustomUserDetails user) {
-		Station stationEntity = new station.builder()
+	public void insertStation(Station station) {
+		Station stationEntity = Station.builder()
+									   .stationName(station.getStationName())
+									   .stationDesc(station.getStationDesc())
+									   .region(station.getRegion())
+									   .address(station.getAddress())
+									   .lat(station.getLat())
+									   .lng(station.getLng())
+									   .build();
+		if(stationEntity == null) {
+			throw new StationCreateException("충전소 등록에 실패했습니다.");
+		}
+		
+		stationMapper.insertStation(stationEntity);
 	} 
 }

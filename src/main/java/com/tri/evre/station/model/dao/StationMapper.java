@@ -2,12 +2,14 @@ package com.tri.evre.station.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.station.model.vo.Station;
 
 @Mapper
 public interface StationMapper {
@@ -153,6 +155,13 @@ public interface StationMapper {
 			 	   	   C.STATUS = 'N'
 			""")
 	int findUnableCharger(Long stationNo);
+
+	@Insert("""
+				INSERT
+				  INTO
+				  	   
+			""")
+	void insertStation(Station stationEntity);
 
 
 	

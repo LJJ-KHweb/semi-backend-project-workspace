@@ -136,9 +136,8 @@ public class AdminController {
 	
 	// 07/03 심영도 충전소 작성
 	@PostMapping("/chargeStations/form")
-	public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid Station station
-														 , @AuthenticationPrincipal CustomUserDetails user) {
-		adminService.insertStation(station, user);
+	public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid Station station) {
+		adminService.insertStation(station);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 작성 성공", null));
 	}
 	
