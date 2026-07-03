@@ -28,6 +28,7 @@ import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.user.model.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,7 @@ public class AdminService {
 	//------------------07/01 김선겸---------
 	public ProductListResponse findAllProduct(PageInfo pageInfo) {
 		
-		List<ProductListDto> products = shopMapper.findAll(pageInfo);
+		List<ProductListDto> products = shopMapper.findAllProductAdmin(pageInfo);
 		
 		
 		// 테이블에 아무것도 없을때

@@ -127,6 +127,29 @@
 	</select>
 	
 	
+	<select id="findAllProductAdmin">
+		SELECT
+					P.PRODUCT_NO
+				  , P.PRODUCT_NAME
+				  , I.AMOUNT
+				  , P.PRICE
+				  , I.IMAGE
+				  , P.STATUS
+			  FROM 
+			  		PRODUCT P
+			  JOIN
+			  		INVENTORY I
+			  	ON
+			  		P.PRODUCT_NO = I.PRODUCT_NO
+			  	WHERE 
+			  		P.PRICE &lt; 0
+			  	ORDER
+			  	   BY
+			  	   	P.PRODUCT_NO
+			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	
 	<!-- 07/02 재준-->
 	
 	<select id="findAllPurchaseProduct">
