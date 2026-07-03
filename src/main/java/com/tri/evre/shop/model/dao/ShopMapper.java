@@ -44,5 +44,8 @@ public interface ShopMapper {
 
 	List<WeeklyProductPurchaseDto> findByPurchaseCount();
 
+	// admin용 상품 조회 메소드
+	List<ProductListDto> findAllProductAdmin(PageInfo pageInfo);
+
 
 }

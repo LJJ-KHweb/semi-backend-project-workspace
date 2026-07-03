@@ -28,6 +28,7 @@ import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.user.model.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,7 @@ public class AdminService {
 	//------------------07/01 김선겸---------
 	public ProductListResponse findAllProduct(PageInfo pageInfo) {
 		
-		List<ProductListDto> products = shopMapper.findAll(pageInfo);
+		List<ProductListDto> products = shopMapper.findAllProductAdmin(pageInfo);
 		
 		
 		// 테이블에 아무것도 없을때
@@ -113,6 +114,24 @@ public class AdminService {
 		
 		
 	} 
+	// ------------------ 07/03 김선겸
+	// --- 상품 삭제
+	@Transactional
+	public void deleteProduct(Long productNo) {
+		
+		if(shopMapper.findByProductNo(productNo) == null) throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+		
+		if(shopMapper.findByProductNo(productNo).getStatus().equals("N")) throw new ProductNotFoundException("이미 삭제된 상품입니다.");
+		
+		productMapper.deleteProduct(productNo);
+	} 
+	
+	
+	
+	
+	
+	
+	
 
 	// ---07/02 이재준-----------------------------------------------------
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
@@ -167,5 +186,7 @@ public class AdminService {
 		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
 		
 		return searchResponse;
-	} 
+	}
+
+
 }
