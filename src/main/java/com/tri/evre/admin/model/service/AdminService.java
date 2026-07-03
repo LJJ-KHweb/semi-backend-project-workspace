@@ -118,18 +118,18 @@ public class AdminService {
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
 		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct();
 		if(rankings.isEmpty()) {
-			throw new ProductNotFoundException("조회 실패했습니다.");
+			throw new ProductNotFoundException("사용가 상품 구매 랭킹 조회 실패했습니다.");
 		}
 		return rankings;
 	}
 
 	@Transactional
 	public List<WeeklyProductPurchaseDto> findByPurchaseCount() {
-		List<WeeklyProductPurchaseDto>  results = shopMapper.findByPurchaseCount();
-		if(results.isEmpty()) {
+		List<WeeklyProductPurchaseDto>  weeklyPurchaseList = shopMapper.findByPurchaseCount();
+		if(weeklyPurchaseList.isEmpty()) {
 			throw new ProductNotFoundException("요일별 상품 구매수량 조회 실패했습니다.");
 		}
-		return results;
+		return weeklyPurchaseList;
 	}
 	
 	
