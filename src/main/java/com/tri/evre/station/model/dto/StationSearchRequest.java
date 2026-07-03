@@ -19,4 +19,10 @@ public class StationSearchRequest {
 	private PageInfo pageInfo;
 	private SearchInfo searchInfo;
 	private List<StationDto> stations;
+	
+	public StationSearchRequest(PageInfo pageInfo, List<StationDto> stations) { // 관리자는 좌표랑 거리가 필요 없음
+		super();
+		this.pageInfo = pageInfo;
+		this.stations = stations;
+	}
 }

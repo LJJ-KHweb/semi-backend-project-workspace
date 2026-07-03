@@ -3,6 +3,7 @@ package com.tri.evre.shop.model.dto;
 import java.util.List;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.product.model.dto.ProductListDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
