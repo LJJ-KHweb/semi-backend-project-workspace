@@ -68,7 +68,7 @@ public class AdminController {
 	
 	// --------- 07-02--이재준-- 관리자 메인 페이지 상품 구매 랭킹 --------------------------
 	
-	@GetMapping("ranking")
+	@GetMapping("/ranking")
 	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
 		
 		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
@@ -76,7 +76,7 @@ public class AdminController {
 	}
 	
 	// ---------07-03--이재준-- 관리자 메인 페이지 요일별 상품 구매 차트 ----------------------
-	@GetMapping("charts")
+	@GetMapping("/charts")
 	public ResponseEntity<ApiResponse<List<WeeklyProductPurchaseDto>>> findByPurchaseCount(){ 
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findByPurchaseCount()));
