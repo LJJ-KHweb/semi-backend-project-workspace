@@ -112,6 +112,20 @@ public class AdminService {
 		
 		
 	} 
+	// ------------------ 07/03 김선겸
+	// --- 상품 삭제
+	@Transactional
+	public void deleteProduct(Long productNo) {
+		productMapper.deleteInventoryByProductNo(productNo);
+		productMapper.deleteProduct(productNo);
+	} 
+	
+	
+	
+	
+	
+	
+	
 
 	// ---07/02 이재준-----------------------------------------------------
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
@@ -155,5 +169,7 @@ public class AdminService {
 		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
 		
 		return searchResponse;
-	} 
+	}
+
+
 }

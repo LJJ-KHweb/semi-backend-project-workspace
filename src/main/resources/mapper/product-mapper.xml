@@ -42,5 +42,22 @@
 					)
 	</insert>
 	
+	<!-- =========== 07/03 김선겸 -->
+	<!-- 삭제-->
+	<delete id="deleteInventoryByProductNo">
+		DELETE
+			FROM
+				INVENTORY
+			WHERE
+				PRODUCT_NO = #{productNo}
+	</delete>
+	
+	<delete id="deleteProduct">
+		DELETE
+			FROM
+				PRODUCT
+			WHERE
+				PRODUCT_NO = #{productNo}
+	</delete>
 	
 </mapper>

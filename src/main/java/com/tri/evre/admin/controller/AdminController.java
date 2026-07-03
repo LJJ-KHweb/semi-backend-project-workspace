@@ -2,6 +2,7 @@ package com.tri.evre.admin.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,6 +91,19 @@ public class AdminController {
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
 							 .body(ApiResponse.created("상품 추가에 성공했습니다.", null));
 		
+	}
+	
+	//----------------------07/03 김선겸
+	// 상품 삭제
+	
+	@Delete("/proudcts")
+	public ResponseEntity<ApiResponse<?>> deleteProduct(@PathVariable("productNo") Long productNo){
+		
+		log.info("------------------------------------------productNo : {}",productNo);
+		
+		adminService.deleteProduct(productNo);
+		
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("상품 삭제 성공", null));
 	}
 	
 	
