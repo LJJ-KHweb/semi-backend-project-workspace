@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.station.model.dto.SearchInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
@@ -182,7 +183,19 @@ public interface StationMapper {
 			""")
 	void insertStation(Station stationEntity);
 
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+				       STATION
+				 WHERE
+				 	   LAT = #{lat}
+				   AND
+				   	   LNG = #{lng}
+			""")
+	int checkDuplicate(SearchInfo stationInfo);
 
+	
 	
 	
 }

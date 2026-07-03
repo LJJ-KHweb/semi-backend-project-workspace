@@ -27,9 +27,11 @@ import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
+import com.tri.evre.station.model.dto.SearchInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -198,10 +200,13 @@ public class AdminService {
 									   .lat(station.getLat())
 									   .lng(station.getLng())
 									   .build();
-		if(stationEntity == null) {
-			throw new StationCreateException("충전소 등록에 실패했습니다.");
+		
+		SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
+		
+		int duplicateStation = stationMapper.checkDuplicate(stationInfo);
+		if(duplicateStation > 0) {
+			throw new StationCreateException("충전소가 중복입니다.");
 		}
-		log.info("{}",stationEntity);
 		
 		stationMapper.insertStation(stationEntity);
 	} 
