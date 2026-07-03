@@ -137,6 +137,7 @@ public class AdminService {
 	
 	
 	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
+	@Transactional
 	public StationSearchRequest findAllStations(PageInfo pageInfo) {
 		
 		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
@@ -145,9 +146,6 @@ public class AdminService {
 		}
 		
 		List<StationDto> stations = stationMapper.findAllStation(pageInfo);
-		if(stations.isEmpty()) {
-			throw new StationNotFoundException("충전소가 없습니다.");
-		}
 		
 		for(StationDto station : stations) {
 			int chargerCount = stationMapper.findChargerCount(station.getStationNo());

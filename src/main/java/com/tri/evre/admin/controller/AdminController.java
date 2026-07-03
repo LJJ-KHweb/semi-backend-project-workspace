@@ -119,7 +119,7 @@ public class AdminController {
 	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
 											  							   , @RequestParam(name="size") int size) {
 		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
-		log.info("어드민 맞음");
+		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
 	}
 	
