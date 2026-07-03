@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.product.model.dao.ProductMapper">
+	
+	<insert id="insertProductTable">
+		<selectKey keyProperty="productNo"
+	               resultType="Long"
+	               order="BEFORE">
+	        SELECT SEQ_PRO.NEXTVAL FROM DUAL
+	    </selectKey>
+	
+		INSERT
+			INTO
+				PRODUCT
+					(
+						PRODUCT_NO
+					  , PRODUCT_NAME
+					  , USER_ID
+					  , PRICE
+					)
+					VALUES
+					(
+						#{productNo}
+					  , #{productName}
+					  , #{userId}
+					  , #{price}
+					)
+	</insert>
+	
+		<insert id="insertInventoryTable">
+	
+		INSERT
+			INTO
+				INVENTORY
+					VALUES
+					(
+						#{product.productNo}
+					  , #{product.amount}
+					  , #{filePath}
+					)
+	</insert>
+	
+	
+</mapper>

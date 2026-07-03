@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.admin.model.service.AdminService;
 import com.tri.evre.board.model.dto.BoardDto;
@@ -18,9 +21,14 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.product.MissingInventoryFieldException;
+import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
+import com.tri.evre.station.model.dto.StationSearchRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,14 +73,67 @@ public class AdminController {
 		
 	}
 	
-	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
+	// -------------07-02--김선겸--
+	//--------------상품 추가 기능---
 	
-	@GetMapping("ranking")
+	@PostMapping("/proudcts")
+	public ResponseEntity<ApiResponse<Void>> insertProduct(@ModelAttribute @Valid ProductDto product,
+														   @RequestParam(name="file", required = false) MultipartFile file,
+														   @AuthenticationPrincipal CustomUserDetails user){
+
+		if (file == null || file.isEmpty()) {
+		    throw new MissingInventoryFieldException("파일이 없어요");
+		}
+		
+		
+		adminService.insertProduct(user, product, file);
+		
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
+							 .body(ApiResponse.created("상품 추가에 성공했습니다.", null));
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
+
+	
+	@GetMapping("/ranking")
 	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
 		
 		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("구매 수량 조회 성공", response));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 랭킹 조회에 성공했습니다.", response));
 	}
+	
+	// ---------07-03--이재준-- 관리자 메인 페이지 요일별 상품 구매 차트 ----------------------
+	@GetMapping("/charts")
+	public ResponseEntity<ApiResponse<List<WeeklyProductPurchaseDto>>> findByPurchaseCount(){ 
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findByPurchaseCount()));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	//------07/03---심영도 - 충전소 전체 조회
+	@GetMapping("/chargeStations")
+	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
+											  							   , @RequestParam(name="size") int size) {
+		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+	}
+	
+	
+	
 	
 	
 	

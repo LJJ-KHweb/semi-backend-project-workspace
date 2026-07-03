@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
@@ -110,6 +111,34 @@ public interface StationMapper {
 				   	   STATION_NO = #{stationNo}
 			""")
 	StationDto findByStationNo(Long stationNo);
+
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+				  	   STATION
+			""")
+	int findAllStationCount();
+
+	@Select("""
+				SELECT
+					   STATION_NO
+					 , STATION_NAME
+					 , REGION
+					 , ADDRESS
+					 , STATION_DESC
+					 , LAT
+					 , LNG
+					 , CREATE_DATE
+					 , STATUS
+				  FROM
+				  	   STATION
+				 ORDER
+				 	BY
+				 	   STATION_NO DESC
+				OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+			""")
+	List<StationDto> findAllStation(PageInfo pageInfo);
 
 
 }

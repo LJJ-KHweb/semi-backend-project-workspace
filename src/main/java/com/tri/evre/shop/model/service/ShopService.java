@@ -13,12 +13,12 @@ import com.tri.evre.global.exception.shop.InventoryUpdateException;
 import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.shop.MileageHistoryNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.product.model.dto.InventoryDto;
+import com.tri.evre.product.model.dto.ProductDto;
+import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseListDto;
-import com.tri.evre.shop.model.dto.InventoryDto;
-import com.tri.evre.shop.model.dto.ProductDto;
-import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 
 import lombok.RequiredArgsConstructor;
