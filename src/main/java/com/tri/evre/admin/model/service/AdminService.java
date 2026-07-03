@@ -17,6 +17,9 @@ import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.station.model.dao.StationMapper;
+import com.tri.evre.station.model.dto.StationDto;
+import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,7 @@ public class AdminService {
 
 	private final BoardMapper boardMapper;
 	private final ShopMapper shopMapper;
+	private final StationMapper stationMapper;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -78,6 +82,15 @@ public class AdminService {
 		}
 		
 		return new ProductListResponse(pageInfo, products);
+	}
+
+	
+	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
+	public StationSearchRequest findAllStations(PageInfo pageInfo, double lat, double lng, int dist) {
+		
+		List<StationDto> stations = stationMapper.findAllStations(pageInfo, lat, lng, dist);
+		
+		return null;
 	} 
 
 	

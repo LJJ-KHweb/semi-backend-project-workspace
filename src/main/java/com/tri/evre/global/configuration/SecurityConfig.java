@@ -55,7 +55,8 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/shop/his-products").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/proudcts/**").hasRole("ADMIN");
 					
-					
+					// 07/03 심영도 관리자 충전소 전체조회
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/chargerStations/**").hasRole("ADMIN");
 					
 					
 					// 06/30 재준 추가

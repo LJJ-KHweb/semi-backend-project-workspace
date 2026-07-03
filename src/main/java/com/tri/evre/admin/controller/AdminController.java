@@ -17,6 +17,8 @@ import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.station.model.dto.StationDto;
+import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,25 @@ public class AdminController {
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("사용내역 전체 조회 성공", response));
 		
 	}
+	
+	
+	
+	
+	//------07/03---심영도 - 충전소 전체 조회
+	@GetMapping("/stations")
+	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
+											  , @RequestParam(name="size") int size
+											  , @RequestParam(name="lat") double lat
+											  , @RequestParam(name="lng") double lng
+											  , @RequestParam(name="dist") int dist) {
+		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size), lat, lng, dist);
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+	}
+	
+	
+	
+	
 	
 	
 }
