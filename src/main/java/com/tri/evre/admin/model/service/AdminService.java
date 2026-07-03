@@ -5,18 +5,24 @@ import java.util.List;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.board.model.dao.BoardMapper;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.file.service.FileService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
+import com.tri.evre.global.exception.product.ProductCreateException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.product.model.dao.ProductMapper;
+import com.tri.evre.product.model.dto.ProductDto;
+import com.tri.evre.product.model.dto.ProductListDto;
+import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
-import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 
@@ -30,6 +36,9 @@ public class AdminService {
 
 	private final BoardMapper boardMapper;
 	private final ShopMapper shopMapper;
+	//---- 07/02 선겸--
+	private final ProductMapper productMapper;
+	private final FileService fileService;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -70,7 +79,7 @@ public class AdminService {
 	//------------------07/01 김선겸---------
 	public ProductListResponse findAllProduct(PageInfo pageInfo) {
 		
-		List<ProductListDto> products = shopMapper.findAllProduct(pageInfo);
+		List<ProductListDto> products = shopMapper.findAll(pageInfo);
 		
 		
 		// 테이블에 아무것도 없을때
@@ -81,6 +90,26 @@ public class AdminService {
 		return new ProductListResponse(pageInfo, products);
 	}
 
+	//-------------------------------07/02
+	@Transactional
+	public void insertProduct(CustomUserDetails user, ProductDto product, MultipartFile file) {
+		
+		Product productEntity = Product.builder()
+									   .userId(user.getUsername())
+									   .productName(product.getProductName())
+									   .price(product.getPrice())
+									   .amount(product.getAmount())
+									   .build();
+		
+		productMapper.insertProductTable(productEntity);
+		
+		String filePath = fileService.store(file);
+		
+		productMapper.insertInventoryTable(productEntity, filePath);
+		
+		
+	} 
+
 	// ---07/02 이재준-----------------------------------------------------
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
 		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
@@ -90,7 +119,5 @@ public class AdminService {
 		return results;
 	}
 
-
-	
 
 }

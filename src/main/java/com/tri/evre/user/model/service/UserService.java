@@ -3,7 +3,7 @@ package com.tri.evre.user.model.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.tri.evre.global.exception.DuplicateUserIdException;
+import com.tri.evre.global.exception.user.DuplicateResourceException;
 import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.vo.User;
@@ -25,7 +25,7 @@ public class UserService {
 		
 		if(result > 0 ) {
 			//예외 처리 아이디가 중복됨
-			throw new DuplicateUserIdException("이미 사용중인 아이디입니다");
+			throw new DuplicateResourceException("이미 사용중인 아이디입니다");
 		}
 		
 		User userEntity = User.builder().userId(user.getUserId())
