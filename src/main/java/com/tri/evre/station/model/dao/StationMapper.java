@@ -159,7 +159,17 @@ public interface StationMapper {
 	@Insert("""
 				INSERT
 				  INTO
-				  	   
+				  	   STATION
+				VALUES
+					   (
+					   	SEQ_STATION.NEXTVAL
+					  , #{stationName}
+					  , #{region}
+					  , #{address}
+					  , #{stationDesc}
+					  , #{lat}
+					  , #{lng}
+					   )
 			""")
 	void insertStation(Station stationEntity);
 

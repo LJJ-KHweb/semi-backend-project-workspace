@@ -184,6 +184,7 @@ public class AdminService {
 		if(stationEntity == null) {
 			throw new StationCreateException("충전소 등록에 실패했습니다.");
 		}
+		log.info("{}",stationEntity);
 		
 		stationMapper.insertStation(stationEntity);
 	} 
