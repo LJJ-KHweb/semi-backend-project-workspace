@@ -77,6 +77,8 @@ public class SecurityConfig {
 					// 07/02 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp/mypage").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/ranking", "api/admin/charts").hasRole("ADMIN");
+					// 07/03
+					requests.requestMatchers(HttpMethod.PATCH, "/api/users").authenticated();
 					
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

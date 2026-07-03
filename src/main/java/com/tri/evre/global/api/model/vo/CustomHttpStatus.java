@@ -30,6 +30,8 @@ public enum CustomHttpStatus {
     ACCESS_TOKEN_EXPIRED(400),
     // Refresh Token 만료
     REFRESH_TOKEN_EXPIRED(400),
+    // 회원 정보 수정 실패
+    USER_UPDATE_FAIL(409),
     
     
 	//---------------------------------------

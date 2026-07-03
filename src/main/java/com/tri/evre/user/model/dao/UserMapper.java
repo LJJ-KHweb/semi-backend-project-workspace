@@ -9,37 +9,12 @@ import com.tri.evre.user.model.vo.User;
 @Mapper
 public interface UserMapper {
 
+	int validateDuplicateUserId(String userId);
 	
-	@Select("""
-				SELECT
-						COUNT(*)
-				  FROM
-				  		SEMI_USER
-				 WHERE
-				 		USER_ID = #{userId}
-			""")
-	int checkId(String userId);
-	
-	
-	
-	@Insert("""
-				INSERT
-				  INTO
-				  		SEMI_USER
-				  		(
-				  		USER_ID
-				  	 ,	USER_PWD
-				  	 ,	USER_NAME
-				  	 ,	EMAIL
-				  	 	)
-				VALUES
-						(
-						#{userId}
-					 ,	#{userPwd}
-					 ,	#{userName}
-					 ,	#{email}
-					 	)
-			""")
-	int signup(User userEntity);
+	void signup(User userEntity);
+
+	String findPwd();
+
+	int update(User userEntity);
 
 }
