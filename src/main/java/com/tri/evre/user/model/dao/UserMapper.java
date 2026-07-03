@@ -40,6 +40,6 @@ public interface UserMapper {
 					 ,	#{email}
 					 	)
 			""")
-	int signup(User userEntity);
+	void signup(User userEntity);
 
 }
