@@ -66,6 +66,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp").permitAll();
 					// 07/02 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp/mypage").authenticated();
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/charts").hasRole("ADMIN");
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

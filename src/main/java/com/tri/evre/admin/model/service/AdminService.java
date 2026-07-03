@@ -2,6 +2,7 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +64,6 @@ public class AdminService {
 		if(result < 1) {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
-		
 	}
 
 	
@@ -78,7 +79,17 @@ public class AdminService {
 		}
 		
 		return new ProductListResponse(pageInfo, products);
-	} 
+	}
+
+	// ---07/02 이재준-----------------------------------------------------
+	public List<PurchaseProductDto> findAllPurchaseProduct() {
+		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
+		if(results == null) {
+			throw new ProductNotFoundException("조회 실패했습니다.");
+		}
+		return results;
+	}
+
 
 	
 
