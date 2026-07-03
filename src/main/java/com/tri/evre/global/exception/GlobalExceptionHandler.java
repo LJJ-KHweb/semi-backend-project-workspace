@@ -132,6 +132,13 @@ public class GlobalExceptionHandler {
 	// -----------------------------------------------------------------------------------
 
 	// 일치하는 게시글이 없습니다.
+	/*
+	 * @ExceptionHandler(BoardNotFoundException.class) public
+	 * ResponseEntity<ApiResponse> BoardNotFound(BoardNotFoundException e) { return
+	 * ResponseEntity.status(CustomHttpStatus.BOARD_NOT_FOUND.getCode()) .body(new
+	 * ApiResponse(2000, e.getMessage(), null)); }
+	 */
+	
 	@ExceptionHandler(BoardNotFoundException.class)
 	public ResponseEntity<ApiResponse> BoardNotFound(BoardNotFoundException e) {
 		return ResponseEntity.status(CustomHttpStatus.BOARD_NOT_FOUND.getCode())

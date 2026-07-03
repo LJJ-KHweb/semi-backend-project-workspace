@@ -23,6 +23,7 @@ public class RaspService {
 	private final double ELECTRICITY_EMISSION_FACTOR = 0.46; // 전력을 만들때의 탄소 배출 평균
 	private final RaspMapper raspMapper;
 
+	
 	// 탄소절감량 계산 공식
 	private List<RaspResponseDto> calculateCarbonReduction(List<RaspDayOfWeek> results) {
 		List<RaspResponseDto> responseResults = new ArrayList();
@@ -37,9 +38,8 @@ public class RaspService {
 			
 		}
 		return responseResults;
-		
 	}
-
+	
 	public void save(RaspDto rasp) {
 		int reuslt = raspMapper.save(rasp);
 	}
