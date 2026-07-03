@@ -24,6 +24,7 @@ import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
@@ -115,11 +116,20 @@ public class AdminService {
 
 	// ---07/02 이재준-----------------------------------------------------
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
-		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
-		if(results == null) {
-			throw new ProductNotFoundException("조회 실패했습니다.");
+		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct();
+		if(rankings.isEmpty()) {
+			throw new ProductNotFoundException("사용가 상품 구매 랭킹 조회 실패했습니다.");
 		}
-		return results;
+		return rankings;
+	}
+
+	@Transactional
+	public List<WeeklyProductPurchaseDto> findByPurchaseCount() {
+		List<WeeklyProductPurchaseDto>  weeklyPurchaseList = shopMapper.findByPurchaseCount();
+		if(weeklyPurchaseList.isEmpty()) {
+			throw new ProductNotFoundException("요일별 상품 구매수량 조회 실패했습니다.");
+		}
+		return weeklyPurchaseList;
 	}
 	
 	
