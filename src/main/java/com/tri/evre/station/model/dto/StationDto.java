@@ -34,4 +34,5 @@ public class StationDto {
 	private double lng;
 	private Date createDate;
 	private String status;
+	private int unableChargerCount; // 충전소에 충전기 몇대 고장났는 지
 }
