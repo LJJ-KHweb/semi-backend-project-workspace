@@ -158,7 +158,7 @@
 		  		H.PRODUCT_NO, P.PRODUCT_NAME
 		 ORDER
 		 	BY
-		 		P.PRODUCT_NAME
+		 		PURCHASE_COUNT DESC
 	</select>
 	
 	

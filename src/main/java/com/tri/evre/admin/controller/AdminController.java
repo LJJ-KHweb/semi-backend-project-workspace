@@ -67,7 +67,7 @@ public class AdminController {
 	
 	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
 	
-	@GetMapping("charts")
+	@GetMapping("ranking")
 	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
 		
 		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
