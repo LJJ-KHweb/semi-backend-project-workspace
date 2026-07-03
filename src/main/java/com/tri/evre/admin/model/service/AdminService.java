@@ -15,16 +15,12 @@ import com.tri.evre.file.service.FileService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
-import com.tri.evre.global.exception.product.ProductCreateException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
-<<<<<<< HEAD
 import com.tri.evre.global.exception.station.StationNotFoundException;
-=======
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.product.model.vo.Product;
->>>>>>> 6d2ad815b732271a9185c9e30a94646c3f3d8f0a
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
@@ -42,13 +38,10 @@ public class AdminService {
 
 	private final BoardMapper boardMapper;
 	private final ShopMapper shopMapper;
-<<<<<<< HEAD
 	private final StationMapper stationMapper;
-=======
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
 	private final FileService fileService;
->>>>>>> 6d2ad815b732271a9185c9e30a94646c3f3d8f0a
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -128,7 +121,6 @@ public class AdminService {
 		}
 		return results;
 	}
-<<<<<<< HEAD
 	
 	
 	
@@ -166,21 +158,4 @@ public class AdminService {
 		
 		return searchResponse;
 	} 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-=======
-
->>>>>>> 6d2ad815b732271a9185c9e30a94646c3f3d8f0a
-
 }
