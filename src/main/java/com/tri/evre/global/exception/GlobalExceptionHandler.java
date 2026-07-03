@@ -65,6 +65,7 @@ import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.global.exception.station.StationReadException;
 import com.tri.evre.global.exception.station.StationUpdateException;
 import com.tri.evre.global.exception.user.AccessTokenExprireException;
+import com.tri.evre.global.exception.user.ConcurrentUpdateException;
 import com.tri.evre.global.exception.user.DuplicateResourceException;
 import com.tri.evre.global.exception.user.InvalidUserFormatException;
 import com.tri.evre.global.exception.user.MissingAuthFieldException;
@@ -236,6 +237,12 @@ public class GlobalExceptionHandler {
 				.body(new ApiResponse(1006, e.getMessage(), null));
 	}
 	
+	// update 수행시 동시 요청시 발생하는 에러 ConcurrentUpdateException
+	@ExceptionHandler(ConcurrentUpdateException.class)
+	public ResponseEntity<ApiResponse> ConcurrentUpdate(ConcurrentUpdateException e) {
+		return ResponseEntity.status(CustomHttpStatus.USER_UPDATE_FAIL.getCode())
+				.body(new ApiResponse(1007, e.getMessage(), null));
+	}
 	
 	
 
