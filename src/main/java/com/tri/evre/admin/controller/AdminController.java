@@ -1,5 +1,7 @@
 package com.tri.evre.admin.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +24,7 @@ import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +95,16 @@ public class AdminController {
 	
 	
 	
+	
+	
+	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
+	
+	@GetMapping("ranking")
+	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
+		
+		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("구매 수량 조회 성공", response));
+	}
 	
 	
 	

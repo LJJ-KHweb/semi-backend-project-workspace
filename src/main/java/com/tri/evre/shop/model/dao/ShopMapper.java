@@ -11,6 +11,7 @@ import com.tri.evre.product.model.dto.InventoryDto;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 
 @Mapper
 public interface ShopMapper {
@@ -37,5 +38,6 @@ public interface ShopMapper {
 	List<HistoryPurchaseDto> findByHistoryPurchase(@Param("pageInfo")PageInfo pageInfo, 
 												   @Param("user") CustomUserDetails user);
 
-	
+	// ---07/02 이재준-----------------------------------------------------
+	List<PurchaseProductDto> findAllPurchaseProduct();
 }

@@ -11,9 +11,9 @@ import com.tri.evre.product.model.vo.Product;
 public interface ProductMapper {
 	
 	
-	int insertProductTable(Product product);
+	void insertProductTable(Product product);
 	
-	int insertInventoryTable(@Param("product")Product product
+	void insertInventoryTable(@Param("product")Product product
 						   ,@Param("filePath") String filePath);
 
 

@@ -2,6 +2,7 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -71,7 +73,6 @@ public class AdminService {
 		if(result < 1) {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
-		
 	}
 
 	
@@ -89,6 +90,7 @@ public class AdminService {
 		return new ProductListResponse(pageInfo, products);
 	}
 
+	//-------------------------------07/02
 	@Transactional
 	public void insertProduct(CustomUserDetails user, ProductDto product, MultipartFile file) {
 		
@@ -99,22 +101,23 @@ public class AdminService {
 									   .amount(product.getAmount())
 									   .build();
 		
-		int result = productMapper.insertProductTable(productEntity);
-		
-		if(result < 1) {
-			throw new ProductCreateException("상품 추가에 실패");
-		}
+		productMapper.insertProductTable(productEntity);
 		
 		String filePath = fileService.store(file);
 		
-		result = productMapper.insertInventoryTable(productEntity, filePath);
+		productMapper.insertInventoryTable(productEntity, filePath);
 		
-		if(result < 1) {
-			throw new ProductCreateException("상품 추가에 실패");
-		}
 		
 	} 
 
-	
+	// ---07/02 이재준-----------------------------------------------------
+	public List<PurchaseProductDto> findAllPurchaseProduct() {
+		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
+		if(results == null) {
+			throw new ProductNotFoundException("조회 실패했습니다.");
+		}
+		return results;
+	}
+
 
 }

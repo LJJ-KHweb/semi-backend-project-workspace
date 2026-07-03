@@ -1,8 +1,12 @@
 package com.tri.evre.global.exception;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -74,6 +78,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler { 	
 	
+	
+	// 예외가 터진 method의 명으로 customHttpStatusCode를 생성하는 코드
+	// 만약 9999가 터지면 method명을 추가해서 해당 에러로 반환해주면 해결됨
 	private int getcode(String msg) {
 		if(msg.contains("login")) {
 			return 1000;
@@ -92,11 +99,20 @@ public class GlobalExceptionHandler {
 	}
 	
 	// URL 파라미터 타입이 안 맞을 때 parameter의 타입이 맞지 않음 page={} < = 요게 글자일때 터트리는 에러
+	// 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
 	        MethodArgumentTypeMismatchException e,
 	        HandlerMethod handlerMethod) {
+		
+		
+		// HandlerMethod는 Controller에서 어떤 메소드가 호출됐는지에 대한 정보를 가지고 있음
+		/*
+			Class<?> clazz = handlerMethod.getBeanType();	clazz에 controller명.class가 담김 
 
+			String controller = clazz.getSimpleName(); calzz(controller명.class)에서 .class빼고 controller명만 가져옴
+		 */
+		
 	    String controller = handlerMethod.getBeanType().getSimpleName();
 	    String method = handlerMethod.getMethod().getName();
 
@@ -112,42 +128,60 @@ public class GlobalExceptionHandler {
 	            .body(ApiResponse.fail(code, message));
 	}
 	
-	// JSON 자체가 깨졌을 때, 즉 숫자여야하는데 글자가 들어올때
+	// JSON 자체가 깨졌을 때
+	/*
+	 * {
+	 * 		"문자열" : 문자열		<= 타입 안맞음
+	 * }
+	 */
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e
 													  , HandlerMethod handlerMethod) {
 		
 	    String method = handlerMethod.getMethod().getName();
-		
-	    
+		  
 	    int code = getcode(method);
-	    
 	    
 	    return ResponseEntity
 	            .badRequest()
 	            .body(ApiResponse.fail(code, method + ": json으로 넘어온 값의 형식이 잘못되었습니다."));
 	}
 	
-	// 이게 원래 유효성 검사때 터지는 에러, 근데 if문으로 에러가 났을 떄 
+	// 이게 원래 유효성 검사때 터지는 에러
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ApiResponse<Void>> handleValid(
+	public ResponseEntity<ApiResponse<Map<String, Object>>> handleValid(
 	        MethodArgumentNotValidException e,
 	        HandlerMethod handlerMethod) {
 
+	    // 1. 어떤 Controller / Method인지
 	    String controller = handlerMethod.getBeanType().getSimpleName();
 	    String method = handlerMethod.getMethod().getName();
 
-	    var fieldError = e.getBindingResult().getFieldError();
+	    // 2. 모든 필드 에러 가져오기
+	    List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
-	    String field = fieldError != null ? fieldError.getField() : "unknown";
-	    String message = fieldError != null ? "값의 입력형식이 올바르지 않습니다." : "VALIDATION_ERROR";
-	    
+	    // 3. 에러 리스트 구성
+	    List<Map<String, String>> errors = fieldErrors.stream()
+	            .map(err -> {
+	                Map<String, String> map = new HashMap<>();
+	                map.put("field", err.getField());
+	                map.put("message", err.getDefaultMessage());
+	                return map;
+	            })
+	            .toList();
+
+	    // 4. 코드
 	    int code = getcode(method);
-	    
+
+	    // 5. 최종 payload 구성
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("controller", controller);
+	    response.put("method", method);
+	    response.put("errors", errors);
+
 	    return ResponseEntity
 	            .badRequest()
-	            .body(ApiResponse.fail(code,
-	                    controller + "." + method + " | " + field + " : " + message));
+	            .body(ApiResponse.fail(code, response.toString()));
 	}
 
 	
@@ -209,6 +243,13 @@ public class GlobalExceptionHandler {
 	// -----------------------------------------------------------------------------------
 
 	// 일치하는 게시글이 없습니다.
+	/*
+	 * @ExceptionHandler(BoardNotFoundException.class) public
+	 * ResponseEntity<ApiResponse> BoardNotFound(BoardNotFoundException e) { return
+	 * ResponseEntity.status(CustomHttpStatus.BOARD_NOT_FOUND.getCode()) .body(new
+	 * ApiResponse(2000, e.getMessage(), null)); }
+	 */
+	
 	@ExceptionHandler(BoardNotFoundException.class)
 	public ResponseEntity<ApiResponse> BoardNotFound(BoardNotFoundException e) {
 		return ResponseEntity.status(CustomHttpStatus.BOARD_NOT_FOUND.getCode())

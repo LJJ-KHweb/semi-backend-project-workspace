@@ -26,7 +26,7 @@ public class UserDto {
 	@Pattern(regexp= "^[0-9a-zA-Z._%+-]{4,20}@[0-9a-zA-Z.-]{4,10}\\.(com|kr)$",  message = "이메일 형식이 올바르지 않습니다.")
 	private String email;
 	@NotBlank
-	@Pattern(regexp="^[가-힣]{2,6}$")
+	@Pattern(regexp="^[가-힣]{2,6}$", message="이름 형식이 올바르지 않습니다.")
 	private String userName;
 	private String role;
 	private Date createDate;
