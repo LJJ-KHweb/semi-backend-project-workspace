@@ -64,7 +64,7 @@ public class AdminController {
 	
 	
 	// -------------07-01--김선겸-- 상품관리 기능중 전체 조회------------------------------- 
-	@GetMapping("/proudcts")
+	@GetMapping("/products")
 	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page") int page
 																   		  ,@RequestParam(name="size") int size){
 		
@@ -77,7 +77,7 @@ public class AdminController {
 	// -------------07-02--김선겸--
 	//--------------상품 추가 기능---
 	
-	@PostMapping("/proudcts")
+	@PostMapping("/products")
 	public ResponseEntity<ApiResponse<Void>> insertProduct(@ModelAttribute @Valid ProductDto product,
 														   @RequestParam(name="file", required = false) MultipartFile file,
 														   @AuthenticationPrincipal CustomUserDetails user){
@@ -97,10 +97,8 @@ public class AdminController {
 	//----------------------07/03 김선겸
 	// 상품 삭제
 	
-	@Delete("/proudcts")
-	public ResponseEntity<ApiResponse<?>> deleteProduct(@PathVariable("productNo") Long productNo){
-		
-		log.info("------------------------------------------productNo : {}",productNo);
+	@DeleteMapping("/products/{productNo}")
+	public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable("productNo") Long productNo){
 		
 		adminService.deleteProduct(productNo);
 		
