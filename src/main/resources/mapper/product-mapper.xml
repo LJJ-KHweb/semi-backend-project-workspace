@@ -44,20 +44,17 @@
 	
 	<!-- =========== 07/03 김선겸 -->
 	<!-- 삭제-->
-	<delete id="deleteInventoryByProductNo">
-		DELETE
-			FROM
-				INVENTORY
-			WHERE
-				PRODUCT_NO = #{productNo}
-	</delete>
-	
-	<delete id="deleteProduct">
-		DELETE
-			FROM
+
+	<update id ="deleteProduct" >
+		UPDATE 
 				PRODUCT
+			SET
+				STATUS = 'N'
 			WHERE
 				PRODUCT_NO = #{productNo}
-	</delete>
+	</update>
+
+
+
 	
 </mapper>

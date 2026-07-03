@@ -14,6 +14,7 @@
 				  , I.AMOUNT
 				  , P.PRICE
 				  , I.IMAGE
+				  , P.STATUS
 			  FROM 
 			  		PRODUCT P
 			  JOIN
@@ -22,6 +23,8 @@
 			  		P.PRODUCT_NO = I.PRODUCT_NO
 			  	WHERE 
 			  		P.PRICE &lt; 0
+			  	AND
+			  		P.STATUS='Y'
 			  	ORDER
 			  	   BY
 			  	   	P.PRODUCT_NO
@@ -37,6 +40,7 @@
 					  , PRODUCT_NAME
 					  , PRICE
 					  , USER_ID
+					  , STATUS
 				FROM
 						PRODUCT	  		
 				WHERE

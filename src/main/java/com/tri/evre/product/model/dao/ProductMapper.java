@@ -16,9 +16,6 @@ public interface ProductMapper {
 	void insertInventoryTable(@Param("product")Product product
 						   ,@Param("filePath") String filePath);
 
-	int deleteInventoryByProductNo(Long productNo);
-
-	int deleteProduct(Long productNo);
-
+	void deleteProduct(Long productNo);
 
 }

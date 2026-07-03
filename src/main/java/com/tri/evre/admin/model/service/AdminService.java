@@ -118,14 +118,9 @@ public class AdminService {
 	@Transactional
 	public void deleteProduct(Long productNo) {
 		
-		// inventory테이블과 product 테이블을 삭제해야하는데
-		// inventory테이블이 product_no를 foreign key로 받고 있으서 inventory테이블에서 먼저 삭제
-		if(productMapper.deleteInventoryByProductNo(productNo) < 1) {
-			throw new ProductNotFoundException("없는 상품을 지우려고 해요");
-		}
-		if(productMapper.deleteProduct(productNo)<1) {
-			throw new ProductNotFoundException("없는 상품을 지우려고 해요");
-		}
+		if(shopMapper.findByProductNo(productNo).getStatus().equals("N")) throw new ProductNotFoundException("이미 삭제된 상품입니다.");
+		
+		productMapper.deleteProduct(productNo);
 	} 
 	
 	
