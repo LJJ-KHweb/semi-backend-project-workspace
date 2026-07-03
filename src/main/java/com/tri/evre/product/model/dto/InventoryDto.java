@@ -1,4 +1,4 @@
-package com.tri.evre.shop.model.dto;
+package com.tri.evre.product.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDto {
+public class InventoryDto {
 	private Long productNo;
-	private String userId;
-	private String productName;
-	private int price;
+	private int amount;
+	private String image;
 }

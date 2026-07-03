@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Param;
 
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.product.model.dto.InventoryDto;
+import com.tri.evre.product.model.dto.ProductDto;
+import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
-import com.tri.evre.shop.model.dto.InventoryDto;
-import com.tri.evre.shop.model.dto.ProductDto;
-import com.tri.evre.shop.model.dto.ProductListDto;
 
 @Mapper
 public interface ShopMapper {
@@ -36,8 +36,6 @@ public interface ShopMapper {
 	
 	List<HistoryPurchaseDto> findByHistoryPurchase(@Param("pageInfo")PageInfo pageInfo, 
 												   @Param("user") CustomUserDetails user);
-
-	List<ProductListDto> findAllProduct(PageInfo pageInfo);
 
 	
 }

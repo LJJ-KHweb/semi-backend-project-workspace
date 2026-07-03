@@ -1,7 +1,5 @@
 package com.tri.evre.global.exception;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
@@ -46,6 +44,7 @@ import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
 import com.tri.evre.global.exception.product.InvalidProductFormatException;
+import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.global.exception.product.ProductCreateException;
 import com.tri.evre.global.exception.rasp.RaspNotFoundException;
 import com.tri.evre.global.exception.shop.InsufficientInventoryException;
@@ -73,110 +72,26 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
-	/*
-	 * @ExceptionHandler(MethodArgumentNotValidException.class) public
-	 * ResponseEntity<ErrorResponse>
-	 * handlerArgumentNotValid(MethodArgumentNotValidException e) { Map<String,
-	 * String> errors = new HashMap();
-	 * e.getBindingResult().getFieldErrors().forEach(err ->
-	 * errors.put(err.getField(), err.getDefaultMessage()));
-	 * 
-	 * return ResponseEntity.badRequest().body(new (400,"유효하지 않은 값입니다", errors)); }
-	 */
-/*
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handleValid(MethodArgumentNotValidException e) {
-
-	    List<Map<String, String>> errors = e.getBindingResult()
-	        .getFieldErrors()
-	        .stream()
-	        .map(err -> Map.of(
-	            "field", err.getField(),
-	            "reason", err.getDefaultMessage()
-	        ))
-	        .toList();
-
-	    log.info("================= errors : {}",errors);
-	    	
-	    return ResponseEntity.badRequest().body(
-	        Map.of("code", "DTO_VALIDATION_ERROR", "errors", errors)
-	    );
-	}
-	*/
+public class GlobalExceptionHandler { 	
 	
-/*
-	
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<?> handle(MethodArgumentTypeMismatchException e,
-	                                HandlerMethod handlerMethod) {
+	private int getcode(String msg) {
+		if(msg.contains("login")) {
+			return 1000;
+		}
+		if(msg.contains("signup")) {
+			return 1000;
+		}
+		if(msg.contains("Board")) {
+			return 2000;
+		}
+		if(msg.contains("Product")) {
+			return 7000;
+		}
 
-	    String controller = handlerMethod.getBeanType().getSimpleName();
-	    String method = handlerMethod.getMethod().getName();
-
-	    return ResponseEntity.badRequest().body(
-	        Map.of(
-	            "controller", controller,
-	            "method", method,
-	            "field", e.getName()
-	        )
-	    );
+		return 9999;
 	}
 	
-	
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<?> handleJson(HttpMessageNotReadableException e) {
-
-	    return ResponseEntity.badRequest().body(
-	        Map.of("code", "JSON_PARSE_ERROR")
-	    );
-	}
-	
-	
-	@ExceptionHandler(BindException.class)
-	public ResponseEntity<?> handleBind(BindException e) {
-
-	    return ResponseEntity.badRequest().body(
-	        Map.of("code", "BIND_ERROR")
-	    );
-	}
-	
-	
-	
-	
-	
-	
-	
-	 
-	 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<?> handle(MethodArgumentNotValidException e,
-	                                HandlerMethod handlerMethod) {
-
-	    String controller = handlerMethod.getBeanType().getSimpleName();
-	    String method = handlerMethod.getMethod().getName();
-
-	    String field = e.getBindingResult()
-	                    .getFieldError()
-	                    .getField();
-
-	    String message = e.getBindingResult()
-	                       .getFieldError()
-	                       .getDefaultMessage();
-
-	    return ResponseEntity.badRequest().body(
-	        Map.of(
-	            "controller", controller,
-	            "method", method,
-	            "field", field,
-	            "message", message
-	        )
-	    );
-	}
-	 
-	 	
- */
-	 	
-	
+	// URL 파라미터 타입이 안 맞을 때 parameter의 타입이 맞지 않음 page={} < = 요게 글자일때 터트리는 에러
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
 	        MethodArgumentTypeMismatchException e,
@@ -185,40 +100,35 @@ public class GlobalExceptionHandler {
 	    String controller = handlerMethod.getBeanType().getSimpleName();
 	    String method = handlerMethod.getMethod().getName();
 
+	    int code = getcode(method);
+	    
 	    String message = String.format(
-	        "%s.%s - field '%s' type mismatch",
+	        "%s.%s - field '%s' parameter로 넘어온 입력 값의 형식이 잘못되었습니다.",
 	        controller, method, e.getName()
 	    );
 
 	    return ResponseEntity
 	            .badRequest()
-	            .body(ApiResponse.fail(400, message));
+	            .body(ApiResponse.fail(code, message));
 	}
 	
+	// JSON 자체가 깨졌을 때, 즉 숫자여야하는데 글자가 들어올때
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e) {
-
+	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e
+													  , HandlerMethod handlerMethod) {
+		
+	    String method = handlerMethod.getMethod().getName();
+		
+	    
+	    int code = getcode(method);
+	    
+	    
 	    return ResponseEntity
 	            .badRequest()
-	            .body(ApiResponse.fail(400, "JSON_PARSE_ERROR"));
+	            .body(ApiResponse.fail(code, method + ": json으로 넘어온 값의 형식이 잘못되었습니다."));
 	}
 	
-	@ExceptionHandler(BindException.class)
-	public ResponseEntity<ApiResponse<Void>> handleBind(BindException e) {
-
-	    String field = e.getFieldError() != null
-	            ? e.getFieldError().getField()
-	            : "unknown";
-
-	    String message = e.getFieldError() != null
-	            ? e.getFieldError().getDefaultMessage()
-	            : "BIND_ERROR";
-
-	    return ResponseEntity
-	            .badRequest()
-	            .body(ApiResponse.fail(400, field + " : " + message));
-	}
-	 
+	// 이게 원래 유효성 검사때 터지는 에러, 근데 if문으로 에러가 났을 떄 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ApiResponse<Void>> handleValid(
 	        MethodArgumentNotValidException e,
@@ -230,16 +140,16 @@ public class GlobalExceptionHandler {
 	    var fieldError = e.getBindingResult().getFieldError();
 
 	    String field = fieldError != null ? fieldError.getField() : "unknown";
-	    String message = fieldError != null ? fieldError.getDefaultMessage() : "VALIDATION_ERROR";
-
+	    String message = fieldError != null ? "값의 입력형식이 올바르지 않습니다." : "VALIDATION_ERROR";
+	    
+	    int code = getcode(method);
+	    
 	    return ResponseEntity
 	            .badRequest()
-	            .body(ApiResponse.fail(400,
+	            .body(ApiResponse.fail(code,
 	                    controller + "." + method + " | " + field + " : " + message));
 	}
-	
-	
-	
+
 	
 	// 회원 -----------------------------------------------------------------------
 
@@ -291,6 +201,9 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.REFRESH_TOKEN_EXPIRED.getCode())
 				.body(new ApiResponse(1006, e.getMessage(), null));
 	}
+	
+	
+	
 
 	// 일반 게시판
 	// -----------------------------------------------------------------------------------
@@ -670,8 +583,13 @@ public class GlobalExceptionHandler {
 				.body(new ApiResponse(7001, e.getMessage(), null));
 	}
 	
-	
-	
+	// 상품 형식이 올바르지 않음
+		@ExceptionHandler(MissingInventoryFieldException.class)
+		public ResponseEntity<ApiResponse> MissingInventoryField(MissingInventoryFieldException e) {
+
+			return ResponseEntity.status(CustomHttpStatus.INVALID_PRODUCT.getCode())
+					.body(new ApiResponse(7008, e.getMessage(), null));
+		}
 
 	// 재준 추가 0701 라지베리 디비 조회 실패
 	@ExceptionHandler(RaspNotFoundException.class)
