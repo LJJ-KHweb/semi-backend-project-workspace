@@ -37,7 +37,7 @@ public class UserController {
 	@PatchMapping
 	public ResponseEntity<ApiResponse<Void>> update(@RequestBody @Valid UserUpdateRequestDto updateUser, @AuthenticationPrincipal CustomUserDetails user){
 		userService.update(updateUser, user);
-		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("회원 정보 수정에 성공하셨습니다.", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.created("회원 정보 수정에 성공하셨습니다.", null));
 	}
 	
 	

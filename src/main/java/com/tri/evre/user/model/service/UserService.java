@@ -29,9 +29,11 @@ public class UserService {
 		//아이디가 중복인지 확인
 		validateDuplicateUserId(user.getUserId());
 
-		User userEntity = User.builder().userId(user.getUserId()).userPwd(passwordEncoder.encode(user.getUserPwd()))
-				.userName(user.getUserName()).email(user.getEmail()).build();
-		
+		User userEntity = User.builder().userId(user.getUserId())
+										.userPwd(passwordEncoder.encode(user.getUserPwd()))
+										.userName(user.getUserName())
+										.email(user.getEmail())
+										.build();
 		userMapper.signup(userEntity);
 
 	}
@@ -78,10 +80,6 @@ public class UserService {
 		if(!passwordEncoder.matches(rawPwd, encodePassword)) {
 			throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
 		}
-	}
-	
-	private void checkEmail(String email) {
-		
 	}
 
 }

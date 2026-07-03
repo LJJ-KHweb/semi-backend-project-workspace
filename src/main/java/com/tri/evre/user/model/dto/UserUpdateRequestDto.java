@@ -18,7 +18,7 @@ public class UserUpdateRequestDto {
 	@Pattern(regexp="^[a-zA-Z0-9]{4,20}$", message="비밀번호 형식이 올바르지 않습니다.")
 	private String userPwd;
 	@NotBlank
-	@Pattern(regexp= "^[0-9a-zA-Z._%+-]{4,20}@[0-9a-zA-Z.-]{4,10}\\.(com|kr)$",  message = "이메일 형식이 올바르지 않습니다.")
+	@Pattern(regexp= "^[0-9a-zA-Z]{4,20}@[0-9a-zA-Z]{4,10}\\.(com|kr)$",  message = "이메일 형식이 올바르지 않습니다.")
 	private String email;
 
 }
