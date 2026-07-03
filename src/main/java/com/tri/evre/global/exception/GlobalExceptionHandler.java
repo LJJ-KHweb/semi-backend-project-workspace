@@ -1,10 +1,17 @@
 package com.tri.evre.global.exception;
 
-import org.springframework.dao.DataAccessException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
@@ -40,6 +47,9 @@ import com.tri.evre.global.exception.charger.ChargerUpdateException;
 import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
+import com.tri.evre.global.exception.product.InvalidProductFormatException;
+import com.tri.evre.global.exception.product.MissingInventoryFieldException;
+import com.tri.evre.global.exception.product.ProductCreateException;
 import com.tri.evre.global.exception.rasp.RaspNotFoundException;
 import com.tri.evre.global.exception.shop.InsufficientInventoryException;
 import com.tri.evre.global.exception.shop.InsufficientMileageException;
@@ -56,6 +66,7 @@ import com.tri.evre.global.exception.station.StationReadException;
 import com.tri.evre.global.exception.station.StationUpdateException;
 import com.tri.evre.global.exception.user.AccessTokenExprireException;
 import com.tri.evre.global.exception.user.DuplicateResourceException;
+import com.tri.evre.global.exception.user.InvalidUserFormatException;
 import com.tri.evre.global.exception.user.MissingAuthFieldException;
 import com.tri.evre.global.exception.user.PasswordMismatchException;
 import com.tri.evre.global.exception.user.RefreshTokenExprireException;
@@ -65,18 +76,115 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
-	/*
-	 * @ExceptionHandler(MethodArgumentNotValidException.class) public
-	 * ResponseEntity<ErrorResponse>
-	 * handlerArgumentNotValid(MethodArgumentNotValidException e) { Map<String,
-	 * String> errors = new HashMap();
-	 * e.getBindingResult().getFieldErrors().forEach(err ->
-	 * errors.put(err.getField(), err.getDefaultMessage()));
-	 * 
-	 * return ResponseEntity.badRequest().body(new (400,"유효하지 않은 값입니다", errors)); }
-	 */
+public class GlobalExceptionHandler { 	
+	
+	
+	// 예외가 터진 method의 명으로 customHttpStatusCode를 생성하는 코드
+	// 만약 9999가 터지면 method명을 추가해서 해당 에러로 반환해주면 해결됨
+	private int getcode(String msg) {
+		if(msg.contains("login")) {
+			return 1000;
+		}
+		if(msg.contains("signup")) {
+			return 1000;
+		}
+		if(msg.contains("Board")) {
+			return 2000;
+		}
+		if(msg.contains("Product")) {
+			return 7000;
+		}
 
+		return 9999;
+	}
+	
+	// URL 파라미터 타입이 안 맞을 때 parameter의 타입이 맞지 않음 page={} < = 요게 글자일때 터트리는 에러
+	// 
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<ApiResponse<Void>> handleTypeMismatch(
+	        MethodArgumentTypeMismatchException e,
+	        HandlerMethod handlerMethod) {
+		
+		
+		// HandlerMethod는 Controller에서 어떤 메소드가 호출됐는지에 대한 정보를 가지고 있음
+		/*
+			Class<?> clazz = handlerMethod.getBeanType();	clazz에 controller명.class가 담김 
+
+			String controller = clazz.getSimpleName(); calzz(controller명.class)에서 .class빼고 controller명만 가져옴
+		 */
+		
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    int code = getcode(method);
+	    
+	    String message = String.format(
+	        "%s.%s - field '%s' parameter로 넘어온 입력 값의 형식이 잘못되었습니다.",
+	        controller, method, e.getName()
+	    );
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(code, message));
+	}
+	
+	// JSON 자체가 깨졌을 때
+	/*
+	 * {
+	 * 		"문자열" : 문자열		<= 타입 안맞음
+	 * }
+	 */
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e
+													  , HandlerMethod handlerMethod) {
+		
+	    String method = handlerMethod.getMethod().getName();
+		  
+	    int code = getcode(method);
+	    
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(code, method + ": json으로 넘어온 값의 형식이 잘못되었습니다."));
+	}
+	
+	// 이게 원래 유효성 검사때 터지는 에러
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ApiResponse<Map<String, Object>>> handleValid(
+	        MethodArgumentNotValidException e,
+	        HandlerMethod handlerMethod) {
+
+	    // 1. 어떤 Controller / Method인지
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    // 2. 모든 필드 에러 가져오기
+	    List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
+
+	    // 3. 에러 리스트 구성
+	    List<Map<String, String>> errors = fieldErrors.stream()
+	            .map(err -> {
+	                Map<String, String> map = new HashMap<>();
+	                map.put("field", err.getField());
+	                map.put("message", err.getDefaultMessage());
+	                return map;
+	            })
+	            .toList();
+
+	    // 4. 코드
+	    int code = getcode(method);
+
+	    // 5. 최종 payload 구성
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("controller", controller);
+	    response.put("method", method);
+	    response.put("errors", errors);
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(code, response.toString()));
+	}
+
+	
 	// 회원 -----------------------------------------------------------------------
 
 	// 회원 유저 정보가 디비에 없을시
@@ -94,8 +202,8 @@ public class GlobalExceptionHandler {
 	}
 
 	// 아이디 OR 비밀번호 OR 이메일 OR 이름 유효성 검사 실패시
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ApiResponse> MethodArgumentNotValid(MethodArgumentNotValidException e) {
+	@ExceptionHandler(InvalidUserFormatException.class)
+	public ResponseEntity<ApiResponse> InvalidUserFormat(InvalidUserFormatException e) {
 		return ResponseEntity.status(CustomHttpStatus.INVALID_REQUEST.getCode())
 				.body(new ApiResponse(1002, e.getMessage(), null));
 	}
@@ -127,6 +235,9 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.REFRESH_TOKEN_EXPIRED.getCode())
 				.body(new ApiResponse(1006, e.getMessage(), null));
 	}
+	
+	
+	
 
 	// 일반 게시판
 	// -----------------------------------------------------------------------------------
@@ -478,7 +589,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.INSUFFICIENT_RESOURCE.getCode())
 				.body(new ApiResponse(7011, e.getMessage(), null));
 	}
-	
+
 	// 보유한 마일리지가 구매할 상품의 가격보다 적습니다.
 	@ExceptionHandler(MileageHistoryNotFoundException.class)
 	public ResponseEntity<ApiResponse> MileageHistoryNotFound(MileageHistoryNotFoundException e) {
@@ -486,6 +597,7 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.MILEAGE_HISTORY_NOT_FOUND.getCode())
 				.body(new ApiResponse(7010, e.getMessage(), null));
 	}
+
 	// 상품 관리에서 상품 전체 조회에 실패했습니다.
 	@ExceptionHandler(ProductReadException.class)
 	public ResponseEntity<ApiResponse> ProductRead(ProductReadException e) {
@@ -493,12 +605,38 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.PRODUCT_CRUD_FAILED.getCode())
 				.body(new ApiResponse(7015, e.getMessage(), null));
 	}
+
+	// ---------------- 07/02 선겸 ---------------
+
+	// 상품 관리에서 상품 추가에 실패
+	@ExceptionHandler(ProductCreateException.class)
+	public ResponseEntity<ApiResponse> ProductCreate(ProductCreateException e) {
+
+		return ResponseEntity.status(CustomHttpStatus.PRODUCT_CRUD_FAILED.getCode())
+				.body(new ApiResponse(7012, e.getMessage(), null));
+	}
+
+	// 상품 형식이 올바르지 않음
+	@ExceptionHandler(InvalidProductFormatException.class)
+	public ResponseEntity<ApiResponse> InvalidProductFormat(InvalidProductFormatException e) {
+
+		return ResponseEntity.status(CustomHttpStatus.INVALID_PRODUCT.getCode())
+				.body(new ApiResponse(7001, e.getMessage(), null));
+	}
 	
-		
-	// 재준 추가 0701 라지베리 디비 조회 실패
-		@ExceptionHandler(RaspNotFoundException.class)
-		public ResponseEntity<ApiResponse> RaspNotFound(RaspNotFoundException e){
-			return ResponseEntity.status(CustomHttpStatus.RASP_CRUD_FAILED.getCode()).body(new ApiResponse(8001, e.getMessage(), null));
+	// 상품 형식이 올바르지 않음
+		@ExceptionHandler(MissingInventoryFieldException.class)
+		public ResponseEntity<ApiResponse> MissingInventoryField(MissingInventoryFieldException e) {
+
+			return ResponseEntity.status(CustomHttpStatus.INVALID_PRODUCT.getCode())
+					.body(new ApiResponse(7008, e.getMessage(), null));
 		}
+
+	// 재준 추가 0701 라지베리 디비 조회 실패
+	@ExceptionHandler(RaspNotFoundException.class)
+	public ResponseEntity<ApiResponse> RaspNotFound(RaspNotFoundException e) {
+		return ResponseEntity.status(CustomHttpStatus.RASP_CRUD_FAILED.getCode())
+				.body(new ApiResponse(8001, e.getMessage(), null));
+	}
 
 }

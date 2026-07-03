@@ -31,6 +31,7 @@ public enum CustomHttpStatus {
     // Refresh Token 만료
     REFRESH_TOKEN_EXPIRED(400),
     
+    
 	//---------------------------------------
     // 게시글이 존재하지 않음
     BOARD_NOT_FOUND(404),

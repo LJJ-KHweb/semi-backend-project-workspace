@@ -1,4 +1,4 @@
-package com.tri.evre.shop.model.dto;
+package com.tri.evre.product.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
