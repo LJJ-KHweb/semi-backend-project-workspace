@@ -160,6 +160,8 @@ public class AdminService {
 		for(StationDto station : stations) {
 			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
 			station.setChargerCount(chargerCount);
+			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+			station.setUnableChargerCount(unableChargers);
 		}
 		
 		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
