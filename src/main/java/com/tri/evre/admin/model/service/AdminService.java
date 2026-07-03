@@ -2,7 +2,6 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +18,7 @@ import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,9 +83,18 @@ public class AdminService {
 
 	// ---07/02 이재준-----------------------------------------------------
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
-		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
-		if(results == null) {
+		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct();
+		if(rankings.isEmpty()) {
 			throw new ProductNotFoundException("조회 실패했습니다.");
+		}
+		return rankings;
+	}
+
+	@Transactional
+	public List<WeeklyProductPurchaseDto> findByPurchaseCount() {
+		List<WeeklyProductPurchaseDto>  results = shopMapper.findByPurchaseCount();
+		if(results.isEmpty()) {
+			throw new ProductNotFoundException("요일별 상품 구매수량 조회 실패했습니다.");
 		}
 		return results;
 	}
