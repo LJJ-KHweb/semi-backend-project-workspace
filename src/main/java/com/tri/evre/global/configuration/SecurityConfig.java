@@ -56,7 +56,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/proudcts/**").hasRole("ADMIN");
 					
 					// 07/03 심영도 관리자 충전소 전체조회
-					requests.requestMatchers(HttpMethod.GET,"/api/admin/chargerStations/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/chargeStations/**").hasRole("ADMIN");
 					
 					
 					// 06/30 재준 추가
@@ -67,6 +67,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp").permitAll();
 					// 07/02 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp/mypage").authenticated();
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/ranking").hasRole("ADMIN");
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

@@ -141,8 +141,25 @@
 	</select>
 	
 	
+	<!-- 07/02 재준-->
 	
-	
+	<select id="findAllPurchaseProduct">
+		SELECT   
+				COUNT(*) AS PURCHASE_COUNT 
+			 , 	P.PRODUCT_NAME  
+		  FROM 
+		  		HISTORY_MILEAGE H 
+		  JOIN 
+		  		PRODUCT P  
+		  	ON  
+		  		H.PRODUCT_NO  = P.PRODUCT_NO  
+		 GROUP 
+		  	BY 
+		  		H.PRODUCT_NO, P.PRODUCT_NAME
+		 ORDER
+		 	BY
+		 		PURCHASE_COUNT DESC
+	</select>
 	
 	
 	

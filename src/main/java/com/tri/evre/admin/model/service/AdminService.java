@@ -14,9 +14,11 @@ import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
@@ -66,7 +68,6 @@ public class AdminService {
 		if(result < 1) {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
-		
 	}
 
 	
@@ -84,15 +85,63 @@ public class AdminService {
 		return new ProductListResponse(pageInfo, products);
 	}
 
+	// ---07/02 이재준-----------------------------------------------------
+	public List<PurchaseProductDto> findAllPurchaseProduct() {
+		List<PurchaseProductDto> results = shopMapper.findAllPurchaseProduct();
+		if(results == null) {
+			throw new ProductNotFoundException("조회 실패했습니다.");
+		}
+		return results;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
-	public StationSearchRequest findAllStations(PageInfo pageInfo, double lat, double lng, int dist) {
+	public StationSearchRequest findAllStations(PageInfo pageInfo) {
 		
-		List<StationDto> stations = stationMapper.findAllStations(pageInfo, lat, lng, dist);
+		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
+		if(pageInfo.getBoardCounts() < 1) {
+			throw new StationNotFoundException("충전소가 없습니다.");
+		}
 		
-		return null;
+		List<StationDto> stations = stationMapper.findAllStation(pageInfo);
+		if(stations.isEmpty()) {
+			throw new StationNotFoundException("충전소가 없습니다.");
+		}
+		
+		for(StationDto station : stations) {
+			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
+			station.setChargerCount(chargerCount);
+		}
+		
+		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
+		
+		return searchResponse;
 	} 
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

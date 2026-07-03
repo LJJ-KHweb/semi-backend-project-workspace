@@ -1,5 +1,7 @@
 package com.tri.evre.admin.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +19,7 @@ import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.shop.model.dto.ProductListResponse;
-import com.tri.evre.station.model.dto.StationDto;
+import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -64,18 +66,28 @@ public class AdminController {
 		
 	}
 	
+	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
+	
+	@GetMapping("ranking")
+	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
+		
+		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("구매 수량 조회 성공", response));
+	}
+	
+	
+	
+	
+	
 	
 	
 	
 	//------07/03---심영도 - 충전소 전체 조회
-	@GetMapping("/stations")
+	@GetMapping("/chargeStations")
 	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
-											  , @RequestParam(name="size") int size
-											  , @RequestParam(name="lat") double lat
-											  , @RequestParam(name="lng") double lng
-											  , @RequestParam(name="dist") int dist) {
-		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size), lat, lng, dist);
-		
+											  							   , @RequestParam(name="size") int size) {
+		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
+		log.info("어드민 맞음");
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
 	}
 	
