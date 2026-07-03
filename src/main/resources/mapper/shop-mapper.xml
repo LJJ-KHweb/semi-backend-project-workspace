@@ -143,7 +143,28 @@
 		 		PURCHASE_COUNT DESC
 	</select>
 	
-	
+	<!-- 
+		정렬 기준이 모호해서
+		T0_CHAR(CREATE_DATE, 'D') -> 이건 요일을 숫자로 뽑아줌
+		EX) 일 : 0 월 : 1 ....
+		그래서 이걸로 정렬을 해줬음
+		TO_NUMBER는 어차피 위에서 숫자로 뽑아왔기때문에 안써도 되지만
+		의미를 명확하게 전달하기위해 써준다고함(실무기준)
+	-->
+	<select id="findByPurchaseCount">
+		SELECT
+    			TO_CHAR(CREATE_DATE, 'DY', 'NLS_DATE_LANGUAGE=KOREAN') AS DAY,
+    			COUNT(*) AS PURCHASE_COUNT
+		  FROM 
+		  		HISTORY_MILEAGE
+		 GROUP 
+		 	BY
+    			TO_CHAR(CREATE_DATE, 'D'),
+    			TO_CHAR(CREATE_DATE, 'DY', 'NLS_DATE_LANGUAGE=KOREAN')
+		 ORDER 
+		 	BY
+    			TO_NUMBER(TO_CHAR(CREATE_DATE, 'D'))
+	</select>
 	
 	
 	

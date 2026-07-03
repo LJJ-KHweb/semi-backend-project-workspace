@@ -26,6 +26,7 @@ import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import jakarta.validation.Valid;
@@ -113,12 +114,20 @@ public class AdminController {
 	
 	
 	// --------- 07-02--이재준-- 관리자 페이지 요일별 총 구매수 차트--------------------------
+
 	
-	@GetMapping("ranking")
+	@GetMapping("/ranking")
 	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
 		
 		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("구매 수량 조회 성공", response));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 랭킹 조회에 성공했습니다.", response));
+	}
+	
+	// ---------07-03--이재준-- 관리자 메인 페이지 요일별 상품 구매 차트 ----------------------
+	@GetMapping("/charts")
+	public ResponseEntity<ApiResponse<List<WeeklyProductPurchaseDto>>> findByPurchaseCount(){ 
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findByPurchaseCount()));
 	}
 	
 	

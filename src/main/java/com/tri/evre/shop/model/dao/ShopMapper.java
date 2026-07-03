@@ -12,6 +12,7 @@ import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 
 @Mapper
 public interface ShopMapper {
@@ -40,4 +41,8 @@ public interface ShopMapper {
 
 	// ---07/02 이재준-----------------------------------------------------
 	List<PurchaseProductDto> findAllPurchaseProduct();
+
+	List<WeeklyProductPurchaseDto> findByPurchaseCount();
+
+
 }
