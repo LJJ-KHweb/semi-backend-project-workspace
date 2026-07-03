@@ -118,6 +118,8 @@ public class AdminService {
 	@Transactional
 	public void deleteProduct(Long productNo) {
 		
+		if(shopMapper.findByProductNo(productNo) == null) throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+		
 		if(shopMapper.findByProductNo(productNo).getStatus().equals("N")) throw new ProductNotFoundException("이미 삭제된 상품입니다.");
 		
 		productMapper.deleteProduct(productNo);
