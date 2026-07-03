@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.station.model.vo.Station;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -132,8 +134,13 @@ public class AdminController {
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
 	}
 	
-	
-	
+	// 07/03 심영도 충전소 작성
+	@PostMapping("/chargeStations/form")
+	public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid Station station
+														 , @AuthenticationPrincipal CustomUserDetails user) {
+		adminService.insertStation(station, user);
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 작성 성공", null));
+	}
 	
 	
 	

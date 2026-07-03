@@ -28,7 +28,9 @@ import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.station.model.vo.Station;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,5 +169,10 @@ public class AdminService {
 		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
 		
 		return searchResponse;
+	}
+
+	@Transactional
+	public void insertStation(Station station, CustomUserDetails user) {
+		Station stationEntity = new station.builder()
 	} 
 }

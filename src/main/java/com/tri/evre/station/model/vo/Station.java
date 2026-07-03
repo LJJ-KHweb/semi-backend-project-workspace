@@ -1,7 +1,5 @@
 package com.tri.evre.station.model.vo;
 
-import java.sql.Date;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -32,5 +30,4 @@ public class Station {
 	private int chargerCount;
 	private double lat;
 	private double lng;
-	private Date createDate;
 }
