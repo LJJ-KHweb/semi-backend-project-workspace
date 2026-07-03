@@ -631,6 +631,8 @@ public class GlobalExceptionHandler {
 			return ResponseEntity.status(CustomHttpStatus.INVALID_PRODUCT.getCode())
 					.body(new ApiResponse(7008, e.getMessage(), null));
 		}
+		
+		
 
 	// 재준 추가 0701 라지베리 디비 조회 실패
 	@ExceptionHandler(RaspNotFoundException.class)
@@ -638,5 +640,9 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(CustomHttpStatus.RASP_CRUD_FAILED.getCode())
 				.body(new ApiResponse(8001, e.getMessage(), null));
 	}
+	
+	
+	
+	
 
 }

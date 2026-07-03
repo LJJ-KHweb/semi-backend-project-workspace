@@ -2,6 +2,7 @@ package com.tri.evre.admin.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -63,7 +64,7 @@ public class AdminController {
 	
 	
 	// -------------07-01--김선겸-- 상품관리 기능중 전체 조회------------------------------- 
-	@GetMapping("/proudcts")
+	@GetMapping("/products")
 	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page") int page
 																   		  ,@RequestParam(name="size") int size){
 		
@@ -76,7 +77,7 @@ public class AdminController {
 	// -------------07-02--김선겸--
 	//--------------상품 추가 기능---
 	
-	@PostMapping("/proudcts")
+	@PostMapping("/products")
 	public ResponseEntity<ApiResponse<Void>> insertProduct(@ModelAttribute @Valid ProductDto product,
 														   @RequestParam(name="file", required = false) MultipartFile file,
 														   @AuthenticationPrincipal CustomUserDetails user){
@@ -91,6 +92,17 @@ public class AdminController {
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
 							 .body(ApiResponse.created("상품 추가에 성공했습니다.", null));
 		
+	}
+	
+	//----------------------07/03 김선겸
+	// 상품 삭제
+	
+	@DeleteMapping("/products/{productNo}")
+	public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable("productNo") Long productNo){
+		
+		adminService.deleteProduct(productNo);
+		
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("상품 삭제 성공", null));
 	}
 	
 	

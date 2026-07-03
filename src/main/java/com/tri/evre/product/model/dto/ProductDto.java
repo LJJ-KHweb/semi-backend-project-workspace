@@ -20,4 +20,5 @@ public class ProductDto {
 	private Integer price;
 	@NotNull(message="수량은 필수로 입력해야합니다.")
 	private Integer amount;
+	private String status;
 }
