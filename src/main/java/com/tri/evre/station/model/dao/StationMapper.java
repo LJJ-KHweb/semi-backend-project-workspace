@@ -160,6 +160,15 @@ public interface StationMapper {
 				INSERT
 				  INTO
 				  	   STATION
+				  	   (
+				  	   STATION_NO
+				  	 , STATION_NAME
+				  	 , REGION
+			 		 , ADDRESS
+			 		 , STATION_DESC
+			  		 , LAT
+			  		 , LNG
+				  	   )
 				VALUES
 					   (
 					   	SEQ_STATION.NEXTVAL

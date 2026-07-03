@@ -150,7 +150,7 @@ public class AdminController {
 	@PostMapping("/chargeStations")
 	public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid Station station) {
 		adminService.insertStation(station);
-		
+		log.info("station : {}", station);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 작성 성공", null));
 	}
 	
