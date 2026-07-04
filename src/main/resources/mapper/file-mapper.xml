@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.file.model.dao.FileMapper">
+	<!--===============================================-->
+	<!--================ 일반게시판 =====================-->
+	<!--===============================================-->
+	
+	<!-- 일반 게시판 파일 추가(등록) -->
+	<insert id="saveBoardFile">
+		INSERT 
+		  INTO
+				BOARD_FILE
+		VALUES
+				(
+				#{filePath}
+			 ,	#{fileOrder}
+			 ,	#{originalName}
+			 ,	#{boardNo}
+				)
+	</insert>
+	
+	<!-- 일반 게시판 파일 전체 조회-->
+	<select id="findBoardFileAll">
+		SELECT
+		  		FILE_PATH
+		  	 ,	ORIGINAL_NAME
+		  	 ,	FILE_ORDER
+		  FROM
+		  		BOARD_FILE
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+ 	</select>
+ 	
+ 	<!--일반 게시판 파일 수정 -->
+ 	<update id="updateBoardFile">
+ 		UPDATE
+				BOARD_FILE
+		   SET
+				FILE_PATH = #{filePath}
+			 ,	ORIGINAL_NAME = #{originalName}
+		 WHERE
+				BOARD_NO = #{boardNo}
+		   AND
+				FILE_ORDER = #{fileOrder}
+	</update>
+	
+	<!-- 일반 게시판 파일 삭제-->
+	<delete id="deleteBoardFile">
+		DELETE
+		  FROM
+				 BOARD_FILE
+		 WHERE
+				 BOARD_NO = #{boardNo}
+		   AND
+				 FILE_ORDER > #{order}
+	</delete>
+	
+	<!--일반 게시판 한 게시글의 파일의 총 갯수 -->
+	<select id="findBoardFileCounts">
+		SELECT
+				COUNT(*)
+		  FROM
+		  	   	BOARD_FILE
+		 WHERE
+		 		BOARD_NO = #{boardNo}
+	</select>
+	
+	<!--===============================================-->
+	<!--================= 공지사항 ======================-->
+	<!--===============================================-->
+	<insert id="saveNoticeFile">
+		INSERT 
+		  INTO
+				NOTICE_FILE
+		VALUES
+				(
+				#{filePath}
+			 ,	#{fileOrder}
+			 ,	#{originalName}
+			 ,	#{noticeNo}
+				)
+	</insert>
+	
+	<!-- 공지사항 파일 전체 조회-->
+	<select id="findNoticeFileAll">
+		SELECT
+		  		FILE_PATH
+		  	 ,	ORIGINAL_NAME
+		  	 ,	FILE_ORDER
+		  FROM
+		  		NOTICE_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+ 	</select>
+ 	
+ 	<!--일반 게시판 파일 수정 -->
+ 	<update id="updateNoticeFile">
+ 		UPDATE
+				NOTICE_FILE
+		   SET
+				FILE_PATH = #{filePath}
+			 ,	ORIGINAL_NAME = #{originalName}
+		 WHERE
+				NOTICE_NO = #{noticeNo}
+		   AND
+				FILE_ORDER = #{fileOrder}
+	</update>
+	
+	<!-- 일반 게시판 파일 삭제-->
+	<delete id="deleteNoticeFile">
+		DELETE
+		  FROM
+				 NOTICE_FILE
+		 WHERE
+				 NOTICE_NO = #{noticeNo}
+		   AND
+				 FILE_ORDER > #{order}
+	</delete>
+	
+	<!--일반 게시판 한 게시글의 파일의 총 갯수 -->
+	<select id="findNoticeFileCounts">
+		SELECT
+				COUNT(*)
+		  FROM
+		  	   	NOTICE_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</select>
+	
+</mapper>

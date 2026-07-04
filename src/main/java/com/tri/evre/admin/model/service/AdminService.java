@@ -11,7 +11,7 @@ import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.file.service.FileService;
+import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
@@ -28,7 +28,6 @@ import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
-import com.tri.evre.user.model.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,7 @@ public class AdminService {
 	private final StationMapper stationMapper;
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
-	private final FileService fileService;
+	private final FileStorageService fileStorageService;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -108,7 +107,7 @@ public class AdminService {
 		
 		productMapper.insertProductTable(productEntity);
 		
-		String filePath = fileService.store(file);
+		String filePath =  fileStorageService.store(file);
 		
 		productMapper.insertInventoryTable(productEntity, filePath);
 		

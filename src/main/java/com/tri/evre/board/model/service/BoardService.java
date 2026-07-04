@@ -2,7 +2,7 @@ package com.tri.evre.board.model.service;
 
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,25 +13,31 @@ import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.board.model.vo.Board;
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.file.model.dao.FileMapper;
-import com.tri.evre.file.service.FileService;
+import com.tri.evre.file.service.FileManagementService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.board.BoardUpdateException;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class BoardService {
 
 	private final BoardMapper boardMapper;
-	private final FileService fileService;
-	private final FileMapper fileMapper;
+	private final FileManagementService fileService;
+	
+	//@Qualifier interface 구현체가 2개일때 어떤걸로 주입해줄지 결정해주는 에노테이션
+	// 사용방법 RequiredArgsConstructor말고 직접 생성자 매개변수에 써서 주입해줘야됨
+	public BoardService(BoardMapper boardMapper, @Qualifier("boardFileService")  FileManagementService fileService) {
+		super();
+		this.boardMapper = boardMapper;
+		this.fileService = fileService;
+	}
+	
+	
 
 	@Transactional
 	public BoardListResponse findAll(int page) {
@@ -76,8 +82,10 @@ public class BoardService {
 	@Transactional
 	public void save(BoardDto board, List<MultipartFile> files, CustomUserDetails user) {
 
-		Board boardEntity = Board.builder().boardTitle(board.getBoardTitle()).boardContent(board.getBoardContent())
-				.userId(user.getUsername()).build();
+		Board boardEntity = Board.builder().boardTitle(board.getBoardTitle())
+											.boardContent(board.getBoardContent())
+											.userId(user.getUsername())
+											.build();
 
 		int result = boardMapper.save(boardEntity);
 
@@ -120,5 +128,7 @@ public class BoardService {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
 	}
+
+
 
 }

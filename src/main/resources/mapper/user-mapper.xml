@@ -14,7 +14,7 @@
 				USER_ID = #{userId}
 	</select>
 	
-	<insert id="singup">
+	<insert id="signup">
 		INSERT
 		  INTO
 				SEMI_USER
