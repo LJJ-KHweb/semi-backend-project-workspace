@@ -3,6 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace ="com.tri.evre.board.model.dao.BoardMapper">
+	<!-- 게시글 작성 -->
 	<insert id="save"
 			parameterType="Board">
 			
@@ -31,6 +32,7 @@
 					 	)
 	</insert>
 	
+	<!-- 조회 공통 -->
 	<sql id="boardColumn">
 			SELECT
 					  BOARD_NO
@@ -40,6 +42,7 @@
 					, VIEWS
 	</sql>
 	
+	<!-- 게시글 전체 조회 -->
 	<select id="findAll" resultType="BoardDto">
 		<include refid="boardColumn"/>
 		  FROM
@@ -54,6 +57,7 @@
 	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
+	<!-- 게시글 상세 보기 -->
 	<select id="findByBoardNo" resultType="BoardDto">
 		<include refid="boardColumn"/>
 				 ,	BOARD_CONTENT
@@ -65,26 +69,7 @@
 				 		BOARD_NO = #{boardNo}
 	</select>
 	
-	<update id="plusViews">
-				UPDATE
-						BOARD
-				   SET
-				   		VIEWS = VIEWS +1
-				 WHERE
-				 		STATUS = 'Y'
-				   AND
-				   		BOARD_NO = #{boardNo}
-	</update>
-	
-	<select id="findBoardsCount">
-		SELECT
-				COUNT(*)
-		  FROM
-		  		BOARD
-		 WHERE
-		 		STATUS = 'Y'
-	</select>
-
+	<!-- 게시글 수정 -->
 	<update id="update">
 		UPDATE
 				BOARD
@@ -98,7 +83,8 @@
 	  	   AND
 	  	   		BOARD_NO = #{boardNo}
 	</update>
-
+	
+	<!-- 게시글 삭제 -->
 	<update id="delete">
 		UPDATE
 				BOARD
@@ -119,7 +105,30 @@
 		   	    					)
 		   	    )
 	</update>
-	<!--6/30 재준 추가 -->
+	
+	<!-- 게시글 전체 갯수 조회 -->
+	<select id="findBoardsCount">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		BOARD
+		 WHERE
+		 		STATUS = 'Y'
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="plusViews">
+				UPDATE
+						BOARD
+				   SET
+				   		VIEWS = VIEWS +1
+				 WHERE
+				 		STATUS = 'Y'
+				   AND
+				   		BOARD_NO = #{boardNo}
+	</update>
+	
+	<!-- 게시글 삭제 포함 조회 -->
 	<select id="adminFindAll">
 		<include refid="boardColumn"/>
 			 ,	BOARD.STATUS
@@ -133,11 +142,22 @@
 	    OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
 	</select>	
 	
+	<!-- 게시글 삭제 포함 전체 갯수 조회 -->
 	<select id="findAllBoardsCount">
 		SELECT
 				COUNT(*)
 		  FROM
 		  		BOARD
+	</select>
+	
+	<!-- 게시글의 존재 여부 확인 -->
+	<select id="existsByBoardNo">
+		SELECT
+				1
+		  FROM
+		  		BOARD
+		 WHERE
+		 		BOARD_NO = #{boardNo}
 	</select>
 	
 </mapper>

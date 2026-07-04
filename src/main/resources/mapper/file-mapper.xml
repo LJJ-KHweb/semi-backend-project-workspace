@@ -129,4 +129,13 @@
 		 		NOTICE_NO = #{noticeNo}
 	</select>
 	
+	<!-- 모든 파일 삭제 -->
+	<delete id="deleteFile">
+		DELETE
+		  FROM
+		  		NOTICE_FILE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</delete>
+	
 </mapper>

@@ -15,4 +15,7 @@ public interface FileManagementService {
 
 	void updateFile(List<MultipartFile> files, Long boardNo);
 
+	void deleteFile(Long noticeNo);
+
+
 }

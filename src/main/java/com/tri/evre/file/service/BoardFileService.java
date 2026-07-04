@@ -139,4 +139,10 @@ public class BoardFileService implements FileManagementService {
 		return files;
 		
 	}
+
+	@Override
+	public void deleteFile(Long noticeNo) {
+		//삭제 할때 구현함
+		
+	}
 }

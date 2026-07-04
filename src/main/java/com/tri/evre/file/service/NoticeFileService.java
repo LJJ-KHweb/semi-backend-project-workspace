@@ -46,7 +46,6 @@ public class NoticeFileService implements FileManagementService {
 
 	@Override
 	public List<FileDto> findAll(Long noticeNo) {
-		countNoticeFiles(noticeNo);
 		return findNoticeFiles(noticeNo);
 	
 	}
@@ -120,10 +119,16 @@ public class NoticeFileService implements FileManagementService {
 	// 공지사항 테이블에 file 전체조회
 	private List<FileDto> findNoticeFiles(Long boardNo) {
 		List<FileDto> files= fileMapper.findNoticeFileAll(boardNo);
-		if(files.isEmpty()) {
-			throw new BoardFileCreateException("파일을 조회하지 못했습니다.");
-		}
 		return files;
+		// 예외 처리 안한이유 파일이 없을수도 있음
 		
+	}
+	
+	public void deleteFile(Long boardNo) {
+		countNoticeFiles(boardNo);
+		int result = fileMapper.deleteFile(boardNo);
+		if(result < 1) {
+			throw new BoardFileCreateException("파일 삭제 실패했습니다.");
+		}
 	}
 }

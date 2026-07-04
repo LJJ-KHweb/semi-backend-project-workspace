@@ -1,5 +1,7 @@
 package com.tri.evre.common.model.dto;
 
+import com.tri.evre.global.exception.page.InvalidPagingParameterException;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +24,22 @@ public class PageInfo {
 	
 	public PageInfo(int page, int size) {
 		super();
+		validatePage(page);
+		validateSize(size);
 		this.page = page-1;
 		this.size = size;
 	
 		this.offset = this.page * this.size;
 	}
 	
+	private void validatePage(int page) {
+		if(page < 1) {
+			throw new InvalidPagingParameterException("page는 1이상이여야 합니다.");
+		}
+	}
+	private void validateSize(int size) {
+	    if (size < 1) {
+	        throw new InvalidPagingParameterException("size는 1 이상이어야 합니다.");
+	    }
+	}
 }

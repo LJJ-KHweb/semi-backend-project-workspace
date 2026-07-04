@@ -47,6 +47,9 @@ public interface FileMapper {
 	//공지사항 한 게시글의 파일의 총 갯수
 	int findNoticeFileCounts(Long boardNo);
 
+	//공지사항 삭제시 해당 개시글의 파일 다날려야됨
+	int deleteFile(Long boardNo);
+
 	
 	
 }
