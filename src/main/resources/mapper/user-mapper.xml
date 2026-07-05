@@ -53,4 +53,24 @@
 		   AND
 		   		STATUS = 'Y'
 	</update>
+	
+	<select id="findAllMileageHistory">
+		SELECT
+				P.PRODUCT_NAME
+			 ,	H.CREATE_DATE
+			 ,	I.PRICE
+		  FROM
+		  		HISTORY_MILEAGE H
+		  JOIN
+		  		PRODUCT P
+		  	ON
+		  		P.PRODUCT_NO = H.PRODUCT_NO
+		  JOIN
+		  		INVENTORY I
+		  	ON
+		  		P.PRODUCT_NO = I.PRODUCT_NO
+		 WHERE
+		 		H.USER_ID = #{username}
+		 OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY		
+	</select>
 </mapper>

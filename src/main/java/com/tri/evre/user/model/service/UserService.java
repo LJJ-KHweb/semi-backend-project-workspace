@@ -1,15 +1,20 @@
 package com.tri.evre.user.model.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.user.ConcurrentUpdateException;
 import com.tri.evre.global.exception.user.DuplicateResourceException;
 import com.tri.evre.global.exception.user.PasswordMismatchException;
 import com.tri.evre.global.exception.user.UserNotFoundException;
+import com.tri.evre.mileage.model.dto.MileageDto;
 import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.UserDto;
+import com.tri.evre.user.model.dto.UserMileageRequestDto;
 import com.tri.evre.user.model.dto.UserUpdateRequestDto;
 import com.tri.evre.user.model.vo.User;
 
@@ -80,6 +85,14 @@ public class UserService {
 		if(!passwordEncoder.matches(rawPwd, encodePassword)) {
 			throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
 		}
+	}
+
+	public UserMileageRequestDto findAllMileageHistory(PageInfo pageInfo, CustomUserDetails user) {
+		List<MileageDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
+
+		return UserMileageRequestDto.builder().mileages(mileages)
+												.pageInfo(pageInfo)
+												.build();
 	}
 
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
-import com.tri.evre.shop.model.dto.HistoryPurchaseDto;
 import com.tri.evre.shop.model.dto.HistoryPurchaseListDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.service.ShopService;
@@ -58,6 +57,9 @@ public class ShopController {
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회 성공", response));
 	}
+	
+	
+
 	
 	
 	
