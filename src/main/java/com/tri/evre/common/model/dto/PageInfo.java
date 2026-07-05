@@ -26,10 +26,10 @@ public class PageInfo {
 		super();
 		validatePage(page);
 		validateSize(size);
-		this.page = page-1;
+		this.page = page;
 		this.size = size;
 	
-		this.offset = this.page * this.size;
+		this.offset = (this.page-1) * this.size;
 	}
 	
 	private void validatePage(int page) {
