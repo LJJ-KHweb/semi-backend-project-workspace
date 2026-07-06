@@ -15,8 +15,11 @@ import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
+import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
+import com.tri.evre.global.exception.station.StationCreateException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
+import com.tri.evre.global.exception.station.StationReadException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
@@ -27,10 +30,11 @@ import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
+import com.tri.evre.station.model.dto.SearchInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.station.model.vo.Station;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +48,7 @@ public class AdminService {
 	private final StationMapper stationMapper;
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
-	private final FileStorageService fileStorageService;
+	private final FileStorageService fileService;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -109,7 +113,7 @@ public class AdminService {
 		
 		productMapper.insertProductTable(productEntity);
 		
-		String filePath =  fileStorageService.store(file);
+		String filePath =  fileService.store(file);
 		
 		productMapper.insertInventoryTable(productEntity, filePath);
 		
@@ -197,28 +201,122 @@ public class AdminService {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
-	@Transactional
-	public StationSearchRequest findAllStations(PageInfo pageInfo) {
-		
-		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
-		if(pageInfo.getBoardCounts() < 1) {
-			throw new StationNotFoundException("충전소가 없습니다.");
+		@Transactional
+		public StationSearchRequest findAllStations(PageInfo pageInfo) {
+			
+			pageInfo.setBoardCounts(stationMapper.findAllStationCount());
+			if(pageInfo.getBoardCounts() < 1) {
+				throw new StationNotFoundException("충전소가 없습니다.");
+			}
+			
+			List<StationDto> stations = stationMapper.findAllStation(pageInfo);
+			
+			for(StationDto station : stations) {
+				int chargerCount = stationMapper.findChargerCount(station.getStationNo());
+				station.setChargerCount(chargerCount);
+				int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+				station.setUnableChargerCount(unableChargers);
+			}
+			
+			StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
+			
+			return searchResponse;
 		}
-		
-		List<StationDto> stations = stationMapper.findAllStation(pageInfo);
-		
-		for(StationDto station : stations) {
-			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
-			station.setChargerCount(chargerCount);
-			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
-			station.setUnableChargerCount(unableChargers);
-		}
-		
-		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
-		
-		return searchResponse;
-	}
 
+		@Transactional
+		public void insertStation(StationDto station) {
+			Station stationEntity = Station.builder()
+										   .stationName(station.getStationName())
+										   .stationDesc(station.getStationDesc())
+										   .region(station.getRegion())
+										   .address(station.getAddress())
+										   .lat(station.getLat())
+										   .lng(station.getLng())
+										   .build();
+			
+			SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
+			
+			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
+			if(duplicateStation > 0) {
+				throw new StationCreateException("충전소가 중복입니다.");
+			}
+			
+			stationMapper.insertStation(stationEntity);
+		}
+
+		// 07/04 심영도 충전소 상세보기
+		@Transactional
+		public StationDto findByStationNo(Long stationNo) {
+			
+			StationDto station = stationMapper.findByStationNo(stationNo);
+			if(station == null) {
+				throw new StationReadException("충전소 조회에 실패했습니다.");
+			}
+			
+			int chargerCount = stationMapper.findChargerCount(station.getStationNo()); 
+			if(chargerCount < 0) {
+				throw new ChargerReadException("충전기 조회에 실패했습니다.");
+			}
+			
+			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+			station.setChargerCount(chargerCount);
+			station.setUnableChargerCount(unableChargers);
+			
+			return station;
+		}
+
+		// 07/04 충전소 수정
+		public void updateStation(Long stationNo, StationDto station) {
+			Station stationEntity = Station.builder()
+					   .stationNo(stationNo)
+					   .stationName(station.getStationName())
+					   .stationDesc(station.getStationDesc())
+					   .region(station.getRegion())
+					   .address(station.getAddress())
+					   .lat(station.getLat())
+					   .lng(station.getLng())
+					   .status(station.getStatus())
+					   .build();
+			
+			SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
+			
+			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
+			if(duplicateStation < 1) {
+				throw new StationCreateException("일치하는 충전소가 없습니다..");
+			}
+			
+			stationMapper.updateStation(stationEntity);
+		} 
 
 }
