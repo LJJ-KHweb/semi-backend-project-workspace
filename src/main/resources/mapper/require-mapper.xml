@@ -65,5 +65,32 @@
 		 		STATUS = 'Y'
 	</select>
 	
+	
+	<!--   관리자가 문의사항 전체 조회  -->
+	<select id="adminFindAllRequires" resultType="RequireResponse">
+		<include refid="requireColumn"/>
+				  FROM
+				      REQUIRE
+			    ORDER
+			       BY
+			       	  CREATE_DATE ASC
+	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>

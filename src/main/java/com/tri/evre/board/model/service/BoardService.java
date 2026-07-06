@@ -56,8 +56,10 @@ public class BoardService {
 		if (result < 1) {
 			throw new BoardCreateException("게시글 등록 실패");
 		}
-
-		fileService.saveFile(files, boardEntity.getBoardNo());
+		
+		if (files != null && !files.isEmpty()) {
+			fileService.saveFile(files, boardEntity.getBoardNo());
+		}
 		
 	}
 	
