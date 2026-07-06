@@ -18,6 +18,7 @@ import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.StationCreateException;
+import com.tri.evre.global.exception.station.StationDeleteException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.global.exception.station.StationReadException;
 import com.tri.evre.global.exception.user.UserNotFoundException;
@@ -235,7 +236,7 @@ public class AdminService {
 			
 			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
 			if(duplicateStation > 0) {
-				throw new StationCreateException("충전소가 중복입니다.");
+				throw new StationReadException("충전소가 중복입니다.");
 			}
 			
 			stationMapper.insertStation(stationEntity);
@@ -275,11 +276,15 @@ public class AdminService {
 					   .status(station.getStatus())
 					   .build();
 			
-			SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
+			StationDto stationDto = stationMapper.findByStationNo(stationNo);
+			if(stationDto == null) {
+				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
+			}
 			
-			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
-			if(duplicateStation < 1) {
-				throw new StationCreateException("일치하는 충전소가 없습니다..");
+			StationDto stationInfo = new StationDto(station.getStationNo(), station.getLat(), station.getLng());
+			int duplicateStation = stationMapper.checkDuplicateByNo(stationInfo);
+			if(duplicateStation > 0) {
+				throw new StationReadException("이미 존재하는 충전소입니다.");
 			}
 			
 			stationMapper.updateStation(stationEntity);
@@ -304,5 +309,17 @@ public class AdminService {
 			userMapper.updateUserRole(user);
 			
 		} 
+		
+		//07/06 심영도 충전소 삭제
+		public void deleteStation(Long stationNo) {
+			
+			if(stationMapper.findByStationNo(stationNo) == null) {
+				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
+			}
+			
+			if(stationMapper.deleteStation(stationNo) < 1) {
+				throw new StationDeleteException("충전소 삭제에 실패했습니다.");
+			}
+		}
 
 }

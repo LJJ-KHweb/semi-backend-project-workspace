@@ -2,7 +2,6 @@ package com.tri.evre.station.model.dto;
 
 import java.sql.Date;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,4 +30,11 @@ public class StationDto {
 	private Date createDate;
 	private String status;
 	private int unableChargerCount; // 충전소에 충전기 몇대 고장났는 지
+	
+	public StationDto(Long stationNo, double lat, double lng) {
+		super();
+		this.stationNo = stationNo;
+		this.lat = lat;
+		this.lng = lng;
+	}
 }

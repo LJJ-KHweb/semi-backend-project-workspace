@@ -195,6 +195,8 @@ public interface StationMapper {
 				   	   LNG = #{lng}
 			""")
 	int checkDuplicate(SearchInfo stationInfo);
+	
+	
 
 	@Update("""
 				UPDATE
@@ -211,6 +213,30 @@ public interface StationMapper {
 			  	 	   STATION_NO = #{stationNo}
 			""")
 	void updateStation(Station stationEntity);
+
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+				  	   STATION
+				 WHERE
+				 	   LAT = #{lat}
+				   AND
+				   	   LNG = #{lng}
+				   AND
+				   	   STATION_NO != #{stationNo}
+			""")
+	int checkDuplicateByNo(StationDto stationInfo);
+
+	@Update("""
+				UPDATE
+					   STATION
+				   SET
+				   	   STATUS = 'N'
+				 WHERE
+				 	   STATION_NO = #{stationNo}
+			""")
+	int deleteStation(Long stationNo);
 
 
 	
