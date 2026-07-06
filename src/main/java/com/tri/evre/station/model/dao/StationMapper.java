@@ -2,12 +2,16 @@ package com.tri.evre.station.model.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.station.model.dto.SearchInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.station.model.vo.Station;
 
 @Mapper
 public interface StationMapper {
@@ -153,6 +157,60 @@ public interface StationMapper {
 			 	   	   C.STATUS = 'N'
 			""")
 	int findUnableCharger(Long stationNo);
+
+	@Insert("""
+				INSERT
+				  INTO
+				  	   STATION
+				  	   (
+				  	   STATION_NO
+				  	 , STATION_NAME
+				  	 , REGION
+			 		 , ADDRESS
+			 		 , STATION_DESC
+			  		 , LAT
+			  		 , LNG
+				  	   )
+				VALUES
+					   (
+					   	SEQ_STATION.NEXTVAL
+					  , #{stationName}
+					  , #{region}
+					  , #{address}
+					  , #{stationDesc}
+					  , #{lat}
+					  , #{lng}
+					   )
+			""")
+	void insertStation(Station stationEntity);
+
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+				       STATION
+				 WHERE
+				 	   LAT = #{lat}
+				   AND
+				   	   LNG = #{lng}
+			""")
+	int checkDuplicate(SearchInfo stationInfo);
+
+	@Update("""
+				UPDATE
+					   STATION
+				   SET
+				   	   STATION_NAME = #{stationName}
+				   	 , STATION_DESC = #{stationDesc}
+				   	 , REGION = #{region}
+			 		 , ADDRESS = #{address}
+			 		 , LAT = #{lat}
+			  		 , LNG = #{lng}
+			  		 , STATUS = #{status}
+			  	 WHERE
+			  	 	   STATION_NO = #{stationNo}
+			""")
+	void updateStation(Station stationEntity);
 
 
 	
