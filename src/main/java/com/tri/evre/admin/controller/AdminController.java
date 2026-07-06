@@ -234,4 +234,7 @@ public class AdminController {
 			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("충전소 삭제 성공", null));
 		}
 		
+		// 07/06 심영도 충전기 전체조회
+		
+		
 }
