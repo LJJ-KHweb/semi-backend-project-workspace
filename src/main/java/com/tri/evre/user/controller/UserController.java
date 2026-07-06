@@ -38,6 +38,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(ApiResponse.created("회원가입에 성공했습니다.",null));
 	}
 	
+	// 회원 정부수정
 	@PatchMapping("/mypage")  
 	public ResponseEntity<ApiResponse<Void>> update(@RequestBody @Valid UserUpdateRequestDto updateUser, @AuthenticationPrincipal CustomUserDetails user){
 		userService.update(updateUser, user);
@@ -51,6 +52,8 @@ public class UserController {
 																				@AuthenticationPrincipal CustomUserDetails user){
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("마일리지 조회에 성공했습니다.", userService.findAllMileageHistory(new PageInfo(page, size), user)));
 	}
+	
+	//관리자 
 	
 	
 	

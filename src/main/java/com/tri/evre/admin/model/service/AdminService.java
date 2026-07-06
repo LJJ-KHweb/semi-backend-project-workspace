@@ -34,6 +34,8 @@ import com.tri.evre.station.model.dto.SearchInfo;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
+import com.tri.evre.user.model.dao.UserMapper;
+import com.tri.evre.user.model.dto.UserDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,7 @@ public class AdminService {
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
 	private final FileStorageService fileService;
+	private final UserMapper userMapper;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -188,46 +191,7 @@ public class AdminService {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -317,6 +281,11 @@ public class AdminService {
 			}
 			
 			stationMapper.updateStation(stationEntity);
+		}
+
+		public List<UserDto> findAllUser(PageInfo pageInfo) {
+			
+			return userMapper.findAllUser(pageInfo);
 		} 
 
 }

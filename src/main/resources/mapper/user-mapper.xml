@@ -73,4 +73,17 @@
 		 		H.USER_ID = #{username}
 		 OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY		
 	</select>
+	
+	<select id="findAllUser">
+		SELECT
+				USER_NAME
+			 ,	USER_ID
+			 ,	EMAIL
+			 ,	CREATE_DATE
+			 ,	ROLE
+			 ,	STATUS
+		  FROM
+		  		SEMI_USER
+	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
 </mapper>
