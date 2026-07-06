@@ -30,7 +30,6 @@ import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +43,7 @@ public class AdminService {
 	private final StationMapper stationMapper;
 	//---- 07/02 선겸--
 	private final ProductMapper productMapper;
-	private final FileStorageService fileStorageService;
+	private final FileStorageService fileService;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -109,7 +108,7 @@ public class AdminService {
 		
 		productMapper.insertProductTable(productEntity);
 		
-		String filePath =  fileStorageService.store(file);
+		String filePath =  fileService.store(file);
 		
 		productMapper.insertInventoryTable(productEntity, filePath);
 		

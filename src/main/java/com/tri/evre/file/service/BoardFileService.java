@@ -28,8 +28,6 @@ public class BoardFileService implements FileManagementService {
 	private final FileStorageService fileStorageService;
 	private final FileMapper fileMapper;
 
-
-
 	@Override
 	public void saveFile(List<MultipartFile> files, Long boardNo) {
 		if(files.isEmpty()) {
@@ -37,16 +35,16 @@ public class BoardFileService implements FileManagementService {
 		}
 		int count = 1;
 		for(MultipartFile file : files) {
-			if(count >5) {
+			if(count > 5) {
 				throw new BoardFileCreateException("파일이 너무 많습니다.");
 			}
 			String filePath = fileStorageService.store(file);
 			BoardFile fileEntity = BoardFile.builder()
-								.filePath(filePath)
-								.fileOrder(count)
-								.originalName(file.getOriginalFilename())
-								.boardNo(boardNo)
-								.build();
+											.filePath(filePath)
+											.fileOrder(count)
+											.originalName(file.getOriginalFilename())
+											.boardNo(boardNo)
+											.build();
 			saveBoardFile(fileEntity);
 			count++;
 		}
@@ -59,11 +57,8 @@ public class BoardFileService implements FileManagementService {
 	
 	}
 
-	
-
 	@Override
 	public void updateFile(List<MultipartFile> files, Long boardNo) {
-		int result = 0;
 		if(files.isEmpty()) {
 			return;
 		}
