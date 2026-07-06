@@ -21,6 +21,7 @@ import com.tri.evre.global.exception.station.StationCreateException;
 import com.tri.evre.global.exception.station.StationDeleteException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.global.exception.station.StationReadException;
+import com.tri.evre.global.exception.user.UserNotFoundException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
@@ -37,6 +38,7 @@ import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
 import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.UserDto;
+import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -288,9 +290,24 @@ public class AdminService {
 			stationMapper.updateStation(stationEntity);
 		}
 
+		
+		@Transactional
 		public List<UserDto> findAllUser(PageInfo pageInfo) {
 			
 			return userMapper.findAllUser(pageInfo);
+		}
+
+		
+		
+		public void updateUserRole(UserRoleRequestDto user) {
+			
+			int userCount  = userMapper.countByUserId(user.getUserId());
+			if(userCount  < 1) {
+				throw new  UserNotFoundException("일치하는 회원이 없습니다.");
+			}
+			
+			userMapper.updateUserRole(user);
+			
 		} 
 		
 		//07/06 심영도 충전소 삭제
