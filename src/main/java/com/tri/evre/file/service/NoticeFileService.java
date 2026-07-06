@@ -24,7 +24,7 @@ public class NoticeFileService implements FileManagementService {
 
 	@Override
 	public void saveFile(List<MultipartFile> files, Long noticeNo) {
-		if(files == null) {
+		if(files.isEmpty()) {
 			return;
 		}
 		int count = 1;
@@ -55,7 +55,7 @@ public class NoticeFileService implements FileManagementService {
 	@Override
 	public void updateFile(List<MultipartFile> files, Long noticeNo) {
 		int result = 0;
-		if(files == null) {
+		if(files.isEmpty()) {
 			return;
 		}
 		

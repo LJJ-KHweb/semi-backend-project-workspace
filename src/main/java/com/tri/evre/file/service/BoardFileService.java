@@ -32,7 +32,7 @@ public class BoardFileService implements FileManagementService {
 
 	@Override
 	public void saveFile(List<MultipartFile> files, Long boardNo) {
-		if(files == null) {
+		if(files.isEmpty()) {
 			return;
 		}
 		int count = 1;
@@ -64,7 +64,7 @@ public class BoardFileService implements FileManagementService {
 	@Override
 	public void updateFile(List<MultipartFile> files, Long boardNo) {
 		int result = 0;
-		if(files == null) {
+		if(files.isEmpty()) {
 			return;
 		}
 		
