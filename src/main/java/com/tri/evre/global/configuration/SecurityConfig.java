@@ -59,8 +59,9 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/chargeStations/**").hasRole("ADMIN");
 					// 07/03 심영도 관리자 충전소 추가
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/chargeStations/**").hasRole("ADMIN");
-					// 07/06 심영도 관리자 충전소 수정
+					// 07/06 심영도 관리자 충전소 수정, 삭제
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/chargeStations/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/chargeStations/**").hasRole("ADMIN");
 					
 					// 07/02 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/products").hasRole("ADMIN");
