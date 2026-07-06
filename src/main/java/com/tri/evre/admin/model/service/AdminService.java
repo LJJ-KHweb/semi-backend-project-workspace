@@ -10,6 +10,9 @@ import com.tri.evre.board.model.dao.BoardMapper;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
+import com.tri.evre.charger.model.dao.ChargerMapper;
+import com.tri.evre.charger.model.dto.ChargerDto;
+import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
@@ -17,7 +20,6 @@ import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
-import com.tri.evre.global.exception.station.StationCreateException;
 import com.tri.evre.global.exception.station.StationDeleteException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.global.exception.station.StationReadException;
@@ -55,6 +57,9 @@ public class AdminService {
 	private final ProductMapper productMapper;
 	private final FileStorageService fileService;
 	private final UserMapper userMapper;
+	
+	//-- 07/06 심영도 --
+	private final ChargerMapper chargerMapper;
 	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
@@ -320,6 +325,21 @@ public class AdminService {
 			if(stationMapper.deleteStation(stationNo) < 1) {
 				throw new StationDeleteException("충전소 삭제에 실패했습니다.");
 			}
+		}
+
+		public ChargerResponse findAllCharger(PageInfo pageInfo) {
+			
+			pageInfo.setBoardCounts(chargerMapper.findAllChargerCount());
+			if(pageInfo.getBoardCounts() < 1) {
+				throw new StationNotFoundException("충전기가 없습니다.");
+			}
+			
+			List<ChargerDto> chargers = chargerMapper.findAllCharger(pageInfo);
+			
+			ChargerResponse chargerResponse = new ChargerResponse(pageInfo, chargers);
+			
+			return chargerResponse;
+			
 		}
 
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.charger.model.dao.ChargerMapper">
+
+	<select id="findAllChargerCount">
+		SELECT
+		 	   COUNT(*)
+		  FROM
+		  	   CHARGER
+	</select>
+	
+	<select id="findAllCharger">
+		SELECT
+			   STATION_NO
+			 , STATION_NAME
+			 , CHARGER_NO
+			 , C.STATUS
+			 , S.STATUS AS STATION_STATUS
+		  FROM
+		  	   CHARGER C
+		  JOIN
+		  	   STATION S USING(STATION_NO)
+		 ORDER
+		 	BY
+		 	   STATION_NO DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+</mapper>
