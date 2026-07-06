@@ -31,6 +31,7 @@ import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
+import com.tri.evre.user.model.dto.UserDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -149,6 +150,16 @@ public class AdminController {
 	public ResponseEntity<ApiResponse<List<WeeklyProductPurchaseDto>>> findByPurchaseCount(){ 
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findByPurchaseCount()));
+	}
+	
+	
+	// 회원 관리페이지 회원 정보 전체 조회
+	@GetMapping("/users")
+	public ResponseEntity<ApiResponse<List<UserDto>>> findAllUser(@RequestParam(name="page")int page, 
+																	@RequestParam(name="size")int size){ 
+		
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size))));
 	}
 	
 	
