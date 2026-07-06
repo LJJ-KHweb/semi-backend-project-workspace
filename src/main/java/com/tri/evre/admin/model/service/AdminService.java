@@ -20,6 +20,7 @@ import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
+import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
@@ -29,6 +30,7 @@ import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -127,6 +129,37 @@ public class AdminService {
 	
 	
 	
+	// 상품 수정
+	@Transactional
+	public void updateProduct(Long productNo, UpdateProductDto product, MultipartFile file) {
+		
+		
+		// 앞단을 생각 못하고 뒷단만 생각하다보니 값을 입력하지 않은 필드가 있을 경우 udpate실행 안함
+		// 원래 앞단에서 확인하는 건데 여기다 만들어버렸음
+		// 수정할 때 앞단에서 상품의 정보를 가지고 있을 것이고 앞단에서 이미 있는 정보와 업데이트시 보내는 정보를 비교해서 값이 넘어올것이다.
+	    boolean isProductUpdate =
+	            (product.getProductName() != null && !product.getProductName().isBlank())
+	            || product.getPrice() != null;
+
+	    if (isProductUpdate) {
+	        productMapper.updateProduct(productNo, product);
+	    }
+
+	    String filePath = (file != null && !file.isEmpty())
+	            ? fileService.store(file)
+	            : null;
+	    
+	    
+	    boolean isInventoryUpdate =
+	            product.getAmount() != null
+	            || filePath != null;
+	    
+	    log.info("================{} {} {}", productNo, product.getAmount(), filePath);
+	    
+	    if (isInventoryUpdate) {
+	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
+	    }
+	}
 	
 	
 	

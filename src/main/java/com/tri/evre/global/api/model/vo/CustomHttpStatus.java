@@ -13,7 +13,12 @@ public enum CustomHttpStatus {
 	UPDATE_SUCCESS(201),
 	// 삭제 성공
 	DELETE_SUCCESS(200),
-
+	
+	
+	
+	
+	//업데이트 요청시 요청가는 데이터가 하나도 없ㅅ음
+	Updated_Nothing(404),
 	//---------- 서버 오류--------
 	SERVER_ERROR(500),
 	

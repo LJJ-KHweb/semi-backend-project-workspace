@@ -2,12 +2,12 @@ package com.tri.evre.admin.controller;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +24,7 @@ import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.product.model.dto.ProductDto;
+import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
@@ -105,7 +106,27 @@ public class AdminController {
 		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("상품 삭제 성공", null));
 	}
 	
-	
+	// 상품 수정
+	@PatchMapping("/products/{productNo}")
+	public ResponseEntity<ApiResponse<Void>> updateProduct(
+	        @PathVariable("productNo") Long productNo,
+	        @ModelAttribute @Valid UpdateProductDto product,
+	        @RequestParam(name = "file", required = false) MultipartFile file) {
+		
+		
+	    if ((product.getProductName() == null || product.getProductName().isBlank())
+	            && product.getPrice() == null
+	            && product.getAmount() == null
+	            && (file == null || file.isEmpty())) {
+
+	        throw new IllegalArgumentException("수정할 내용이 없습니다.");
+	    }
+	    
+	    
+	    adminService.updateProduct(productNo, product, file);
+
+	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정 성공", null));
+	}
 	
 	
 	

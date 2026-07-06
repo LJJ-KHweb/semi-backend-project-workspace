@@ -61,7 +61,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/products").hasRole("ADMIN");
 					// 07/03 선겸
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/products/**").hasRole("ADMIN");
-					
+					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/products/**").hasRole("ADMIN");
 					
 					
 					
