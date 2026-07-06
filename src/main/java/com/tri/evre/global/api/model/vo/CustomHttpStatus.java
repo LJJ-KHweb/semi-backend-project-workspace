@@ -111,7 +111,8 @@ public enum CustomHttpStatus {
     MILEAGE_HISTORY_CREATE_FAILED(500) ,
     
     // 07/02 재준 추가 
-    RASP_CRUD_FAILED(500);
+    RASP_CRUD_FAILED(500),
+    INVALID_PAGE_REQUEST(400);
 	
 	
 	

@@ -46,7 +46,6 @@ public class AuthController {
 	
 	@DeleteMapping("/logout")
 	public ResponseEntity<ApiResponse<Map<String, String>>> logout(@RequestBody Map<String,String> refreshToken, @AuthenticationPrincipal CustomUserDetails user){
-		log.info("11111111111111111111111111111111111111111111111111111{}", refreshToken.get("refreshToken"));
 		tokenService.logout(refreshToken.get("refreshToken"), user.getUsername());
 		return ResponseEntity.status(200).body(ApiResponse.success("로그아웃 성공~",null));
 	}

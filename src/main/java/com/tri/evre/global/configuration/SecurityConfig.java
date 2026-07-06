@@ -75,7 +75,14 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/rasp/mypage").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/ranking", "api/admin/charts").hasRole("ADMIN");
 					// 07/03
-					requests.requestMatchers(HttpMethod.PATCH, "/api/users").authenticated();
+					requests.requestMatchers(HttpMethod.PATCH, "/api/users/mypage").authenticated();
+					requests.requestMatchers(HttpMethod.GET,"/api/users/mypage").authenticated();
+					// 공지사항
+					requests.requestMatchers(HttpMethod.POST,"/api/notices").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET,"/api/notices").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET, "/api/notices/**").permitAll();
+					requests.requestMatchers(HttpMethod.PATCH,"/api/notices/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.DELETE,"/api/notices/**").hasRole("ADMIN");
 					
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -11,9 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class File {
+public class NoticeFile {
 	private String filePath;
 	private int fileOrder;
 	private String originalName;
-	private Long boardNo;
+	private Long noticeNo;
 }
+

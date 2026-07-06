@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserDto extends UserUpdateRequestDto{
+public class UserDto{
 	@NotBlank
 	@Pattern(regexp="^[a-zA-Z0-9]{4,20}$", message="아이디 형식이 올바르지 않습니다.")
 	private String userId;

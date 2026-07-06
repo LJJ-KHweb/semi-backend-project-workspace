@@ -47,6 +47,7 @@ import com.tri.evre.global.exception.charger.ChargerUpdateException;
 import com.tri.evre.global.exception.charger.DuplicateChargerException;
 import com.tri.evre.global.exception.charger.InvalidChargerFormatException;
 import com.tri.evre.global.exception.charger.MissingChargerFieldException;
+import com.tri.evre.global.exception.page.InvalidPagingParameterException;
 import com.tri.evre.global.exception.product.InvalidProductFormatException;
 import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.global.exception.product.ProductCreateException;
@@ -648,7 +649,12 @@ public class GlobalExceptionHandler {
 				.body(new ApiResponse(8001, e.getMessage(), null));
 	}
 	
-	
+	//재준 추가 PageInfo잘못된값이 들어올때
+	@ExceptionHandler(InvalidPagingParameterException.class)
+	public ResponseEntity<ApiResponse> InvalidPagingParameter(InvalidPagingParameterException e) {
+		return ResponseEntity.status(CustomHttpStatus.INVALID_PAGE_REQUEST.getCode())
+				.body(new ApiResponse(9001, e.getMessage(), null));
+	}
 	
 	
 

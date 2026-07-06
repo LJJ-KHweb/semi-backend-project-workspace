@@ -1,9 +1,12 @@
 package com.tri.evre.user.model.dao;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.mileage.model.dto.MileageDto;
 import com.tri.evre.user.model.vo.User;
 
 @Mapper
@@ -16,5 +19,7 @@ public interface UserMapper {
 	String findPwd();
 
 	int update(User userEntity);
+
+	List<MileageDto> findAllMileageHistory(@Param(value = "pageInfo")PageInfo pageInfo, @Param(value = "username")String username);
 
 }

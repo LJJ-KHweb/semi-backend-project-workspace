@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tri.evre.notice.model.dao.NoticeMapper">
+
+	<!-- 공지사항 작성 -->
+	<insert id="save"
+		parameterType="Notice">
+		<selectKey keyProperty="noticeNo"
+			resultType="Long"
+			order="BEFORE">
+			SELECT SEQ_NNO.NEXTVAL FROM DUAL
+		</selectKey>
+			INSERT
+			  INTO
+				  	NOTICE
+				  	(
+				 	NOTICE_NO
+				 ,	NOTICE_TITLE
+				 ,	NOTICE_CONTENT
+				 ,	USER_ID
+				 ,	VIEWS
+				  	)
+			VALUES
+					(
+					#{noticeNo}
+				 ,	#{noticeTitle}
+				 ,	#{noticeContent}
+				 ,	#{userId}
+				 ,  0
+				 	)
+	</insert>
+	
+	<!-- 조회 공통 -->
+	<sql id="noticeColumn">
+			SELECT
+					NOTICE_NO
+				 , 	NOTICE_TITLE
+				 , 	U.USER_NAME
+				 ,	N.CREATE_DATE
+				 ,	VIEWS
+	</sql>
+	
+	<!-- 공지사항 전체 조회 -->
+	<select id="findAll" resultType="noticeDto">
+		<include refid="noticeColumn"/>
+			FROM
+			      NOTICE N
+			JOIN
+			 	  SEMI_USER U
+			  ON 
+			  	  N.USER_ID = U.USER_ID
+		   ORDER
+			  BY
+			   	  N.CREATE_DATE ASC
+	     OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<!-- 공지사항 상세 보기 -->
+	<select id="findByNoticeNo" resultType="noticeDto">
+		<include refid="noticeColumn"/>
+				 ,	NOTICE_CONTENT
+			  FROM
+					NOTICE N
+			  JOIN
+					SEMI_USER U
+				ON
+					N.USER_ID = U.USER_ID
+			 WHERE
+			 		NOTICE_NO = #{noticeNo}
+	</select>
+	
+	<!-- 공지사항 일반게시판에 공유하는 게시글 조회 -->
+	<select id="findPublicNotice">
+		<include refid="noticeColumn"/>
+				 ,	NOTICE_CONTENT
+			  FROM
+			  		NOTICE N
+			  JOIN
+					SEMI_USER U
+				ON
+					N.USER_ID = U.USER_ID
+			 WHERE
+			 		PUBLIC_YN = 'Y'
+	</select>
+
+	<!-- 공지사항 수정 -->
+	<update id="update">
+			UPDATE
+					NOTICE
+			   SET
+			   		NOTICE_TITLE = #{noticeTitle}
+			   	 ,	NOTICE_CONTENT = #{noticeContent}
+			   	 ,	PUBLIC_YN = #{publicYN}
+	 	 	 WHERE
+	  		 		USER_ID = #{userId}
+	  		   AND
+	  		   		STATUS = 'Y'
+	  		   AND
+	  	   			NOTICE_NO = #{noticeNo}
+	</update>
+	
+	<delete id="delete">
+		DELETE
+		  FROM
+		  		NOTICE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</delete>
+	
+	<!-- 공지사항 전체 갯수 조회 -->
+	<select id="findNoticesCount">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		NOTICE
+		 WHERE
+		 		STATUS = 'Y'
+	</select>
+	
+	<!-- 공지사항 조회수 증가 -->
+	<update id="plusViews">
+		UPDATE
+				NOTICE
+		   SET
+		   		VIEWS = VIEWS +1
+		 WHERE
+		 		STATUS = 'Y'
+		   AND
+		   		NOTICE_NO = #{noticeNo}
+	</update>
+	
+	<!-- 공지사항 존재 여부 확인 -->
+	<select id="existsByNoticeNo">
+		SELECT
+				1
+		  FROM
+		  		NOTICE
+		 WHERE
+		 		NOTICE_NO = #{noticeNo}
+	</select>
+	
+	
+</mapper>
