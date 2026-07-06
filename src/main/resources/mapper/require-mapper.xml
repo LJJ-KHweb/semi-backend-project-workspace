@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace ="com.tri.evre.require.model.dao.RequireMapper">
+	<!-- 게시글 작성 -->
+	<insert id="wirteRequire"
+			parameterType="Require">
+			
+	<selectKey keyProperty="requireNo"
+               resultType="Long"
+               order="BEFORE">
+        SELECT SEQ_REQ.NEXTVAL FROM DUAL
+    </selectKey>
+	 	INSERT
+				  INTO
+				  		REQUIRE
+				  		(
+				  		REQUIRE_NO
+				  	 ,	REQUIRE_TITLE
+				  	 ,	REQUIRE_CONTENT
+				  	 ,	USER_ID
+				  	 ,  VIEWS
+				  	 	)
+				VALUES
+						(
+						#{requireNo}
+					 ,	#{requireTitle}
+					 ,	#{requireContent}
+					 ,	#{userId}
+					 ,  0
+					 	)
+	</insert>
+	
+
+</mapper>

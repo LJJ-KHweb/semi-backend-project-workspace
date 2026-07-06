@@ -69,6 +69,8 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/products/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/products/**").hasRole("ADMIN");
 					
+					// 07/06 선겸
+					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();
 					
 					
 					// 06/30 재준 추가
