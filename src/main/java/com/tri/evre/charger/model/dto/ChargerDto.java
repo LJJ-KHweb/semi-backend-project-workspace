@@ -14,7 +14,7 @@ import lombok.ToString;
 public class ChargerDto {
 	private Long chargerNo;
 	private String status;
-	private Long StationNo;
-	private String StationName;
+	private Long stationNo;
+	private String stationName;
 	private String stationStatus;
 }

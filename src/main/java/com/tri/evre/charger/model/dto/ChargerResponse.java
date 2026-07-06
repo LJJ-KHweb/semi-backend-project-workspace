@@ -17,5 +17,5 @@ import lombok.ToString;
 @ToString
 public class ChargerResponse {
 	private PageInfo pageInfo;
-	private List<ChargerDto> stations;
+	private List<ChargerDto> chargers;
 }
