@@ -22,6 +22,7 @@ import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
@@ -134,7 +135,15 @@ public class AdminController {
 	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정 성공", null));
 	}
 	
+	// ======================== 07/06 김선겸
+	// 문의사항 전체조회
 	
+	@GetMapping("/requires")
+	public ResponseEntity<ApiResponse<RequireListResponse>> findAllRequires(@RequestParam(name = "page", defaultValue = "0") int page,
+												@RequestParam(name = "size", defaultValue = "3") int size) {
+		RequireListResponse requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)문의사항 조회 성공", requireListResponse));
+	}
 	
 	
 	
