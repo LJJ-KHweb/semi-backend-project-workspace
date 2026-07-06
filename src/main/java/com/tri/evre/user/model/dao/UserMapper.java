@@ -14,7 +14,7 @@ import com.tri.evre.user.model.vo.User;
 @Mapper
 public interface UserMapper {
 
-	int validateDuplicateUserId(String userId);
+	int countByUserId(String userId);
 	
 	void signup(User userEntity);
 

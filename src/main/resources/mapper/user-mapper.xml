@@ -5,7 +5,7 @@
 <mapper namespace ="com.tri.evre.user.model.dao.UserMapper">
 	
 	<!-- 아이디 중복 체크 -->
-	<select id="validateDuplicateUserId">
+	<select id="countByUserId">
 		SELECT
 				COUNT(*)
 		  FROM

@@ -301,8 +301,8 @@ public class AdminService {
 		
 		public void updateUserRole(UserRoleRequestDto user) {
 			
-			int result = userMapper.validateDuplicateUserId(user.getUserId());
-			if(result < 1) {
+			int userCount  = userMapper.countByUserId(user.getUserId());
+			if(userCount  < 1) {
 				throw new  UserNotFoundException("일치하는 회원이 없습니다.");
 			}
 			
