@@ -74,7 +74,7 @@ public class SecurityConfig {
 					
 					// 07/06 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();
-					
+					requests.requestMatchers(HttpMethod.GET,"/api/requires/**").authenticated();
 					
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");

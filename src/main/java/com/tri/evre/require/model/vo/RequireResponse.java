@@ -3,13 +3,12 @@ package com.tri.evre.require.model.vo;
 import java.sql.Date;
 
 import lombok.Builder;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 @Builder
-public class Require {
+public class RequireResponse {
 	private Long requireNo;
 	private String requireTitle;
-	private String requireContent;
-	private String userId;
+	private Date createDate;
 }
