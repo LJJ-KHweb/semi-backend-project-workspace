@@ -48,8 +48,9 @@ public class RequireService {
 			throw new BoardCreateException("문의사항 작성에 실패했습니다.");
 		}
 		
-		fileService.saveFile(files, requireEntity.getRequireNo());
-		
+		if (files != null && !files.isEmpty()) {
+		    fileService.saveFile(files, requireEntity.getRequireNo());
+		}
 	}
 
 	

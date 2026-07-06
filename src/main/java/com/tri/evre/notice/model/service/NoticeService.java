@@ -47,7 +47,9 @@ public class NoticeService {
 		if (result < 1) {
 			throw new BoardCreateException("게시글 등록 실패했습니다.");
 		}
-		fileService.saveFile(files, noticeEntity.getNoticeNo());
+		if (files != null && !files.isEmpty()) {
+			fileService.saveFile(files, noticeEntity.getNoticeNo());
+		}
 	}
 
 	// 공지사항 전체 조회
