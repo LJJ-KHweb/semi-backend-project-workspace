@@ -14,4 +14,8 @@ public interface ChargerMapper {
 
 	List<ChargerDto> findAllCharger(PageInfo pageInfo);
 
+	ChargerDto findByChargerNo(Long stationNo);
+
+	ChargerDto findChargerByStationNo(Long stationNo);
+
 }

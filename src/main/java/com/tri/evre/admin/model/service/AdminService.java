@@ -13,6 +13,7 @@ import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dao.ChargerMapper;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
+import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
@@ -339,6 +340,12 @@ public class AdminService {
 			ChargerResponse chargerResponse = new ChargerResponse(pageInfo, chargers);
 			
 			return chargerResponse;
+			
+		}
+
+		public void insertCharger(ChargerDto charger) {
+			
+			ChargerDto chargerEntity = chargerMapper.findChargerByStationNo(charger.getStationNo());
 			
 		}
 

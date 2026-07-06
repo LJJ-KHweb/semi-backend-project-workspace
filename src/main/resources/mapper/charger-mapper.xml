@@ -28,4 +28,14 @@
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
+	<select id="findChargerByStationNo">
+		SELECT
+			   STATION_NAME
+			 , S.STATUS AS STATION_STATUS
+		  FROM
+		  	   CHARGER C
+		  JOIN
+		  	   STATION S USING(STATION_NO)
+	</select>
+	
 </mapper>
