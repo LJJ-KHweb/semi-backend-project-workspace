@@ -137,6 +137,9 @@ public class GlobalExceptionHandler {
 	 * 		"문자열" : 문자열		<= 타입 안맞음
 	 * }
 	 */
+	
+	
+	
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ApiResponse<Void>> handleJson(HttpMessageNotReadableException e
 													  , HandlerMethod handlerMethod) {

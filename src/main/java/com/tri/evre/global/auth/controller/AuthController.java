@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.auth.model.dto.LoginRequestDto;
 import com.tri.evre.global.auth.model.dto.LoginResponse;
-import com.tri.evre.global.auth.model.dto.TestDto;
+import com.tri.evre.global.auth.model.dto.LogoutRequest;
 import com.tri.evre.global.auth.model.service.AuthService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.token.model.service.TokenService;
@@ -45,8 +45,10 @@ public class AuthController {
 	}
 	
 	@DeleteMapping("/logout")
-	public ResponseEntity<ApiResponse<Map<String, String>>> logout(@RequestBody Map<String,String> refreshToken, @AuthenticationPrincipal CustomUserDetails user){
-		tokenService.logout(refreshToken.get("refreshToken"), user.getUsername());
+	public ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutRequest logoutRequest, @AuthenticationPrincipal CustomUserDetails user){
+		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		tokenService.logout(logoutRequest.getRefreshToken(), user.getUsername());
+		log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		return ResponseEntity.status(200).body(ApiResponse.success("로그아웃 성공~",null));
 	}
 	
