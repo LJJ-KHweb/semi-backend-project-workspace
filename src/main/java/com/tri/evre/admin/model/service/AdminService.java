@@ -327,7 +327,7 @@ public class AdminService {
 		//07/06 심영도 충전소 삭제
 		public void deleteStation(Long stationNo) {
 			
-			if(stationNo < 1) {
+			if(stationMapper.findByStationNo(stationNo) == null) {
 				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
 			}
 			
