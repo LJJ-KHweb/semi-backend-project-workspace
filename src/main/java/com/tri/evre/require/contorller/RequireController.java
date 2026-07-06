@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.board.model.dto.BoardListResponse;
+import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
@@ -48,7 +50,7 @@ public class RequireController {
 												  @RequestParam("size") int size,
 												  @AuthenticationPrincipal CustomUserDetails user){
 
-		
+		BoardListResponse boardsResponse = boardService.findAll(new PageInfo(page,size));
 
 
 return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 작성 성공", null));
