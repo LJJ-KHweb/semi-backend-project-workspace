@@ -35,7 +35,7 @@ public class BoardService {
 	
 	//@Qualifier interface 구현체가 2개일때 어떤걸로 주입해줄지 결정해주는 에노테이션
 	// 사용방법 RequiredArgsConstructor말고 직접 생성자 매개변수에 써서 주입해줘야됨
-	public BoardService(BoardMapper boardMapper, NoticeService noticeService ,@Qualifier("boardFileService")  FileManagementService fileService) {
+	public BoardService(BoardMapper boardMapper, NoticeService noticeService ,@Qualifier("boardFileService") FileManagementService fileService) {
 		super();
 		this.boardMapper = boardMapper;
 		this.fileService = fileService;
