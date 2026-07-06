@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tri.evre.admin.model.service.AdminService;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
+import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
@@ -237,6 +238,14 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> deleteStation(@PathVariable(name="stationNo") Long stationNo) {
 			adminService.deleteStation(stationNo);
 			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("충전소 삭제 성공", null));
+		}
+		
+		// 07/06 심영도 충전기 전체조회
+		@GetMapping("/charger")
+		public ResponseEntity<ApiResponse<ChargerResponse>> findAllCharger(@RequestParam(name="page") int page
+												  		   				 , @RequestParam(name="size") int size) {
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 조회 성공", adminService.findAllCharger(new PageInfo(page, size))));
 		}
 		
 }
