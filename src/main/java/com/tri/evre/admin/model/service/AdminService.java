@@ -345,7 +345,7 @@ public class AdminService {
 
 		public void insertCharger(ChargerDto charger) {
 			
-			ChargerDto chargerEntity = chargerMapper.findChargerByStationNo(charger.getStationNo());
+			ChargerDto stationInfo = chargerMapper.findChargerByStationNo(charger.getStationNo());
 			
 		}
 
