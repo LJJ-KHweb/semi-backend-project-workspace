@@ -20,6 +20,7 @@ import com.tri.evre.global.exception.station.StationNotFoundException;
 import com.tri.evre.product.model.dao.ProductMapper;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.ProductListDto;
+import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
@@ -28,8 +29,8 @@ import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
-import com.tri.evre.user.model.dto.UserDto;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -128,6 +129,30 @@ public class AdminService {
 	
 	
 	
+	
+	@Transactional
+	public void updateProduct(Long productNo, UpdateProductDto product, MultipartFile file) {
+
+	    boolean isProductUpdate =
+	            (product.getProductName() != null && !product.getProductName().isBlank())
+	            || product.getPrice() != null;
+
+	    if (isProductUpdate) {
+	        productMapper.updateProduct(productNo, product);
+	    }
+
+	    String filePath = (file != null && !file.isEmpty())
+	            ? fileService.store(file)
+	            : null;
+
+	    boolean isInventoryUpdate =
+	            product.getAmount() != null
+	            || filePath != null;
+
+	    if (isInventoryUpdate) {
+	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
+	    }
+	}
 	
 	
 	

@@ -1,5 +1,6 @@
 package com.tri.evre.global.exception;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -185,6 +186,33 @@ public class GlobalExceptionHandler {
 	            .body(ApiResponse.fail(code, response.toString()));
 	}
 
+	// 인자의 값이 잘못되었다.
+	@ExceptionHandler(IllegalArgumentException.class)
+	public ResponseEntity<ApiResponse<Map<String, Object>>> handleIllegalArgument(
+	        IllegalArgumentException e,
+	        HandlerMethod handlerMethod) {
+
+	    // 1. 어떤 Controller / Method인지
+	    String controller = handlerMethod.getBeanType().getSimpleName();
+	    String method = handlerMethod.getMethod().getName();
+
+	    String  messeage = e.getMessage();
+
+	    // 3. 코드
+	    int code = getcode(method);
+
+	    // 4. 최종 payload 구성
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("controller", controller);
+	    response.put("method", method);
+	    response.put("errors", messeage);
+
+	    return ResponseEntity
+	            .badRequest()
+	            .body(ApiResponse.fail(code, response.toString()));
+	}
+	
+	
 	
 	// 회원 -----------------------------------------------------------------------
 
