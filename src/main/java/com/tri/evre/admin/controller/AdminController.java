@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +29,7 @@ import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
+import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 
 import jakarta.validation.Valid;
@@ -156,18 +158,82 @@ public class AdminController {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	//------07/03---심영도 - 충전소 전체 조회
-	@GetMapping("/chargeStations")
-	public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
-											  							   , @RequestParam(name="size") int size) {
-		StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
+		@GetMapping("/chargeStations")
+		public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
+												  							   , @RequestParam(name="size") int size) {
+			StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
+			
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+		}
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
-	}
-	
-	
-	
-	
-	
-	
+		// 07/03 심영도 충전소 작성
+		@PostMapping("/chargeStations")
+		public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid StationDto station) {
+			adminService.insertStation(station);
+			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 작성 성공", null));
+		}
+		
+		// 07/04 심영도 충전기 상세보기
+		@GetMapping("/chargeStations/{stationNo}")
+		public ResponseEntity<ApiResponse<StationDto>> findByStationNo(@PathVariable(name="stationNo") Long stationNo){
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 조회 성공", adminService.findByStationNo(stationNo)));
+		}
+		
+		// 07/04 심영도 충전소 수정
+		@PatchMapping("/chargeStations/{stationNo}")
+		public ResponseEntity<ApiResponse<Void>> updateStation(@PathVariable(name="stationNo") Long stationNo,
+															   @RequestBody @Valid StationDto station) {
+			adminService.updateStation(stationNo, station);
+			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 수정 성공", null));
+		}
 }
