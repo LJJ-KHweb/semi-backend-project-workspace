@@ -3,7 +3,7 @@ package com.tri.evre.file.model.dto;
 import java.util.List;
 
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.require.model.dto.RequireDto;
+import com.tri.evre.require.model.vo.RequireResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RequireListResponse {
 	private PageInfo pageInfo;
-	private List<RequireDto> requires;
+	private List<RequireResponse> requires;
 	
 }
