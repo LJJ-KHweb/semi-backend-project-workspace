@@ -197,27 +197,6 @@ public class AdminController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	//------07/03---심영도 - 충전소 전체 조회
 		@GetMapping("/chargeStations")
 		public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
@@ -247,4 +226,12 @@ public class AdminController {
 			adminService.updateStation(stationNo, station);
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 수정 성공", null));
 		}
+		
+		// 07/06 심영도 충전소 삭제
+		@DeleteMapping("/chargeStations/{stationNo}")
+		public ResponseEntity<ApiResponse<Void>> deleteStation(@PathVariable(name="stationNo") Long stationNo) {
+			adminService.deleteStation(stationNo);
+			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("충전소 삭제 성공", null));
+		}
+		
 }
