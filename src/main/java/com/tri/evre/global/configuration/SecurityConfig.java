@@ -90,6 +90,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.DELETE,"/api/notices/**").hasRole("ADMIN");
 					
 					requests.requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/users").hasRole("ADMIN");
 					
 					
 				}).sessionManagement(manager-> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

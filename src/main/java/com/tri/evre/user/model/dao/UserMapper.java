@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.mileage.model.dto.MileageDto;
 import com.tri.evre.user.model.dto.UserDto;
+import com.tri.evre.user.model.dto.UserRoleRequestDto;
 import com.tri.evre.user.model.vo.User;
 
 @Mapper
@@ -24,5 +25,7 @@ public interface UserMapper {
 	List<MileageDto> findAllMileageHistory(@Param(value = "pageInfo")PageInfo pageInfo, @Param(value = "username")String username);
 
 	List<UserDto> findAllUser(PageInfo pageInfo);
+
+	void updateUserRole(UserRoleRequestDto user);
 
 }

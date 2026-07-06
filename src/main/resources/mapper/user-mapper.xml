@@ -86,4 +86,13 @@
 		  		SEMI_USER
 	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
+	
+	<update id="updateUserRole">
+		UPDATE
+				SEMI_USER
+		   SET
+		   		ROLE = #{role}
+		 WHERE
+		 		USER_ID = #{userId}
+	</update>
 </mapper>
