@@ -159,7 +159,7 @@ public class AdminController {
 																	@RequestParam(name="size")int size){ 
 		
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size))));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 전체 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size))));
 	}
 	
 	
