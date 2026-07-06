@@ -250,9 +250,9 @@ public class AdminController {
 		}
 		
 		// 07/06 심영도 충전기 추가
-		@PostMapping("/charger/{chargerNo}")
-		public ResponseEntity<ApiResponse<Void>> insertCharger(@RequestBody ChargerDto charger){
-			adminService.insertCharger(charger);
+		@PostMapping("/charger")
+		public ResponseEntity<ApiResponse<Void>> insertCharger(@RequestParam(name="stationNo") Long stationNo){
+			adminService.insertCharger(stationNo);
 			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
 					.body(ApiResponse.created("충전기 작성성공", null));
 		}

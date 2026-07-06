@@ -16,6 +16,6 @@ public interface ChargerMapper {
 
 	ChargerDto findByChargerNo(Long stationNo);
 
-	ChargerDto findChargerByStationNo(Long stationNo);
+	void insertCharger(Long stationNo);
 
 }

@@ -13,12 +13,12 @@ import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dao.ChargerMapper;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
-import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
+import com.tri.evre.global.exception.charger.ChargerCreateException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.StationDeleteException;
@@ -343,10 +343,18 @@ public class AdminService {
 			
 		}
 
-		public void insertCharger(ChargerDto charger) {
+		public void insertCharger(Long stationNo) {
+
+			StationDto station = findByStationNo(stationNo);
+			if(station == null) {
+				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
+			}
+			if(station.getStatus() == "N") {
+				throw new ChargerCreateException("충전소가 운영 중이지 않습니다.");
+			}
 			
-			ChargerDto stationInfo = chargerMapper.findChargerByStationNo(charger.getStationNo());
 			
+			chargerMapper.insertCharger(stationNo);
 		}
 
 }
