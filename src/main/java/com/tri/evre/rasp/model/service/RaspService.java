@@ -50,10 +50,6 @@ public class RaspService {
 		if (results.isEmpty()) {
 			throw new RaspNotFoundException("라즈베리디비 조회 실패했습니다.");
 		}
-		if (results.size() < 7) {
-			throw new RaspNotFoundException("라즈베리디비 요일별 조회 실패했습니다.");
-		}
-
 		List<RaspResponseDto> responseResults = calculateCarbonReduction(results);
 
 		return responseResults;

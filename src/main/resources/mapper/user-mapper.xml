@@ -5,7 +5,7 @@
 <mapper namespace ="com.tri.evre.user.model.dao.UserMapper">
 	
 	<!-- 아이디 중복 체크 -->
-	<select id="validateDuplicateUserId">
+	<select id="countByUserId">
 		SELECT
 				COUNT(*)
 		  FROM
@@ -86,4 +86,13 @@
 		  		SEMI_USER
 	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
+	
+	<update id="updateUserRole">
+		UPDATE
+				SEMI_USER
+		   SET
+		   		ROLE = #{role}
+		 WHERE
+		 		USER_ID = #{userId}
+	</update>
 </mapper>

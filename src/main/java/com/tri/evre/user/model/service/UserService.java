@@ -68,14 +68,14 @@ public class UserService {
 
 	// 회원인지 확인하는 방법
 	private void ensureUserIdNotExists(String userId) {
-		if(userMapper.validateDuplicateUserId(userId) == 0) {
+		if(userMapper.countByUserId(userId) == 0) {
 			throw new UserNotFoundException("일치하는 회원이 없습니다.");
 		}
 	}
 	
 	// 아이디 중복은 여러군대에서 쓸거 같아서 책임 분리 해놈
 	private void validateDuplicateUserId(String userId) {
-		if (userMapper.validateDuplicateUserId(userId) > 0) {
+		if (userMapper.countByUserId(userId) > 0) {
 			// 예외 처리 아이디가 중복됨
 			throw new DuplicateResourceException("이미 사용중인 아이디입니다");
 		}
