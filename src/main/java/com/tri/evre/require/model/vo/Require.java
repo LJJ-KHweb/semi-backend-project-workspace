@@ -9,4 +9,5 @@ public class Require {
 	private Long requireNo;
 	private String requireTitle;
 	private String requireContent;
+	private String userId;
 }

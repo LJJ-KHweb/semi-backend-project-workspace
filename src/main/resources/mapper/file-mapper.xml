@@ -138,4 +138,49 @@
 		 		NOTICE_NO = #{noticeNo}
 	</delete>
 	
+	<!--===============================================-->
+	<!--================= 문의사항 ======================-->
+	<!--===============================================-->
+	
+	<insert id="saveRequireFile">
+		INSERT 
+		  INTO
+				REQUIRE_FILE
+		VALUES
+				(
+				#{filePath}
+			 ,	#{fileOrder}
+			 ,	#{originalName}
+			 ,	#{requireNo}
+				)
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

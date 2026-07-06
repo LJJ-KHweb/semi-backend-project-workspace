@@ -26,7 +26,8 @@ public class RequireService {
 	private final RequireMapper requireMapper;
 	private final FileManagementService fileService;
 	
-	public RequireService(RequireMapper requireMapper, @Qualifier("boardFileService") FileManagementService fileService) {
+	
+	public RequireService(RequireMapper requireMapper, @Qualifier("requireFileService") FileManagementService fileService) {
 		super();
 		this.requireMapper = requireMapper;
 		this.fileService = fileService;
@@ -38,16 +39,16 @@ public class RequireService {
 		Require requireEntity = Require.builder()
 									   .requireTitle(require.getRequireTitle())
 									   .requireContent(require.getRequireContent())
+									   .userId(user.getUsername())
 									   .build();
 		
-		int result = requireMapper.wirteRequire(requireEntity, user);
+		int result = requireMapper.wirteRequire(requireEntity);
 		
 		if(result < 1) {
 			throw new BoardCreateException("문의사항 작성에 실패했습니다.");
 		}
 		
 		fileService.saveFile(files, requireEntity.getRequireNo());
-		
 		
 	}
 

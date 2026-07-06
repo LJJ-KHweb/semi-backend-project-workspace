@@ -9,8 +9,7 @@ import com.tri.evre.require.model.vo.Require;
 @Mapper
 public interface RequireMapper {
 
-	int wirteRequire(@Param("require") Require require,
-					  @Param("require") CustomUserDetails user);
+	int wirteRequire(Require require);
 	
 
 }
