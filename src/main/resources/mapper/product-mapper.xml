@@ -62,7 +62,7 @@
             AMOUNT = #{amount},
         </if>
         <if test="file != null and file != ''">
-            FILE = #{file}
+            IMAGE = #{file}
         </if>
         
     </set>

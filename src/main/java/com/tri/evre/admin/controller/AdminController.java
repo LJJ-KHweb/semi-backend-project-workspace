@@ -112,7 +112,8 @@ public class AdminController {
 	        @PathVariable("productNo") Long productNo,
 	        @ModelAttribute @Valid UpdateProductDto product,
 	        @RequestParam(name = "file", required = false) MultipartFile file) {
-
+		
+		
 	    if ((product.getProductName() == null || product.getProductName().isBlank())
 	            && product.getPrice() == null
 	            && product.getAmount() == null
@@ -120,7 +121,8 @@ public class AdminController {
 
 	        throw new IllegalArgumentException("수정할 내용이 없습니다.");
 	    }
-
+	    
+	    
 	    adminService.updateProduct(productNo, product, file);
 
 	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정 성공", null));

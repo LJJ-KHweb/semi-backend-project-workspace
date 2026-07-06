@@ -148,11 +148,14 @@ public class AdminService {
 	    String filePath = (file != null && !file.isEmpty())
 	            ? fileService.store(file)
 	            : null;
-
+	    
+	    
 	    boolean isInventoryUpdate =
 	            product.getAmount() != null
 	            || filePath != null;
-
+	    
+	    log.info("================{} {} {}", productNo, product.getAmount(), filePath);
+	    
 	    if (isInventoryUpdate) {
 	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
 	    }
