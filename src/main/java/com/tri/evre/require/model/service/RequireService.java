@@ -7,17 +7,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tri.evre.board.model.dao.BoardMapper;
+import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.service.FileManagementService;
-import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
-import com.tri.evre.notice.model.service.NoticeService;
+import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.require.model.dao.RequireMapper;
 import com.tri.evre.require.model.dto.RequireDto;
 import com.tri.evre.require.model.vo.Require;
+import com.tri.evre.require.model.vo.RequireResponse;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,8 +48,28 @@ public class RequireService {
 			throw new BoardCreateException("문의사항 작성에 실패했습니다.");
 		}
 		
-		fileService.saveFile(files, requireEntity.getRequireNo());
+		if (files != null && !files.isEmpty()) {
+		    fileService.saveFile(files, requireEntity.getRequireNo());
+		}
+	}
+
+	
+	// 
+	public RequireListResponse findAll(PageInfo pageInfo, String user) {
+		List<RequireResponse> requires = requireMapper.findAll(pageInfo, user);
+		
+		if (requires.isEmpty()) {
+			throw new BoardNotFoundException("조회 결과가 없습니다.");
+		}
+		
+		pageInfo.setBoardCounts(requireMapper.findRequiresCount());
+		
+		return RequireListResponse.builder()
+								  .pageInfo(pageInfo)
+								  .requires(requires)
+								  .build();
 		
 	}
+
 
 }

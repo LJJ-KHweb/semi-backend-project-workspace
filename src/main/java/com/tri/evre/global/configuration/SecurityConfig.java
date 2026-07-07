@@ -64,6 +64,9 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/chargeStations/**").hasRole("ADMIN");
 					// 07/06 심영도 관리자 충전기 전체조회
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/charger/**").hasRole("ADMIN");
+					// 07/06 심영도 관리자 충전기 추가
+					requests.requestMatchers(HttpMethod.POST,"/api/admin/charger/**").hasRole("ADMIN");
+					
 					
 					
 					// 07/02 선겸
@@ -74,7 +77,8 @@ public class SecurityConfig {
 					
 					// 07/06 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();
-					
+					requests.requestMatchers(HttpMethod.GET,"/api/requires/**").authenticated();
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/requires/**").hasRole("ADMIN");
 					
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");

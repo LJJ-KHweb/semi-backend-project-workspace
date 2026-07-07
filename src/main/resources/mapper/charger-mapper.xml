@@ -28,4 +28,35 @@
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
+	<select id="findChargerByStationNo">
+		SELECT
+			   STATION_NAME
+			 , S.STATUS AS STATION_STATUS
+		  FROM
+		  	   CHARGER C
+		  JOIN
+		  	   STATION S USING(STATION_NO)
+		 WHERE
+		 	   STATION_NO = #{stationNo}
+		   AND
+		   	   ROWNUM = 1;
+	</select>
+	
+	<insert id="insertCharger">
+		INSERT
+		  INTO
+		  	   CHARGER
+		  	   (
+				CHARGER_NO
+			  , STATUS
+			  , STATION_NO
+			   )
+    	VALUES
+			   (
+				SEQ_CHARGER.NEXTVAL
+			  , 'Y'
+			  , #{stationNo}
+			   )
+	</insert>
+	
 </mapper>

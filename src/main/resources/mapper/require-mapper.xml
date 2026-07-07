@@ -32,5 +32,65 @@
 					 	)
 	</insert>
 	
+		<!-- 조회 공통 -->
+	<sql id="requireColumn">
+			SELECT
+					  REQUIRE_NO
+					, REQUIRE_TITLE
+					, CREATE_DATE
+	</sql>
+	
+	<!-- 게시글 전체 조회 -->
+	<select id="findAll" resultType="RequireResponse">
+		<include refid="requireColumn"/>
+		  FROM
+				      REQUIRE
+				WHERE
+					  REQUIRE.STATUS = 'Y'
+				AND
+					 USER_ID = #{userId}
+			    ORDER
+			       BY
+			       	  CREATE_DATE ASC
+	        OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	</select>
+	
+		<!-- 게시글 전체 갯수 조회 -->
+	<select id="findRequiresCount">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		REQUIRE
+		 WHERE
+		 		STATUS = 'Y'
+	</select>
+	
+	
+	<!--   관리자가 문의사항 전체 조회  -->
+	<select id="adminFindAllRequires" resultType="RequireResponse">
+		<include refid="requireColumn"/>
+				  FROM
+				      REQUIRE
+			    ORDER
+			       BY
+			       	  CREATE_DATE ASC
+	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>
