@@ -113,4 +113,24 @@
 		 WHERE
 		 		USER_ID = #{userId}
 	</select>
+	
+	<select id="sumUsers">
+		SELECT
+				COUNT(*)
+			FROM
+				SEMI_USER
+			WHERE
+				STATUS='Y'
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>

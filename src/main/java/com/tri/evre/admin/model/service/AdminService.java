@@ -451,4 +451,16 @@ public class AdminService {
  			chargerMapper.deleteCharger(chargerNo);
 		}
 
+		public int sumRequires() {
+			return requireMapper.sumRequires();
+		}
+
+		public int finishRequires() {
+			return requireMapper.finishRequires();
+		}
+
+		public int sumUsers() {
+			return userMapper.sumUsers();
+		}
+
 }
