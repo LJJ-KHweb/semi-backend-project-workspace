@@ -17,4 +17,5 @@ import lombok.NoArgsConstructor;
 public class UserMileageRequestDto {
 	private PageInfo pageInfo;
 	private List<MileageDto> mileages;
+	private int mileageSum;
 }

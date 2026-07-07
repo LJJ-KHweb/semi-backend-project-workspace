@@ -28,4 +28,8 @@ public interface UserMapper {
 
 	void updateUserRole(UserRoleRequestDto user);
 
+	int findAllMileageHistoryCounts(String userId);
+
+	int findMileageSum(String userId);
+
 }
