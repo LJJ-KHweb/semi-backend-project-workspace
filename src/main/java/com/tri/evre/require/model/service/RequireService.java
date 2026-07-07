@@ -76,6 +76,7 @@ public class RequireService {
 		
 	}
 
+	// 문의사항 상세보기
 	public RequireDetailResponse findByRequireNo(Long requireNo, String userId) {
 		RequireDto require = requireMapper.findByBoardNo(requireNo, userId);
 		if (require == null) {
@@ -97,9 +98,9 @@ public class RequireService {
 		
 		return response;
 	}
-
+	// (관리자)문의사항 상세보기
 	public RequireDetailResponse findByRequireNoAdmin(Long requireNo) {
-		RequireDto require = requireMapper.findByBoardNo(requireNo);
+		RequireDto require = requireMapper.findByRequireNoAdmin(requireNo);
 		if (require == null) {
 			throw new BoardNotFoundException("조회 결과가 없습니다.");
 		}

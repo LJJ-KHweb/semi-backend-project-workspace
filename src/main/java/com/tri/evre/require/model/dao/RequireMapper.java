@@ -24,6 +24,8 @@ public interface RequireMapper {
 
 	RequireDto findByBoardNo(@Param("requireNo")Long requireNo,
 							 @Param("userId") String userId);
+
+	RequireDto findByRequireNoAdmin(Long requireNo);
 	
 	
 }
