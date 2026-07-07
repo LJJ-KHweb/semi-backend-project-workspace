@@ -91,14 +91,11 @@
 	<select id="findByRequireNoAdmin" resultType="RequireDto">
 		<include refid="requireColumn"/>
 				 ,	REQUIRE_CONTENT
+				 , 	USER_ID
 				  FROM
 				  		REQUIRE
 				 WHERE
 				 		REQUIRE_NO = #{requireNo}
-				 AND
-				 	STATUS = 'Y'
-				 AND
-				 	USER_ID = #{userId}
 	</select>
 	
 	

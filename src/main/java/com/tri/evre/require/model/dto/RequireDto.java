@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class RequireDto {
 	private String requireTitle;
 	private String requireContent;
-	
+	private String userId;
 	
 	private List<FileDto> files;
 	private Date createDate;

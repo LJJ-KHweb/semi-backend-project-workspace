@@ -14,7 +14,7 @@ import lombok.Value;
 public class RequireDetailResponse {
 	private String requireTitle;
 	private String requireContent;
-	
+	private String userId;
 	
 	private List<FileDto> files;
 	private Date createDate;

@@ -169,7 +169,7 @@ public class AdminController {
 	}
 	// 문의사항 상세보기
 	@GetMapping("/requires/{requiredNo}")
-	public ResponseEntity<ApiResponse<?>> findByRequireNo(@PathVariable("requireNo") Long requireNo) {
+	public ResponseEntity<ApiResponse<?>> findByRequireNo(@PathVariable("requiredNo") Long requireNo) {
 		
 		RequireDetailResponse response = requireService.findByRequireNoAdmin(requireNo);
 		

@@ -113,6 +113,7 @@ public class RequireService {
 		RequireDetailResponse response = RequireDetailResponse.builder()
 															  .requireTitle(require.getRequireTitle())
 															  .requireContent(require.getRequireContent())
+															  .userId(require.getUserId())
 															  .files(require.getFiles())
 															  .createDate(require.getCreateDate())
 															  .answer(answers)
