@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.require.model.dto.RequireDto;
 import com.tri.evre.require.model.vo.Require;
+import com.tri.evre.require.model.vo.RequireDetailResponse;
 import com.tri.evre.require.model.vo.RequireResponse;
 
 @Mapper

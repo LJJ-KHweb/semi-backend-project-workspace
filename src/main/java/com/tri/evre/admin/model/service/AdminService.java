@@ -434,7 +434,9 @@ public class AdminService {
 			chargerMapper.updateCharger(chargerEntity);
 			
 		}
-
+		
+		
+		// 문의사항 응답하기
 		public void insertAnswer(Answer answer) {
 			
 			int result = answerMapper.insertAnswer(answer);
@@ -443,9 +445,7 @@ public class AdminService {
 				throw new BoardCreateException("문의사항 응답 작성에 실패했습니다.");
 			}
 			
-			
-			
-			
 		}
+		
 
 }

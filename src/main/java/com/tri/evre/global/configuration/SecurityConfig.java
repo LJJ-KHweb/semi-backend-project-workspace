@@ -83,6 +83,7 @@ public class SecurityConfig {
 					
 					
 					// 07/07 선겸
+					// 문의사항 응답하기
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/requires/**").hasRole("ADMIN");
 					
 					

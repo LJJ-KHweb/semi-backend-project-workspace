@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.global.api.model.vo.ApiResponse;
@@ -21,6 +20,7 @@ import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.require.model.dto.RequireDto;
 import com.tri.evre.require.model.service.RequireService;
+import com.tri.evre.require.model.vo.RequireDetailResponse;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,6 @@ public class RequireController {
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
 				.body(ApiResponse.success("문의사항 작성 성공", null));
 	}
-
 	@GetMapping
 	public ResponseEntity<ApiResponse<?>> findAll(@RequestParam("page") int page, @RequestParam("size") int size,
 			@AuthenticationPrincipal CustomUserDetails user) {
@@ -58,9 +57,9 @@ public class RequireController {
 	public ResponseEntity<ApiResponse<?>> findByRequireNo(@PathVariable("requireNo") Long requireNo,
 														  @AuthenticationPrincipal CustomUserDetails user) {
 		
-		RequireDto require = requireService.findByRequireNo(requireNo, user.getUsername());
+		RequireDetailResponse response = requireService.findByRequireNo(requireNo, user.getUsername());
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 개별조회 성공", require));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 개별조회 성공", response));
 	}
 
 }
