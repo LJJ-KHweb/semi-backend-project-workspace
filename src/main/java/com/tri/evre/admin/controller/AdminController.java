@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tri.evre.admin.model.service.AdminService;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
+import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
@@ -255,6 +256,14 @@ public class AdminController {
 												  		   				 , @RequestParam(name="size") int size) {
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
 					.body(ApiResponse.success("충전기 조회 성공", adminService.findAllCharger(new PageInfo(page, size))));
+		}
+		
+		// 07/06 심영도 충전기 추가
+		@PostMapping("/charger")
+		public ResponseEntity<ApiResponse<Void>> insertCharger(@RequestParam(name="stationNo") Long stationNo){
+			adminService.insertCharger(stationNo);
+			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
+					.body(ApiResponse.created("충전기 작성성공", null));
 		}
 		
 }
