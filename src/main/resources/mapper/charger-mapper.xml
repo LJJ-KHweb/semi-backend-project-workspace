@@ -61,7 +61,7 @@
 	
 	<select id="findByChargerNo">
 		SELECT
-			   COUNT(*)
+			   STATION_NO
 		  FROM
 		  	   CHARGER
 		 WHERE
@@ -74,6 +74,15 @@
 		   SET
 		   	   STATUS = #{status}
 		   	 , STATION_NO = #{stationNo}
+		 WHERE
+		 	   CHARGER_NO = #{chargerNo}
+	</update>
+	
+	<update id="deleteCharger">
+		UPDATE
+			   CHARGER
+		   SET
+		  	   STATUS = 'N'
 		 WHERE
 		 	   CHARGER_NO = #{chargerNo}
 	</update>

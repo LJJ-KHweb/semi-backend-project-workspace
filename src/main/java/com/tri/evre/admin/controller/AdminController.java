@@ -274,4 +274,12 @@ public class AdminController {
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
 					.body(ApiResponse.success("충전기 수정 성공", null));
 		}
+		
+		// 7.7 심영도 충전기 삭제
+		@DeleteMapping("/charger/{chargerNo}")
+		public ResponseEntity<ApiResponse<Void>> deleteCharger(@PathVariable(name="chargerNo") Long chargerNo) {
+			adminService.deleteCharger(chargerNo);
+			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 삭제 성공", null));
+		}
 }

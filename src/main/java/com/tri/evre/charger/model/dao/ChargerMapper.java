@@ -19,8 +19,10 @@ public interface ChargerMapper {
 
 	void insertCharger(Long stationNo);
 
-	int findByChargerNo(Long chargerNo);
+	Long findByChargerNo(Long chargerNo);
 
 	void updateCharger(Charger chargerEntity);
+
+	void deleteCharger(Long chargerNo);
 
 }
