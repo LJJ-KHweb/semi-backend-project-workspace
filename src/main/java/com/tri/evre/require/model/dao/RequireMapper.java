@@ -26,6 +26,9 @@ public interface RequireMapper {
 							 @Param("userId") String userId);
 
 	RequireDto findByRequireNoAdmin(Long requireNo);
-	
+
+	int sumRequires();
+
+	int finishRequires();
 	
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.admin.model.service.AdminService;
+import com.tri.evre.admin.model.vo.AdminPage;
 import com.tri.evre.answer.model.dto.InsertAnswerDto;
 import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dto.BoardDto;
@@ -178,8 +179,15 @@ public class AdminController {
 	
 	
 	
-	
-	
+	// ======= 07/07 선겸
+	// 관리자 메인페이지 총문의수 완료문의수, 미처리 문의수 총 유저수
+	@GetMapping("/adminPage")
+	public ResponseEntity<ApiResponse<AdminPage>> adminPage() {
+		
+		AdminPage adminPage = adminService.adminPage();
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("관리페이지 정보 조회 성공", adminPage));
+	}
 	
 	
 	

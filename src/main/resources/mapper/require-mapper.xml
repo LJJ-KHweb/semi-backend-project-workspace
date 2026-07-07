@@ -98,12 +98,30 @@
 				 		REQUIRE_NO = #{requireNo}
 	</select>
 	
-	
-	
-	
-	
-	
-	
-	
+	<select id="sumRequires">
+		SELECT
+				COUNT(*)
+			FROM
+				REQUIRE
+			WHERE
+				STATUS = 'Y'
+	</select>
+
+	<select id="finishRequires">
+		SELECT 
+				COUNT(*)
+			FROM
+				REQUIRE
+			WHERE
+				REQUIRE_NO IN (
+								SELECT
+										REQUIRE_NO
+									FROM
+										ANSWER
+									GROUP
+										BY
+											REQUIRE_NO
+							  )
+	</select>
 
 </mapper>
