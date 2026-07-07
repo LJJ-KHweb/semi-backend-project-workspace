@@ -82,7 +82,7 @@ public class SecurityConfig {
 					
 					
 					// 07/07 선겸
-					
+					requests.requestMatchers(HttpMethod.POST,"/api/admin/requires/**").hasRole("ADMIN");
 					
 					
 					

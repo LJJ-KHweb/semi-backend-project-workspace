@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.admin.model.service.AdminService;
+import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dto.ChargerResponse;
@@ -143,6 +144,31 @@ public class AdminController {
 		RequireListResponseAdmin requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)문의사항 조회 성공", requireListResponse));
 	}
+	
+	
+	// 문의사항 답변하기	
+	@PostMapping("/requires/{requiredNo}")
+	public ResponseEntity<ApiResponse<Void>> insertAnswer( @PathVariable("requiredNo") Long requiredNo,
+														   @RequestBody String answerContent,
+														   @AuthenticationPrincipal CustomUserDetails user){
+
+		Answer answer = Answer.builder()
+							  .requiredNo(requiredNo)
+							  .answerContent(answerContent)
+							  .userId(user.getUsername())
+							  .build();
+		
+		adminService.insertAnswer(answer);
+		
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.success("문의사항 응답 성공", null));
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

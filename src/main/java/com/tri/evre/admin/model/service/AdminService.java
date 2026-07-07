@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.answer.model.dao.AnswerMapper;
+import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dao.BoardMapper;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
@@ -14,10 +16,10 @@ import com.tri.evre.charger.model.dao.ChargerMapper;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerCreateException;
@@ -66,6 +68,10 @@ public class AdminService {
 	
 	// == 07/06 김선겸
 	private final RequireMapper requireMapper;
+	
+	
+	// 07/07 김선겸 
+	private final AnswerMapper answerMapper;
 	
 	
 	//-- 07/06 심영도 --
@@ -385,6 +391,19 @@ public class AdminService {
 			
 			
 			chargerMapper.insertCharger(stationNo);
+		}
+
+		public void insertAnswer(Answer answer) {
+			
+			int result = answerMapper.insertAnswer(answer);
+			
+			if(result < 1) {
+				throw new BoardCreateException("문의사항 응답 작성에 실패했습니다.");
+			}
+			
+			
+			
+			
 		}
 
 }
