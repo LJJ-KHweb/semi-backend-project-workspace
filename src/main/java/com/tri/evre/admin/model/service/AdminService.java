@@ -384,21 +384,27 @@ public class AdminService {
 		}
 		
 		// 7.7 심영도 충전기 단일 조회(예외처리용)
-		private int findByChargerNo(Long chargerNo) { // 충전기는 단일조회 기능이 없고 예외 처리용이라서 int형으로 반환
-			return chargerMapper.findByChargerNo(chargerNo);
+		private void findByChargerNo(Long chargerNo) { // 충전기는 단일조회 기능이 없고 예외 처리용이라서 int형으로 반환
+			int reuslt =  chargerMapper.findByChargerNo(chargerNo);
+			if(reuslt < 1) {
+				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
+			}
 		}
 		
 		// 7.7 심영도 삭제된 충전소 찾기
-		private int findDeletedStation(Long stationNo) {
-			return stationMapper.findDeletedStation(stationNo);
+		private void findDeletedStation(Long stationNo) {
+			if(stationMapper.findDeletedStation(stationNo) > 0) {
+				throw new StationNotFoundException("삭제된 충전소입니다.");
+			}
 		}
 		
 		// 7.7 심영도 충전기 업데이트
 		public void updateCharger(Long chargerNo, ChargerDto charger) {
 			
-			if(findByChargerNo(chargerNo) < 1) {
-				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
-			}
+			// 삭제된거 포함 충전기 조회(삭제된것도 관리자는 update할수 있어야함)
+			findByChargerNo(chargerNo);
+			
+			// 여기는 무조건 충전기가 있음 디비에
 			
 			Charger chargerEntity = Charger.builder()
 										   .chargerNo(chargerNo)
@@ -406,11 +412,10 @@ public class AdminService {
 										   .stationNo(charger.getStationNo())
 										   .build();
 			
-			if(findDeletedStation(chargerEntity.getStationNo()) > 0) {
-				throw new StationNotFoundException("삭제된 충전소입니다.");
-			}
+			findDeletedStation(chargerEntity.getStationNo());
+			
 			if(findByStationNo(chargerEntity.getStationNo()) == null) {
-				throw new StationNotFoundException("일치하는 충전소를 찾을 수 없습니다.");
+				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 			}
 			
 			chargerMapper.updateCharger(chargerEntity);
