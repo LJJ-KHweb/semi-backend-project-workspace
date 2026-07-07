@@ -46,6 +46,7 @@ import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -378,6 +379,9 @@ public class AdminService {
 			
 			
 			chargerMapper.insertCharger(stationNo);
+		}
+		
+		public void updateCharger(@Valid ChargerDto charger) {
 		}
 
 }

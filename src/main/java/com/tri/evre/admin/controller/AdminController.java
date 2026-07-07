@@ -266,4 +266,11 @@ public class AdminController {
 					.body(ApiResponse.created("충전기 작성성공", null));
 		}
 		
+		// 07/07 심영도 충전기 수정
+		@PatchMapping("/charger")
+		public ResponseEntity<ApiResponse<Void>> updateCharger(@RequestBody @Valid ChargerDto charger) {
+			adminService.updateCharger(charger);
+			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 수정 성공", null));
+		}
 }
