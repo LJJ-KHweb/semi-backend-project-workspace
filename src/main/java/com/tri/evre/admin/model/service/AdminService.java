@@ -13,6 +13,7 @@ import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dao.ChargerMapper;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
+import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.service.FileStorageService;
@@ -20,6 +21,7 @@ import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerCreateException;
+import com.tri.evre.global.exception.charger.ChargerNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.StationDeleteException;
@@ -336,6 +338,7 @@ public class AdminService {
 			}
 		}
 
+		// 7.6 심영도 충전기 전체 조회
 		public ChargerResponse findAllCharger(PageInfo pageInfo) {
 			
 			pageInfo.setBoardCounts(chargerMapper.findAllChargerCount());
@@ -378,6 +381,45 @@ public class AdminService {
 			
 			
 			chargerMapper.insertCharger(stationNo);
+		}
+		
+		// 7.7 심영도 충전기 단일 조회(예외처리용)
+		private void findByChargerNo(Long chargerNo) { // 충전기는 단일조회 기능이 없고 예외 처리용이라서 int형으로 반환
+			int reuslt =  chargerMapper.findByChargerNo(chargerNo);
+			if(reuslt < 1) {
+				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
+			}
+		}
+		
+		// 7.7 심영도 삭제된 충전소 찾기
+		private void findDeletedStation(Long stationNo) {
+			if(stationMapper.findDeletedStation(stationNo) > 0) {
+				throw new StationNotFoundException("삭제된 충전소입니다.");
+			}
+		}
+		
+		// 7.7 심영도 충전기 업데이트
+		public void updateCharger(Long chargerNo, ChargerDto charger) {
+			
+			// 삭제된거 포함 충전기 조회(삭제된것도 관리자는 update할수 있어야함)
+			findByChargerNo(chargerNo);
+			
+			// 여기는 무조건 충전기가 있음 디비에
+			
+			Charger chargerEntity = Charger.builder()
+										   .chargerNo(chargerNo)
+										   .status(charger.getStatus())
+										   .stationNo(charger.getStationNo())
+										   .build();
+			
+			findDeletedStation(chargerEntity.getStationNo());
+			
+			if(findByStationNo(chargerEntity.getStationNo()) == null) {
+				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
+			}
+			
+			chargerMapper.updateCharger(chargerEntity);
+			
 		}
 
 }

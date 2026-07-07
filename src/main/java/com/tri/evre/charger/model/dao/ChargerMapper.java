@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.tri.evre.charger.model.dto.ChargerDto;
+import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
 
 @Mapper
@@ -14,8 +15,12 @@ public interface ChargerMapper {
 
 	List<ChargerDto> findAllCharger(PageInfo pageInfo);
 
-	ChargerDto findByChargerNo(Long stationNo);
+	ChargerDto findByStationNo(Long stationNo);
 
 	void insertCharger(Long stationNo);
+
+	int findByChargerNo(Long chargerNo);
+
+	void updateCharger(Charger chargerEntity);
 
 }

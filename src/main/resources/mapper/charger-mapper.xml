@@ -28,7 +28,7 @@
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
-	<select id="findChargerByStationNo">
+	<select id="findByStationNo">
 		SELECT
 			   STATION_NAME
 			 , S.STATUS AS STATION_STATUS
@@ -58,5 +58,24 @@
 			  , #{stationNo}
 			   )
 	</insert>
+	
+	<select id="findByChargerNo">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   CHARGER
+		 WHERE
+		 	   CHARGER_NO = #{chargerNo}
+	</select>
+	
+	<update id="updateCharger">
+		UPDATE
+		       CHARGER
+		   SET
+		   	   STATUS = #{status}
+		   	 , STATION_NO = #{stationNo}
+		 WHERE
+		 	   CHARGER_NO = #{chargerNo}
+	</update>
 	
 </mapper>
