@@ -17,18 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.admin.model.service.AdminService;
+import com.tri.evre.answer.model.dto.InsertAnswerDto;
+import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.file.model.dto.RequireListResponse;
+import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.product.model.dto.ProductDto;
 import com.tri.evre.product.model.dto.UpdateProductDto;
+import com.tri.evre.require.model.service.RequireService;
+import com.tri.evre.require.model.vo.RequireDetailResponse;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
@@ -48,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminController {
 
 	private final AdminService adminService;
+	private final RequireService requireService;
 
 	@GetMapping("/boards")
 	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
@@ -139,11 +144,43 @@ public class AdminController {
 	// 문의사항 전체조회
 	
 	@GetMapping("/requires")
-	public ResponseEntity<ApiResponse<RequireListResponse>> findAllRequires(@RequestParam(name = "page", defaultValue = "0") int page,
+	public ResponseEntity<ApiResponse<RequireListResponseAdmin>> findAllRequires(@RequestParam(name = "page", defaultValue = "1") int page,
 												@RequestParam(name = "size", defaultValue = "3") int size) {
-		RequireListResponse requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
+		RequireListResponseAdmin requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)문의사항 조회 성공", requireListResponse));
 	}
+	
+	
+	// 문의사항 답변하기	
+	@PostMapping("/requires/{requiredNo}")
+	public ResponseEntity<ApiResponse<Void>> insertAnswer( @PathVariable("requiredNo") Long requiredNo,
+														   @RequestBody() @Valid InsertAnswerDto answerContent,
+														   @AuthenticationPrincipal CustomUserDetails user){
+		
+		Answer answer = Answer.builder()
+							  .requiredNo(requiredNo)
+							  .answerContent(answerContent.getAnswerContent())
+							  .userId(user.getUsername())
+							  .build();
+		
+		adminService.insertAnswer(answer);
+		
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.success("문의사항 응답 성공", null));
+	}
+	// 문의사항 상세보기
+	@GetMapping("/requires/{requiredNo}")
+	public ResponseEntity<ApiResponse<RequireDetailResponse>> findByRequireNo(@PathVariable("requiredNo") Long requireNo) {
+		
+		RequireDetailResponse response = requireService.findByRequireNoAdmin(requireNo);
+		
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 개별조회 성공", response));
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	

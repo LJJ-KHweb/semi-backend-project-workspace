@@ -5,14 +5,12 @@ import java.util.List;
 
 import com.tri.evre.file.model.dto.FileDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RequireDto {
+@Value
+@Builder
+public class AdminRequireDto {
 	private String requireTitle;
 	private String requireContent;
 	private String userId;

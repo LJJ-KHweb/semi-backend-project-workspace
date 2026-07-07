@@ -1,23 +1,23 @@
-package com.tri.evre.require.model.dto;
+package com.tri.evre.require.model.vo;
 
 import java.sql.Date;
 import java.util.List;
 
+import com.tri.evre.answer.model.vo.ResponseAnswer;
 import com.tri.evre.file.model.dto.FileDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class RequireDto {
+@Value
+@Builder
+public class RequireDetailResponse {
 	private String requireTitle;
 	private String requireContent;
 	private String userId;
 	
 	private List<FileDto> files;
 	private Date createDate;
-	private Long views;
+	
+	private List<ResponseAnswer> answer;
 }

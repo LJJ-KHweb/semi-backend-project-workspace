@@ -81,6 +81,13 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/requires/**").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/requires/**").hasRole("ADMIN");
 					
+					
+					// 07/07 선겸
+					// 문의사항 응답하기
+					requests.requestMatchers(HttpMethod.POST,"/api/admin/requires/**").hasRole("ADMIN");
+					
+					
+					
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE, "/api/admin/boards/**").hasRole("ADMIN");

@@ -155,7 +155,17 @@
 				)
 	</insert>
 	
-	
+		<!-- 공지사항 파일 전체 조회-->
+	<select id="findRequireFileAll">
+		SELECT
+		  		FILE_PATH
+		  	 ,	ORIGINAL_NAME
+		  	 ,	FILE_ORDER
+		  FROM
+		  		REQUIRE_FILE
+		 WHERE
+		 		REQUIRE_NO = #{requireNo}
+ 	</select>
 	
 	
 	

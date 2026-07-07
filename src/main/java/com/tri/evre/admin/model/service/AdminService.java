@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.answer.model.dao.AnswerMapper;
+import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dao.BoardMapper;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
@@ -15,9 +17,10 @@ import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
-import com.tri.evre.file.model.dto.RequireListResponse;
+import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerCreateException;
@@ -34,7 +37,7 @@ import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.require.model.dao.RequireMapper;
-import com.tri.evre.require.model.vo.RequireResponse;
+import com.tri.evre.require.model.vo.Require;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
@@ -67,6 +70,10 @@ public class AdminService {
 	
 	// == 07/06 김선겸
 	private final RequireMapper requireMapper;
+	
+	
+	// 07/07 김선겸 
+	private final AnswerMapper answerMapper;
 	
 	
 	//-- 07/06 심영도 --
@@ -180,7 +187,6 @@ public class AdminService {
 	            product.getAmount() != null
 	            || filePath != null;
 	    
-	    log.info("================{} {} {}", productNo, product.getAmount(), filePath);
 	    
 	    if (isInventoryUpdate) {
 	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
@@ -356,17 +362,17 @@ public class AdminService {
 		
 		// === 07/06 김선겸 문의사항 전체 조회
 
-		public RequireListResponse findAllRequires(PageInfo pageInfo) {
+		public RequireListResponseAdmin findAllRequires(PageInfo pageInfo) {
 			
 			pageInfo.setBoardCounts(boardMapper.findAllBoardsCount());
 			
-			List<RequireResponse> boards = requireMapper.adminFindAllRequires(pageInfo);
+			List<Require> boards = requireMapper.adminFindAllRequires(pageInfo);
 			
 			if(boards.isEmpty()) {
 				throw new BoardNotFoundException("전체 문의사항 조회 실패");
 			}
 			
-			return new RequireListResponse(pageInfo,boards);
+			return new RequireListResponseAdmin(pageInfo,boards);
 		}
 
 		public void insertCharger(Long stationNo) {
@@ -424,6 +430,19 @@ public class AdminService {
 			chargerMapper.updateCharger(chargerEntity);
 			
 		}
+		
+		
+		// 문의사항 응답하기
+		public void insertAnswer(Answer answer) {
+			
+			int result = answerMapper.insertAnswer(answer);
+			
+			if(result < 1) {
+				throw new BoardCreateException("문의사항 응답 작성에 실패했습니다.");
+			}
+			
+		}
+		
 
 		// 7.7 심영도 충전소 삭제
 		public void deleteCharger(Long chargerNo) {
