@@ -238,6 +238,18 @@ public interface StationMapper {
 			""")
 	int deleteStation(Long stationNo);
 
+	@Select("""
+				SELECT
+					   COUNT(*)
+				  FROM
+				  	   STATION
+				 WHERE
+				 	   STATION_NO = #{stationNo}
+				   AND
+				 	   STATUS = 'N'
+			""")
+	int findDeletedStation(Long stationNo);
+
 
 	
 	
