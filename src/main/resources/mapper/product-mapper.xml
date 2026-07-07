@@ -29,11 +29,11 @@
 
 	<update id="deleteProduct">
 		UPDATE
-		PRODUCT
-		SET
-		STATUS = 'N'
-		WHERE
-		PRODUCT_NO = #{productNo}
+				PRODUCT
+		   SET
+				STATUS = 'N'
+		 WHERE
+				PRODUCT_NO = #{productNo}
 	</update>
 
 
