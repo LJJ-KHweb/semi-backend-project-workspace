@@ -30,6 +30,6 @@ public interface UserMapper {
 
 	int findAllMileageHistoryCounts(String userId);
 
-	int findMileageSum(String userId);
+	Integer findMileageSum(String userId);
 
 }

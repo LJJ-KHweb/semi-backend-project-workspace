@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
+import com.tri.evre.board.model.dto.Car;
 import com.tri.evre.board.model.vo.Board;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.require.model.vo.RequireResponse;
@@ -42,6 +43,8 @@ public interface BoardMapper {
 	int findAllBoardsCount();
 
 	//게시글의 존재 여부 확인
-	int existsByBoardNo(Long boardNo);	
+	int existsByBoardNo(Long boardNo);
+
+	void saveDrivingHistory(Car car);	
 	
 }

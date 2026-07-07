@@ -87,12 +87,19 @@ public class UserService {
 		}
 	}
 
+	
+	// 마이페이지 마일리지 내역 조회
 	public UserMileageRequestDto findAllMileageHistory(PageInfo pageInfo, CustomUserDetails user) {
 		List<MileageDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
 		pageInfo.setBoardCounts(userMapper.findAllMileageHistoryCounts(user.getUsername()));
+		Integer mileageSum = userMapper.findMileageSum(user.getUsername());
+		if(mileageSum == null) {
+			mileageSum = 0;
+		}
+		
 		return UserMileageRequestDto.builder().mileages(mileages)
 												.pageInfo(pageInfo)
-												.mileageSum(userMapper.findMileageSum(user.getUsername()))
+												.mileageSum(mileageSum)
 												.build();
 	}
 
