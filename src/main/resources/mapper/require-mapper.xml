@@ -123,11 +123,5 @@
 											REQUIRE_NO
 							  )
 	</select>
-	
-	<select id="notFinishRequires">
-		SELECT
-	</select>
-	
-	
 
 </mapper>

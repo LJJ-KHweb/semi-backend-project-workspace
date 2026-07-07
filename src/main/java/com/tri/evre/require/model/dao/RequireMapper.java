@@ -30,9 +30,5 @@ public interface RequireMapper {
 	int sumRequires();
 
 	int finishRequires();
-
-	int notFinishRequires();
-
-	
 	
 }
