@@ -15,6 +15,7 @@ import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
+import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.file.service.FileStorageService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardDeleteException;
@@ -32,7 +33,7 @@ import com.tri.evre.product.model.dto.ProductListDto;
 import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.product.model.vo.Product;
 import com.tri.evre.require.model.dao.RequireMapper;
-import com.tri.evre.require.model.vo.RequireResponse;
+import com.tri.evre.require.model.vo.Require;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
@@ -353,17 +354,23 @@ public class AdminService {
 		
 		// === 07/06 김선겸 문의사항 전체 조회
 
-		public RequireListResponse findAllRequires(PageInfo pageInfo) {
+		public RequireListResponseAdmin findAllRequires(PageInfo pageInfo) {
 			
 			pageInfo.setBoardCounts(boardMapper.findAllBoardsCount());
 			
-			List<RequireResponse> boards = requireMapper.adminFindAllRequires(pageInfo);
+			log.info("========================================================");
 			
+			List<Require> boards = requireMapper.adminFindAllRequires(pageInfo);
+			
+			log.info("========================== {}", boards);
+			
+			
+			log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			if(boards.isEmpty()) {
 				throw new BoardNotFoundException("전체 문의사항 조회 실패");
 			}
 			
-			return new RequireListResponse(pageInfo,boards);
+			return new RequireListResponseAdmin(pageInfo,boards);
 		}
 
 		public void insertCharger(Long stationNo) {

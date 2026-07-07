@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.service.FileManagementService;
@@ -70,6 +71,18 @@ public class RequireService {
 								  .build();
 		
 	}
+
+	public RequireDto findByRequireNo(Long requireNo, String userId) {
+		RequireDto require = requireMapper.findByBoardNo(requireNo, userId);
+		if (require == null) {
+			throw new BoardNotFoundException("조회 결과가 없습니다.");
+		}
+		
+		require.setFiles(fileService.findAll(requireNo));
+		return require;
+	}
+
+
 
 
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.require.model.dto.RequireDto;
 import com.tri.evre.require.model.vo.Require;
 import com.tri.evre.require.model.vo.RequireResponse;
 
@@ -18,7 +19,10 @@ public interface RequireMapper {
 
 	int findRequiresCount();
 
-	List<RequireResponse> adminFindAllRequires(PageInfo pageInfo);
+	List<Require> adminFindAllRequires(PageInfo pageInfo);
+
+	RequireDto findByBoardNo(@Param("requireNo")Long requireNo,
+							 @Param("userId") String userId);
 	
 	
 }

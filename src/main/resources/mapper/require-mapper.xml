@@ -67,8 +67,9 @@
 	
 	
 	<!--   관리자가 문의사항 전체 조회  -->
-	<select id="adminFindAllRequires" resultType="RequireResponse">
+	<select id="adminFindAllRequires" resultType="Require">
 		<include refid="requireColumn"/>
+				, USER_ID
 				  FROM
 				      REQUIRE
 			    ORDER
@@ -77,8 +78,18 @@
 	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
-	
-	
+		<select id="findByBoardNo" resultType="RequireDto">
+		<include refid="requireColumn"/>
+				 ,	REQUIRE_CONTENT
+				  FROM
+				  		REQUIRE
+				 WHERE
+				 		REQUIRE_NO = #{requireNo}
+				 AND
+				 	STATUS = 'Y'
+				 AND
+				 	USER_ID = #{userId}
+	</select>
 	
 	
 	
