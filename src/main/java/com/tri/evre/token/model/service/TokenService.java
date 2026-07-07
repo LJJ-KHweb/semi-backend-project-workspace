@@ -1,6 +1,5 @@
 package com.tri.evre.token.model.service;
 
-import java.sql.Date;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -8,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.CustomAuthenticationException;
+import com.tri.evre.global.exception.user.RefreshTokenExprireException;
 import com.tri.evre.token.model.dao.TokenMapper;
 import com.tri.evre.token.model.vo.RefreshToken;
 import com.tri.evre.token.util.JwtUtil;
@@ -52,13 +52,9 @@ public class TokenService {
 	// 로그아웃 요청있을때 DB에있는거 싹 지워주는 메소드
 	@Transactional
 	public void logout(String refreshToken, String userId) {
-
-		int result = tokenMapper.deleteToken(userId, refreshToken);
-		if (result < 1) {
-			log.info("잘못됨");
-		} else {
-			log.info("delete성공");
-		}
+		log.info("refresh{}",refreshToken);
+		
+		tokenMapper.deleteToken(userId, refreshToken);
 
 	}
 	// 추후 AccessToken이 만료기간이 지나서 토큰 갱신 요청이 들어왔을때
@@ -72,7 +68,7 @@ public class TokenService {
 		if (token.getExpireDate() < System.currentTimeMillis()) {
 			// 이게 리프레시 토큰도 만료되었을 경우
 			tokenMapper.deleteToken(token.getUserId(), refreshToken);
-			throw new CustomAuthenticationException("리프레시 트큰만료");
+			throw new RefreshTokenExprireException("리프레시 트큰만료");
 		}
 
 		// refreshToken 만료되진 않음
@@ -84,8 +80,8 @@ public class TokenService {
 		CustomUserDetails user = CustomUserDetails.builder().name(userName).username(userId).build();
 
 		Map<String, String> tokens = createTokens(user);
-
 		saveToken(tokens.get("refreshToken"), userId);
+		tokenMapper.deleteToken(userId, refreshToken);
 
 	
 		return tokens;

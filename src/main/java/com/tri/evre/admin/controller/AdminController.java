@@ -291,4 +291,12 @@ public class AdminController {
 					.body(ApiResponse.created("충전기 작성성공", null));
 		}
 		
+		// 07/07 심영도 충전기 수정
+		@PatchMapping("/charger/{chargerNo}")
+		public ResponseEntity<ApiResponse<Void>> updateCharger(@PathVariable(name="chargerNo") Long chargerNo,
+															   @RequestBody @Valid ChargerDto charger) {
+			adminService.updateCharger(chargerNo, charger);
+			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 수정 성공", null));
+		}
 }
