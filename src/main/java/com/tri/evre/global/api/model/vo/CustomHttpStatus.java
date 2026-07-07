@@ -32,9 +32,9 @@ public enum CustomHttpStatus {
     // 이미 존재하는 리소스
     DUPLICATE_RESOURCE(409),
     // Access Token 만료
-    ACCESS_TOKEN_EXPIRED(400),
+    ACCESS_TOKEN_EXPIRED(401),
     // Refresh Token 만료
-    REFRESH_TOKEN_EXPIRED(400),
+    REFRESH_TOKEN_EXPIRED(401),
     // 회원 정보 수정 실패
     USER_UPDATE_FAIL(409),
     
