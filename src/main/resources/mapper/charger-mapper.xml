@@ -62,6 +62,7 @@
 	<select id="findByChargerNo">
 		SELECT
 			   STATION_NO
+			 , STATUS
 		  FROM
 		  	   CHARGER
 		 WHERE

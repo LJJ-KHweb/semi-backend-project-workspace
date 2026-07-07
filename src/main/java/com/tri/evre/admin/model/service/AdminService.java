@@ -376,7 +376,7 @@ public class AdminService {
 				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
 			}
 			if(station.getStatus() == "N") {
-				throw new ChargerCreateException("충전소가 운영 중이지 않습니다.");
+				throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
 			}
 			
 			
@@ -384,18 +384,22 @@ public class AdminService {
 		}
 		
 		// 7.7 심영도 충전기 단일 조회(예외처리용)
-		private Long findByChargerNo(Long chargerNo) { // 예외처리라서 COUNT(*)로 int 형만 받아오려고 했는데 삭제할때 staionNo 필요해서 Long으로 받음
-			Long stationNo =  chargerMapper.findByChargerNo(chargerNo);
-			if(stationNo < 1) {
+		private ChargerDto findByChargerNo(Long chargerNo) { // 예외처리라서 COUNT(*)로 int 형만 받아오려고 했는데 삭제할때 staionNo 필요해서 Long으로 받음
+			ChargerDto chargerEntity =  chargerMapper.findByChargerNo(chargerNo);
+			// Long인데 sql에서 chargerNo로 조회된 값이 없으면 null 반환해요 그래서 null 이면 예외를 터트린다고 한 겁니다.(0 이 올 수가 없음)
+			if(chargerEntity == null) { 
 				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
 			}
-			return stationNo;
+			if(chargerEntity.getStatus().equals("N")) {
+				throw new StationNotFoundException("이미 고장 처리된 충전기입니다.");
+			}
+			return chargerEntity;
 		}
 		
 		// 7.7 심영도 삭제된 충전소 찾기
 		private void validateStation(Long stationNo) {
 			if(stationMapper.findDeletedStation(stationNo) > 0) {
-				throw new StationNotFoundException("삭제된 충전소입니다.");
+				throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
 			}
 			// 합침 ㅋㅋ
 			if(findByStationNo(stationNo) == null) {
@@ -423,8 +427,8 @@ public class AdminService {
 
 		// 7.7 심영도 충전소 삭제
 		public void deleteCharger(Long chargerNo) {
-			Long stationNo = findByChargerNo(chargerNo);
-			validateStation(stationNo);
+			ChargerDto charger = findByChargerNo(chargerNo);
+			validateStation(charger.getStationNo());
  			chargerMapper.deleteCharger(chargerNo);
 		}
 

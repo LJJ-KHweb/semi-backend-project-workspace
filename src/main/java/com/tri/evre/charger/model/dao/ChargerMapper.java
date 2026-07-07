@@ -19,7 +19,7 @@ public interface ChargerMapper {
 
 	void insertCharger(Long stationNo);
 
-	Long findByChargerNo(Long chargerNo);
+	ChargerDto findByChargerNo(Long chargerNo);
 
 	void updateCharger(Charger chargerEntity);
 
