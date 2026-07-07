@@ -59,7 +59,7 @@ public class RequireService {
 	}
 
 	
-	// 
+	// 문의사항 전체보기
 	public RequireListResponse findAll(PageInfo pageInfo, String user) {
 		List<RequireResponse> requires = requireMapper.findAll(pageInfo, user);
 		

@@ -187,7 +187,6 @@ public class AdminService {
 	            product.getAmount() != null
 	            || filePath != null;
 	    
-	    log.info("================{} {} {}", productNo, product.getAmount(), filePath);
 	    
 	    if (isInventoryUpdate) {
 	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
@@ -367,14 +366,8 @@ public class AdminService {
 			
 			pageInfo.setBoardCounts(boardMapper.findAllBoardsCount());
 			
-			log.info("========================================================");
-			
 			List<Require> boards = requireMapper.adminFindAllRequires(pageInfo);
 			
-			log.info("========================== {}", boards);
-			
-			
-			log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 			if(boards.isEmpty()) {
 				throw new BoardNotFoundException("전체 문의사항 조회 실패");
 			}

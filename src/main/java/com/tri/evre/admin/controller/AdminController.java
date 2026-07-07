@@ -144,7 +144,7 @@ public class AdminController {
 	// 문의사항 전체조회
 	
 	@GetMapping("/requires")
-	public ResponseEntity<ApiResponse<RequireListResponseAdmin>> findAllRequires(@RequestParam(name = "page", defaultValue = "0") int page,
+	public ResponseEntity<ApiResponse<RequireListResponseAdmin>> findAllRequires(@RequestParam(name = "page", defaultValue = "1") int page,
 												@RequestParam(name = "size", defaultValue = "3") int size) {
 		RequireListResponseAdmin requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)문의사항 조회 성공", requireListResponse));
@@ -169,7 +169,7 @@ public class AdminController {
 	}
 	// 문의사항 상세보기
 	@GetMapping("/requires/{requiredNo}")
-	public ResponseEntity<ApiResponse<?>> findByRequireNo(@PathVariable("requiredNo") Long requireNo) {
+	public ResponseEntity<ApiResponse<RequireDetailResponse>> findByRequireNo(@PathVariable("requiredNo") Long requireNo) {
 		
 		RequireDetailResponse response = requireService.findByRequireNoAdmin(requireNo);
 		
