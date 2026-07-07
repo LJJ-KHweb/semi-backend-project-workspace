@@ -65,9 +65,9 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/charger/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/charger/**").hasRole("ADMIN");
 					
-					// 7.7 심영도 관리자 충전기 수정
+					// 7.7 심영도 관리자 충전기 수정, 삭제
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/charger/**").hasRole("ADMIN");
-					
+					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/charger/**").hasRole("ADMIN");
 					
 					
 					// 07/02 선겸
@@ -80,6 +80,13 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/requires/**").authenticated();
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/requires/**").hasRole("ADMIN");
+					
+					
+					// 07/07 선겸
+					// 문의사항 응답하기
+					requests.requestMatchers(HttpMethod.POST,"/api/admin/requires/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/adminPage").hasRole("ADMIN");
+					
 					
 					// 06/30 재준 추가
 					requests.requestMatchers(HttpMethod.GET,"/api/admin/boards/**").hasRole("ADMIN");

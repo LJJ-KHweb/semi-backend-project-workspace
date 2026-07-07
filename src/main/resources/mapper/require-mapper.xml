@@ -67,8 +67,9 @@
 	
 	
 	<!--   관리자가 문의사항 전체 조회  -->
-	<select id="adminFindAllRequires" resultType="RequireResponse">
+	<select id="adminFindAllRequires" resultType="Require">
 		<include refid="requireColumn"/>
+				, USER_ID
 				  FROM
 				      REQUIRE
 			    ORDER
@@ -77,20 +78,50 @@
 	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
+		<select id="findByBoardNo" resultType="RequireDto">
+		<include refid="requireColumn"/>
+				 ,	REQUIRE_CONTENT
+				  FROM
+				  		REQUIRE
+				 WHERE
+				 		REQUIRE_NO = #{requireNo}
+	</select>
 	
 	
+	<select id="findByRequireNoAdmin" resultType="RequireDto">
+		<include refid="requireColumn"/>
+				 ,	REQUIRE_CONTENT
+				 , 	USER_ID
+				  FROM
+				  		REQUIRE
+				 WHERE
+				 		REQUIRE_NO = #{requireNo}
+	</select>
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	<select id="sumRequires">
+		SELECT
+				COUNT(*)
+			FROM
+				REQUIRE
+			WHERE
+				STATUS = 'Y'
+	</select>
+
+	<select id="finishRequires">
+		SELECT 
+				COUNT(*)
+			FROM
+				REQUIRE
+			WHERE
+				REQUIRE_NO IN (
+								SELECT
+										REQUIRE_NO
+									FROM
+										ANSWER
+									GROUP
+										BY
+											REQUIRE_NO
+							  )
+	</select>
 
 </mapper>

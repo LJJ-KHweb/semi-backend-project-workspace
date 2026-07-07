@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.answer.model.dao.AnswerMapper;
+import com.tri.evre.answer.model.vo.ResponseAnswer;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.service.FileManagementService;
@@ -16,6 +18,7 @@ import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.require.model.dao.RequireMapper;
 import com.tri.evre.require.model.dto.RequireDto;
 import com.tri.evre.require.model.vo.Require;
+import com.tri.evre.require.model.vo.RequireDetailResponse;
 import com.tri.evre.require.model.vo.RequireResponse;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +29,13 @@ public class RequireService {
 	private final RequireMapper requireMapper;
 	private final FileManagementService fileService;
 	
+	private final AnswerMapper answerMapper;
 	
-	public RequireService(RequireMapper requireMapper, @Qualifier("requireFileService") FileManagementService fileService) {
+	public RequireService(RequireMapper requireMapper, @Qualifier("requireFileService") FileManagementService fileService, AnswerMapper answerMapper) {
 		super();
 		this.requireMapper = requireMapper;
 		this.fileService = fileService;
+		this.answerMapper = answerMapper;
 	}
 	
 	@Transactional
@@ -54,7 +59,7 @@ public class RequireService {
 	}
 
 	
-	// 
+	// 문의사항 전체보기
 	public RequireListResponse findAll(PageInfo pageInfo, String user) {
 		List<RequireResponse> requires = requireMapper.findAll(pageInfo, user);
 		
@@ -70,6 +75,54 @@ public class RequireService {
 								  .build();
 		
 	}
+
+	// 문의사항 상세보기
+	public RequireDetailResponse findByRequireNo(Long requireNo, String userId) {
+		RequireDto require = requireMapper.findByBoardNo(requireNo, userId);
+		if (require == null) {
+			throw new BoardNotFoundException("조회 결과가 없습니다.");
+		}
+		
+		require.setFiles(fileService.findAll(requireNo));
+		
+		List<ResponseAnswer> answers = answerMapper.findAllAnswerByRequireNo(requireNo);
+		
+		
+		RequireDetailResponse response = RequireDetailResponse.builder()
+															  .requireTitle(require.getRequireTitle())
+															  .requireContent(require.getRequireContent())
+															  .files(require.getFiles())
+															  .createDate(require.getCreateDate())
+															  .answer(answers)
+															  .build();
+		
+		return response;
+	}
+	// (관리자)문의사항 상세보기
+	public RequireDetailResponse findByRequireNoAdmin(Long requireNo) {
+		RequireDto require = requireMapper.findByRequireNoAdmin(requireNo);
+		if (require == null) {
+			throw new BoardNotFoundException("조회 결과가 없습니다.");
+		}
+		
+		require.setFiles(fileService.findAll(requireNo));
+		
+		List<ResponseAnswer> answers = answerMapper.findAllAnswerByRequireNo(requireNo);
+		
+		
+		RequireDetailResponse response = RequireDetailResponse.builder()
+															  .requireTitle(require.getRequireTitle())
+															  .requireContent(require.getRequireContent())
+															  .userId(require.getUserId())
+															  .files(require.getFiles())
+															  .createDate(require.getCreateDate())
+															  .answer(answers)
+															  .build();
+		
+		return response;
+	}
+
+
 
 
 }

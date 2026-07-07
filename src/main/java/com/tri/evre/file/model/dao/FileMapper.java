@@ -56,19 +56,19 @@ public interface FileMapper {
 	int saveRequireFile(RequireFile file);
 	
 	//공지사항 파일 전체 조회
-	List<FileDto> findRequireFileAll(Long boardNo);
+	List<FileDto> findRequireFileAll(Long requireNo);
 
 	//공지사항 파일 수정
 	int updateRequireFile(RequireFile file);
 
 	//공지사항 파일 삭제
-	int deleteRequireFile(Long boardNo, int maxOrder);
+	int deleteRequireFile(Long require, int maxOrder);
 
 	//공지사항 한 게시글의 파일의 총 갯수
-	int findRequireFileCounts(Long boardNo);
+	int findRequireFileCounts(Long requireNo);
 
 	//공지사항 삭제시 해당 개시글의 파일 다날려야됨
-	int deleteRequireFile(Long boardNo);
+	int deleteRequireFile(Long requireNo);
 
 	
 	

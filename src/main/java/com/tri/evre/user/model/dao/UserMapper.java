@@ -32,4 +32,6 @@ public interface UserMapper {
 
 	Integer findMileageSum(String userId);
 
+	int sumUsers();
+
 }
