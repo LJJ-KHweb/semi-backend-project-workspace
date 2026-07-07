@@ -58,7 +58,7 @@
 		SELECT
 				P.PRODUCT_NAME
 			 ,	H.CREATE_DATE
-			 ,	I.PRICE
+			 ,	P.PRICE
 		  FROM
 		  		HISTORY_MILEAGE H
 		  JOIN
@@ -95,4 +95,22 @@
 		 WHERE
 		 		USER_ID = #{userId}
 	</update>
+	
+	<select id="findAllMileageHistoryCounts">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		HISTORY_MILEAGE
+		 WHERE
+		 		USER_ID = #{userId}
+	</select>
+	
+	<select id="findMileageSum">
+		SELECT
+				SUM(CHANGE)
+		  FROM
+		  		HISTORY_MILEAGE
+		 WHERE
+		 		USER_ID = #{userId}
+	</select>
 </mapper>

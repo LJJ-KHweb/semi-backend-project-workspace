@@ -89,9 +89,10 @@ public class UserService {
 
 	public UserMileageRequestDto findAllMileageHistory(PageInfo pageInfo, CustomUserDetails user) {
 		List<MileageDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
-
+		pageInfo.setBoardCounts(userMapper.findAllMileageHistoryCounts(user.getUsername()));
 		return UserMileageRequestDto.builder().mileages(mileages)
 												.pageInfo(pageInfo)
+												.mileageSum(userMapper.findMileageSum(user.getUsername()))
 												.build();
 	}
 
