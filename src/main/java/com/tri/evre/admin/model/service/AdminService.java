@@ -2,10 +2,12 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tri.evre.admin.model.vo.AdminPage;
 import com.tri.evre.answer.model.dao.AnswerMapper;
 import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dao.BoardMapper;
@@ -19,6 +21,8 @@ import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.file.service.FileStorageService;
+import com.tri.evre.global.api.model.vo.ApiResponse;
+import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
@@ -450,7 +454,28 @@ public class AdminService {
 			validateStation(charger.getStationNo());
  			chargerMapper.deleteCharger(chargerNo);
 		}
-
+		
+		
+		
+		
+		public AdminPage adminPage() {
+			
+			int total = sumRequires();
+			int finish = finishRequires();
+			int notFinish = total - finish;
+			
+			AdminPage adminPage =  AdminPage.builder()
+					 						.sumRequires(total)
+					 						.finishRequires(finish)
+					 						.notFinishRequires(notFinish)
+					 						.sumUsers(sumUsers())
+					 						.build();
+			return adminPage;
+		}
+		
+		
+		
+	
 		public int sumRequires() {
 			return requireMapper.sumRequires();
 		}

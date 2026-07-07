@@ -184,16 +184,7 @@ public class AdminController {
 	@GetMapping("/adminPage")
 	public ResponseEntity<ApiResponse<AdminPage>> adminPage() {
 		
-		int total = adminService.sumRequires();
-		int finish = adminService.finishRequires();
-		int notFinish = total = finish;
-		
-		AdminPage adminPage =  AdminPage.builder()
-				 						.sumRequires(total)
-				 						.finishRequires(finish)
-				 						.notFinishRequires(notFinish)
-				 						.sumUsers(adminService.sumUsers())
-				 						.build();
+		AdminPage adminPage = adminService.adminPage();
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("관리페이지 정보 조회 성공", adminPage));
 	}
