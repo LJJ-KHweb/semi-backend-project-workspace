@@ -52,7 +52,8 @@ public class TokenService {
 	// 로그아웃 요청있을때 DB에있는거 싹 지워주는 메소드
 	@Transactional
 	public void logout(String refreshToken, String userId) {
-
+		log.info("refresh{}",refreshToken);
+		
 		tokenMapper.deleteToken(userId, refreshToken);
 
 	}
@@ -79,8 +80,8 @@ public class TokenService {
 		CustomUserDetails user = CustomUserDetails.builder().name(userName).username(userId).build();
 
 		Map<String, String> tokens = createTokens(user);
-
 		saveToken(tokens.get("refreshToken"), userId);
+		tokenMapper.deleteToken(userId, refreshToken);
 
 	
 		return tokens;

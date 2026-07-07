@@ -44,7 +44,7 @@ public class JwtUtil {
 				.issuedAt(new Date())
 		//	   .expiration(new Date(System.currentTimeMillis()+(1000*60*15)));
 		//	   .expiration(new Date(System.currentTimeMillis()+ TimeUnit.MINUTES.toMinutes(15))));
-		       .expiration(Date.from(Instant.now().plus(Duration.ofSeconds(10))))
+		       .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(60*5))))
 		       .claim("userName", user.getName())
 		       .signWith(key)
 		       .compact();

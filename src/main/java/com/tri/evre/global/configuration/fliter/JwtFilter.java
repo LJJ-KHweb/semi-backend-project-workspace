@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.user.AccessTokenExprireException;
 import com.tri.evre.token.util.JwtUtil;
 
 import io.jsonwebtoken.Claims;
@@ -75,10 +76,12 @@ public class JwtFilter extends OncePerRequestFilter {
 			
 		} catch (ExpiredJwtException e) {
 			log.info("토큰의 유효기간 만료");
-			response.setStatus(401);
-			response.setContentType("application/json; charset=UTF-8");
-			response.getWriter().write(String.format("토큰만료"));
-			return;
+			  response.setStatus(401);
+			  response.setContentType("application/json; charset=UTF-8");
+			  response.getWriter().write(String.format("토큰만료"));
+			  return;
+			 
+			
 			
 		} catch (JwtException e) {
 			log.info("이 서버의 서비스키로 만든 토큰이 아님");

@@ -40,15 +40,14 @@ public class AuthController {
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<ApiResponse<Map<String, String>>> refresh(@RequestBody Map<String, String> refreshToken){
+		log.info("{}", refreshToken);
 		return ResponseEntity.status(201).body(ApiResponse.created("엑세스 토큰 발급 성공",tokenService.tokenRotation(refreshToken.get("refreshToken"))));
 		
 	}
 	
 	@DeleteMapping("/logout")
 	public ResponseEntity<ApiResponse<Void>> logout(@RequestBody LogoutRequest logoutRequest, @AuthenticationPrincipal CustomUserDetails user){
-		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		tokenService.logout(logoutRequest.getRefreshToken(), user.getUsername());
-		log.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 		return ResponseEntity.status(200).body(ApiResponse.success("로그아웃 성공~",null));
 	}
 	
