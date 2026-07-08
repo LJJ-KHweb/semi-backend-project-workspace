@@ -67,17 +67,19 @@ public class BoardFileService implements FileManagementService {
 	
 	@Override
 	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long boardNo) {
-		
+	
 		// 앞단에서 삭제한 파일 DB에서 삭제
 		if (deleteOrder != null && !deleteOrder.isEmpty()) {
 			for(Integer order : deleteOrder) {
-				log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@{}", order);
 				fileMapper.deleteBoardFile(boardNo, order);
 			}
 		}
 		
-		int maxOrder = fileMapper.findBoardFileCounts(boardNo);
-		int count = maxOrder+1;
+		Integer maxOrder = fileMapper.findBoardFileCounts(boardNo);
+		int count = 0;
+		if(maxOrder != null) {
+			count = maxOrder+1;
+		}
 		if(files != null&& !files.isEmpty()) {
 			if(files.size() > 0) {
 				for(MultipartFile file : files) {
