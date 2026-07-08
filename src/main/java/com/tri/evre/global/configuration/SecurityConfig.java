@@ -45,7 +45,6 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.POST, "/api/boards").authenticated();
 					
 					requests.requestMatchers(HttpMethod.GET,"/api/boards/**","/uploads/**").permitAll();
-					requests.requestMatchers(HttpMethod.PATCH,"/api/boards/**").authenticated();
 					requests.requestMatchers(HttpMethod.POST, "/api/boards").authenticated();
 					//06/30---------------------- 상점 -----------------------------------
 					requests.requestMatchers(HttpMethod.GET,"/api/shop").permitAll();

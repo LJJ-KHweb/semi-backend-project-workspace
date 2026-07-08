@@ -53,7 +53,7 @@
 					  BOARD.STATUS = 'Y'
 			    ORDER
 			       BY
-			       	  BOARD.CREATE_DATE ASC
+			       	  BOARD.CREATE_DATE DESC
 	        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	

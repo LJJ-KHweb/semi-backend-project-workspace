@@ -31,6 +31,8 @@ public class BoardDto {
 	// 추가 6/30 재준
 	private String status;
 	
+	private List<FileDto> existingFiles;
+	private List<Integer> deleteOrder;
 	
 	
 	//--------------------

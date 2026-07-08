@@ -2,7 +2,6 @@ package com.tri.evre.file.service;
 
 import java.util.List;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.file.model.dto.FileDto; 
@@ -13,7 +12,7 @@ public interface FileManagementService {
 
 	List<FileDto> findAll(Long boardNo);
 
-	void updateFile(List<MultipartFile> files, Long boardNo);
+	void updateFile(List<MultipartFile> files, List<Integer> DeleteOrder, Long boardNo);
 
 	void deleteFile(Long noticeNo);
 

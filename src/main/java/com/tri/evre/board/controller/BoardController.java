@@ -48,7 +48,7 @@ public class BoardController {
 	
 	//게시글 전체조회
 	@GetMapping
-	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam("page") int page,
+	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam(name="page",defaultValue = "1") int page,
 			 													@RequestParam(name="size") int size){
 		BoardListResponse boardsResponse = boardService.findAll(new PageInfo(page,size));
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", boardsResponse));
@@ -64,9 +64,10 @@ public class BoardController {
 	// 게시글 수정
 	@PatchMapping("/{boardNo}")
 	public ResponseEntity<ApiResponse<Void>> update(@ModelAttribute @Valid BoardDto board,
-													@RequestParam(name="file") List<MultipartFile> files,
+													@RequestParam(name="file", required = false) List<MultipartFile> files,
 													@AuthenticationPrincipal CustomUserDetails user,
 													@PathVariable(name="boardNo") Long boardNo){
+		
 		board.setBoardNo(boardNo);
 		boardService.update(board,files,user);
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("업데이트 성공", null));
