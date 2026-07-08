@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.tri.evre.file.model.dto.FileDto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,11 +28,7 @@ public class BoardDto {
 	// 추가 6/30 재준
 	private String status;
 	
-	private List<FileDto> existingFiles;
 	private List<Integer> deleteOrder;
-	
-	
-	//--------------------
 	private List<FileDto> files;
 	private Date createDate;
 	private Long views;
