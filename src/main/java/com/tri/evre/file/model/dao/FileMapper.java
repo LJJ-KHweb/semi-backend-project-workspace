@@ -29,7 +29,7 @@ public interface FileMapper {
 	int deleteBoardFile(@Param(value="boardNo") Long boardNo, @Param(value="order") int order);
 
 	// 일반 게시판 한 게시글의 파일의 총 갯수
-	int findBoardFileCounts(Long boardNo);
+	Integer findBoardFileCounts(Long boardNo);
 
 	//=====================공지사항============================//
 	

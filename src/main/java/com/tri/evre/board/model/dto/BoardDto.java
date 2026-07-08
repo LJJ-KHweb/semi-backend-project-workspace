@@ -20,11 +20,9 @@ import lombok.ToString;
 @AllArgsConstructor
 public class BoardDto {
 	private Long boardNo;
-	@NotBlank
-	@Pattern(regexp="^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{2,30}$", message="제목의 형식이 잘못되었습니다.")
+	@Pattern(regexp="[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?()/\\-]{2,200}", message="제목의 형식이 잘못되었습니다.")
 	private String boardTitle;
-	@NotBlank
-	@Pattern(regexp="^[a-zA-Z0-9가-힣]{2,500}$", message="내용의 형식이 잘못되었습니다.")
+	@Pattern(regexp="^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?()/\\-]{2,200}$", message="내용의 형식이 잘못되었습니다.")
 	private String boardContent;
 	private String userName;
 	private String userId;
