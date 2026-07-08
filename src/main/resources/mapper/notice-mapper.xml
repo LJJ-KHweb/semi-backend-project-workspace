@@ -37,6 +37,7 @@
 				 , 	NOTICE_TITLE
 				 , 	U.USER_NAME
 				 ,	N.CREATE_DATE
+				 ,	N.PUBLIC_YN
 				 ,	VIEWS
 	</sql>
 	
@@ -51,7 +52,7 @@
 			  	  N.USER_ID = U.USER_ID
 		   ORDER
 			  BY
-			   	  N.CREATE_DATE ASC
+			   	  N.CREATE_DATE DESC
 	     OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
