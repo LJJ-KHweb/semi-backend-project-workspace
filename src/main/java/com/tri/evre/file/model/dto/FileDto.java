@@ -14,7 +14,7 @@ import lombok.ToString;
 @ToString
 public class FileDto {
 	private String filePath;
-	private int fileOrder;
+	private Integer fileOrder;
 	private String originalName;
 	private Long boardNo;
 }
