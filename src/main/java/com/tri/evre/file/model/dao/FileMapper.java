@@ -37,13 +37,13 @@ public interface FileMapper {
 	int saveNoticeFile(NoticeFile file);
 	
 	//공지사항 파일 전체 조회
-	List<FileDto> findNoticeFileAll(Long boardNo);
+	List<FileDto> findNoticeFileAll(Long noticeNo);
 
 	//공지사항 파일 수정
 	int updateNoticeFile(NoticeFile file);
 
 	//공지사항 파일 삭제
-	int deleteNoticeFile(Long boardNo, int maxOrder);
+	int deleteNoticeFile(@Param(value="noticeNo") Long noticeNo, @Param(value="order")int maxOrder);
 
 	//공지사항 한 게시글의 파일의 총 갯수
 	int findNoticeFileCounts(Long boardNo);

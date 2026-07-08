@@ -17,6 +17,7 @@ import com.tri.evre.global.exception.board.BoardUpdateException;
 import com.tri.evre.notice.model.dao.NoticeMapper;
 import com.tri.evre.notice.model.dto.NoticeDeleteDto;
 import com.tri.evre.notice.model.dto.NoticeDto;
+import com.tri.evre.notice.model.dto.NoticeListResponse;
 import com.tri.evre.notice.model.vo.Notice;
 
 import lombok.extern.slf4j.Slf4j;
@@ -54,20 +55,24 @@ public class NoticeService {
 
 	// 공지사항 전체 조회
 	@Transactional
-	public List<NoticeDto> findAll(PageInfo pageInfo) {
+	public NoticeListResponse findAll(PageInfo pageInfo) {
 		List<NoticeDto> notices = noticeMapper.findAll(pageInfo);
 		if (notices.isEmpty()) {
 			throw new BoardReadException("일치하는 공지사항게시글이 없습니다");
 		}
 		pageInfo.setBoardCounts(noticeMapper.findNoticesCount());
-		return notices;
+		
+		
+		return NoticeListResponse.builder().pageInfo(pageInfo)
+											.notices(notices)
+											.build();
 	}
 
 	// 공지사항 상세 조회
 	@Transactional
 	public NoticeDto findByNoticeNo(Long noticeNo) {
-		plusViews(noticeNo);
 		NoticeDto notice = noticeMapper.findByNoticeNo(noticeNo);
+		plusViews(noticeNo);
 		if(notice == null) {
 			throw new BoardReadException("해당번호의 공지사항 게시글이 존재하지 않습니다.");
 		}

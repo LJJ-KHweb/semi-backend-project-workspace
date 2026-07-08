@@ -119,7 +119,7 @@
 		 WHERE
 				 NOTICE_NO = #{noticeNo}
 		   AND
-				 FILE_ORDER > #{order}
+				 FILE_ORDER = #{order}
 	</delete>
 	
 	<!--일반 게시판 한 게시글의 파일의 총 갯수 -->
