@@ -12,7 +12,6 @@ import com.tri.evre.board.model.dto.BoardCreateRequest;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
-import com.tri.evre.board.model.dto.Car;
 import com.tri.evre.board.model.vo.Board;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.service.FileManagementService;
@@ -65,13 +64,7 @@ public class BoardService {
 		
 		// 파일 까지 들어간 상태
 		
-		Car car = Car.builder().boardNo(boardEntity.getBoardNo())
-								.carNo(board.getCarNo())
-								.startTime(board.getStartTime())
-								.finishTime(board.getFinishTime())
-								.build();
 		
-		boardMapper.saveDrivingHistory(car);
 		
 	}
 	

@@ -1,6 +1,5 @@
 package com.tri.evre.global.exception;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,7 @@ import com.tri.evre.global.exception.board.file.BoardFileNotFoundException;
 import com.tri.evre.global.exception.board.file.BoardFileReadException;
 import com.tri.evre.global.exception.board.file.BoardFileUpdateException;
 import com.tri.evre.global.exception.board.file.InvalidBoardFileFormatException;
+import com.tri.evre.global.exception.car.InvalidVehicleUsageException;
 import com.tri.evre.global.exception.charger.ChargerCreateException;
 import com.tri.evre.global.exception.charger.ChargerDeleteException;
 import com.tri.evre.global.exception.charger.ChargerNotFoundException;
@@ -687,6 +687,10 @@ public class GlobalExceptionHandler {
 				.body(new ApiResponse(9001, e.getMessage(), null));
 	}
 	
-	
+	@ExceptionHandler(InvalidVehicleUsageException.class)
+	public ResponseEntity<ApiResponse> InvalidVehicleUsage(InvalidVehicleUsageException e) {
+		return ResponseEntity.status(CustomHttpStatus.CAR_HISTORY_CREATE_FAILED.getCode())
+				.body(new ApiResponse(9002, e.getMessage(), null));
+	}
 
 }

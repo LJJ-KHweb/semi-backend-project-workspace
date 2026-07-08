@@ -107,6 +107,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.PATCH,"/api/notices/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE,"/api/notices/**").hasRole("ADMIN");
 					
+					requests.requestMatchers(HttpMethod.POST, "/api/users/drivingHistory").authenticated();
 					requests.requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/users").hasRole("ADMIN");
 					
