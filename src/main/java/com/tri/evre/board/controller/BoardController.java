@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.tri.evre.board.model.dto.BoardCreateRequest;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.board.model.service.BoardService;
@@ -38,8 +37,8 @@ public class BoardController {
 	
 	//게시글 작성
 	@PostMapping
-	public ResponseEntity<ApiResponse<Void>> save(@ModelAttribute @Valid BoardCreateRequest board, 
-												@RequestParam(name="file") List<MultipartFile> files, 
+	public ResponseEntity<ApiResponse<Void>> save(@ModelAttribute @Valid BoardDto board, 
+												@RequestParam(name="file", required= false) List<MultipartFile> files, 
 												@AuthenticationPrincipal CustomUserDetails user){
 		
 		boardService.save(board,files,user);

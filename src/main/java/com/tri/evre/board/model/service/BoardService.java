@@ -45,7 +45,7 @@ public class BoardService {
 	
 	// 게시글 작성
 	@Transactional
-	public void save(BoardCreateRequest board, List<MultipartFile> files, CustomUserDetails user) {
+	public void save(BoardDto board, List<MultipartFile> files, CustomUserDetails user) {
 
 		Board boardEntity = Board.builder().boardTitle(board.getBoardTitle())
 											.boardContent(board.getBoardContent())
