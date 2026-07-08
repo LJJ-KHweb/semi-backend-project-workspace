@@ -1,12 +1,5 @@
 package com.tri.evre.file.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -30,7 +23,7 @@ public class BoardFileService implements FileManagementService {
 
 	@Override
 	public void saveFile(List<MultipartFile> files, Long boardNo) {
-		if(files.isEmpty()) {
+		if(files == null || files.isEmpty()) {
 			return;
 		}
 		int count = 1;
@@ -52,44 +45,86 @@ public class BoardFileService implements FileManagementService {
 
 	@Override
 	public List<FileDto> findAll(Long boardNo) {
-		countBoardFiles(boardNo);
+		// countBoardFiles(boardNo);
 		return findBoardFiles(boardNo);
 	
 	}
-
+	// MAX FILE_ORDER 조회하는메소드를 따로 구현하고
+	// 새파일이 들어올시 MAX FILE_ORDER+1로 ORDER를 지정해준다.
+	/*
+	 * 	DELETE 
+	 *    FROM
+	 *    		BOARD_FILE
+	 *  WHERE
+	 *  		BOARD_NO = #{boardNo}
+	 *    AND
+	 *    		FILE_ORDER != #{order1}
+	 *     OR
+	 *    		FILE_ORDER != #{order2}
+	 * 
+	 */
+	// FOR문을 돌려서 existingFiles.size() 만큼 변수 선언후 
+	
 	@Override
-	public void updateFile(List<MultipartFile> files, Long boardNo) {
-		if(files.isEmpty()) {
-			return;
-		}
+	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long boardNo) {
 		
-		int boardFileCounts = countBoardFiles(boardNo);
-		
-		int count = 1;
-		for(MultipartFile file : files) {
-			if(count >5) {
-				throw new BoardFileCreateException("파일이 너무 많습니다.");
+		// 앞단에서 삭제한 파일 DB에서 삭제
+		if (deleteOrder != null && !deleteOrder.isEmpty()) {
+			for(Integer order : deleteOrder) {
+				log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@{}", order);
+				fileMapper.deleteBoardFile(boardNo, order);
 			}
-			String filePath = fileStorageService.store(file);
-			BoardFile fileEntity = BoardFile.builder()
-								.filePath(filePath)
-								.fileOrder(count)
-								.originalName(file.getOriginalFilename())
-								.boardNo(boardNo)
-								.build();
-			updateBoardFile(fileEntity);
-			
-			count++;
 		}
-		// 한 게시글의 저장되어있는 파일의 수가 업데이트의 파일수보다 크다면 더있는 파일들을 삭제해줌
-		if(boardFileCounts > (count-1)) {
-			deleteBoardFiles(boardNo, count-1);
+		
+		int maxOrder = fileMapper.findBoardFileCounts(boardNo);
+		int count = maxOrder+1;
+		if(files != null&& !files.isEmpty()) {
+			if(files.size() > 0) {
+				for(MultipartFile file : files) {
+					String filePath = fileStorageService.store(file);
+					BoardFile fileEntity = BoardFile.builder()
+							.filePath(filePath)
+							.fileOrder(count++)
+							.originalName(file.getOriginalFilename())
+							.boardNo(boardNo)
+							.build();
+					saveBoardFile(fileEntity);
+				}
+			}
 		}
+		
+	
+		
+		
+		//현재 보드에 몇개의 파일이 저장되어있는지 확인
+		
+		/*
+		 * if(existingFiles.size() < maxOrder) { int count = existingFiles.size(); for(;
+		 * count <= maxOrder; count++) {
+		 * 
+		 * fileMapper.deleteBoardFile(boardNo, count+1); } }
+		 */
+		
+		/*
+		 * int boardFileCounts = countBoardFiles(boardNo);
+		 * 
+		 * 
+		 * int count = existingFiles.isEmpty() ? existingFiles.size(): 0; if(count != 0)
+		 * { for(FileDto file : existingFiles) { updateBoardFile(existingFiles); } }
+		 * if(files == null || files.isEmpty()) { return; } for(MultipartFile file :
+		 * files) { if(count >5) { throw new BoardFileCreateException("파일이 너무 많습니다."); }
+		 * String filePath = fileStorageService.store(file); BoardFile fileEntity =
+		 * BoardFile.builder() .filePath(filePath) .fileOrder(count)
+		 * .originalName(file.getOriginalFilename()) .boardNo(boardNo) .build();
+		 * 
+		 * count++; } // 한 게시글의 저장되어있는 파일의 수가 업데이트의 파일수보다 크다면 더있는 파일들을 삭제해줌
+		 * if(boardFileCounts > (count-1)) { deleteBoardFiles(boardNo, count-1); }
+		 */
 	}
 	
 	
 	// Board 게시글의 BoardType에 맞는 테이블에 저장해주는 메소드 
-	private void saveBoardFile(BoardFile file) {
+	private void saveBoardFile( BoardFile file) {
 		int result = fileMapper.saveBoardFile(file);
 		
 		if(result < 1) {
@@ -128,13 +163,15 @@ public class BoardFileService implements FileManagementService {
 	private List<FileDto> findBoardFiles(Long boardNo) {
 		List<FileDto> files= fileMapper.findBoardFileAll(boardNo);
 			
-		if(files.isEmpty()) {
-			throw new BoardFileCreateException("파일을 조회하지 못했습니다.");
-		}
+//		if(files.isEmpty()) {
+//			throw new BoardFileCreateException("파일을 조회하지 못했습니다.");
+//		}
 		return files;
 		
 	}
-
+	
+	
+	
 	@Override
 	public void deleteFile(Long noticeNo) {
 		//삭제 할때 구현함

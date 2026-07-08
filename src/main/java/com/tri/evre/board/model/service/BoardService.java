@@ -50,7 +50,8 @@ public class BoardService {
 											.boardContent(board.getBoardContent())
 											.userId(user.getUsername())
 											.build();
-
+		log.info("boardEntity : {}", boardEntity);
+		
 		int result = boardMapper.save(boardEntity);
 
 		if (result < 1) {
@@ -109,7 +110,7 @@ public class BoardService {
 		if (result < 1) {
 			throw new BoardUpdateException("게시글 수정 실패");
 		}
-		fileService.updateFile(files, boardEntity.getBoardNo());
+		fileService.updateFile(files, board.getDeleteOrder(), boardEntity.getBoardNo());
 	}
 
 	//게시글 삭제

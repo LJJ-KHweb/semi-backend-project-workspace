@@ -31,6 +31,9 @@
 		  		BOARD_FILE
 		 WHERE
 		 		BOARD_NO = #{boardNo}
+		 ORDER
+		 	BY
+		 		FILE_ORDER ASC
  	</select>
  	
  	<!--일반 게시판 파일 수정 -->
@@ -54,13 +57,13 @@
 		 WHERE
 				 BOARD_NO = #{boardNo}
 		   AND
-				 FILE_ORDER > #{order}
+				 FILE_ORDER = #{order}
 	</delete>
 	
 	<!--일반 게시판 한 게시글의 파일의 총 갯수 -->
 	<select id="findBoardFileCounts">
 		SELECT
-				COUNT(*)
+				MAX(FILE_ORDER)
 		  FROM
 		  	   	BOARD_FILE
 		 WHERE
