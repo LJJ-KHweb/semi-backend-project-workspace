@@ -34,6 +34,8 @@ public class NoticeDto {
 	private String status;
 	private String userId;
 
+	List<Integer> deleteOrder;
+	
 	private String userName;
 	private List<FileDto> files;
 }

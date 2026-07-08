@@ -1,18 +1,25 @@
 package com.tri.evre.user.model.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.tri.evre.car.model.dao.CarMapper;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.global.exception.car.InvalidVehicleUsageException;
+import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.user.ConcurrentUpdateException;
 import com.tri.evre.global.exception.user.DuplicateResourceException;
 import com.tri.evre.global.exception.user.PasswordMismatchException;
 import com.tri.evre.global.exception.user.UserNotFoundException;
-import com.tri.evre.mileage.model.dto.MileageDto;
+import com.tri.evre.mileage.model.dto.MileageHistoryResponseDto;
+import com.tri.evre.rasp.model.dao.RaspMapper;
 import com.tri.evre.user.model.dao.UserMapper;
+import com.tri.evre.user.model.dto.DrivingHistory;
 import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserMileageRequestDto;
 import com.tri.evre.user.model.dto.UserUpdateRequestDto;
@@ -28,7 +35,9 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	private final UserMapper userMapper;
+	private final RaspMapper raspMapper;
 	private final PasswordEncoder passwordEncoder;
+	private final CarMapper carMapper;
 
 	public void signup(UserDto user) {
 		//아이디가 중복인지 확인
@@ -87,13 +96,70 @@ public class UserService {
 		}
 	}
 
+	
+	// 마이페이지 마일리지 내역 조회
+	
 	public UserMileageRequestDto findAllMileageHistory(PageInfo pageInfo, CustomUserDetails user) {
-		List<MileageDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
+		List<MileageHistoryResponseDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
 		pageInfo.setBoardCounts(userMapper.findAllMileageHistoryCounts(user.getUsername()));
+		Integer mileageSum = userMapper.findMileageSum(user.getUsername());
+		if(mileageSum == null) {
+			mileageSum = 0;
+		}
+		
 		return UserMileageRequestDto.builder().mileages(mileages)
 												.pageInfo(pageInfo)
-												.mileageSum(userMapper.findMileageSum(user.getUsername()))
+												.mileageSum(mileageSum)
 												.build();
 	}
+
+	
+	@Transactional
+	public void saveDrivingHistory(CustomUserDetails user, DrivingHistory drivingHistory) {
+		//차량 번호 검증
+		validateCarNumber(drivingHistory.getCarNo());
+		
+		// Car테이블에 저장해줘야됨
+		int result = carMapper.save(drivingHistory, user.getUsername());
+		if(result < 1) {
+			throw new InvalidVehicleUsageException("공유전기차 이용내역 저장에 실패했습니다.");
+		}
+		addMileage(drivingHistory, user.getUsername());
+		// 마일리지 히스토리 추가 메소드 호출하기
+	}
+	
+	
+	// 회원 마일리지 적립 메소드
+	private void addMileage(DrivingHistory drivingHistory, String userId) {
+		
+		// 라즈베리파이 데이터에서 차량번호와 운행 시작/종료 시간 사이의 누적 주행거리(kmSum) 조회
+		int drivingKmSum = raspMapper.findByDrivinHistory(drivingHistory);
+		
+		int result = userMapper.addMileage(drivingKmSum * 2, userId);
+		if(result < 1) {
+			throw new MileageHistoryCreateException("마일리지 추가 실패했습니다.");
+		}
+	}
+	
+	
+	// 차량 번호 유효성 검증 메소드
+	private void validateCarNumber(String carNo) {
+		Set<String> carSet = Set.of(
+			    "52가 3108",
+			    "32가 7257",
+			    "47가 5706",
+			    "26가 5771",
+			    "23가 1266",
+			    "29가 7257",
+			    "31가 2012",
+			    "71가 0715",
+			    "77가 7777",
+			    "17가 2311"
+			);
+		if(!carSet.contains(carNo)) {
+			throw new InvalidVehicleUsageException("유효하지 않은 차량 번호 입니다.");
+		}
+	}
+	
 
 }

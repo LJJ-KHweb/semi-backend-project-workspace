@@ -63,12 +63,8 @@
 	  JOIN 
 	  		CAR C
     	ON 	R.CAR_NUM = C.CAR_NO
-	  JOIN 
-	  		BOARD B
-        ON 
-        	C.BOARD_NO = B.BOARD_NO
 	 WHERE
-    		B.USER_ID = #{userId}
+    		C.USER_ID = #{userId}
 	   AND
     		R.CURRENT_TIME BETWEEN C.START_TIME AND C.FINISH_TIME
 	 GROUP 
@@ -79,5 +75,15 @@
     		TRUNC(R.CURRENT_TIME)
    </select>
 	
+	<select id="findByDrivinHistory">
+		SELECT
+				SUM(DISTANCE)
+		  FROM
+		  		RASP
+		 WHERE
+		 		CAR_NUM = #{carNo}
+		   AND
+		   		CURRENT_TIME BETWEEN #{startTime} AND #{finishTime}
+	</select>
 	
 </mapper>

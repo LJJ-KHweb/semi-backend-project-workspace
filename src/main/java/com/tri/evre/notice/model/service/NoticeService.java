@@ -98,7 +98,7 @@ public class NoticeService {
 		if (result < 1) {
 			throw new BoardUpdateException("게시글 수정 실패했습니다.");
 		}			
-		fileService.updateFile(files, noticeEntity.getNoticeNo());
+		fileService.updateFile(files, notice.getDeleteOrder(), noticeEntity.getNoticeNo());
 	}
 
 	// 공지사항 삭제

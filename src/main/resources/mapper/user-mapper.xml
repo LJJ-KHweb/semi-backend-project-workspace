@@ -58,19 +58,18 @@
 		SELECT
 				P.PRODUCT_NAME
 			 ,	H.CREATE_DATE
-			 ,	P.PRICE
+			 ,	H.CHANGE
 		  FROM
 		  		HISTORY_MILEAGE H
 		  JOIN
 		  		PRODUCT P
 		  	ON
 		  		P.PRODUCT_NO = H.PRODUCT_NO
-		  JOIN
-		  		INVENTORY I
-		  	ON
-		  		P.PRODUCT_NO = I.PRODUCT_NO
 		 WHERE
 		 		H.USER_ID = #{username}
+		 ORDER
+		 	BY
+		 		H.CREATE_DATE DESC
 		 OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY		
 	</select>
 	
@@ -123,7 +122,18 @@
 				STATUS='Y'
 	</select>
 	
-	
+	<insert id="addMileage">
+		INSERT
+		  INTO
+		  		HISTORY_MILEAGE
+		VALUES
+				(
+				#{userId}
+			 ,	SYSDATE
+			 ,	#{mileage}
+			 ,	-1	
+				)
+	</insert>
 	
 	
 	

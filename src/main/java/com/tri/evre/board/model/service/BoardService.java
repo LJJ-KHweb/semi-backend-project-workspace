@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.board.model.dao.BoardMapper;
+import com.tri.evre.board.model.dto.BoardCreateRequest;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
@@ -61,6 +62,10 @@ public class BoardService {
 		if (files != null && !files.isEmpty()) {
 			fileService.saveFile(files, boardEntity.getBoardNo());
 		}
+		
+		// 파일 까지 들어간 상태
+		
+		
 		
 	}
 	

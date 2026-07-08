@@ -14,6 +14,7 @@ import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
+import com.tri.evre.user.model.dto.DrivingHistory;
 import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserMileageRequestDto;
 import com.tri.evre.user.model.dto.UserUpdateRequestDto;
@@ -48,13 +49,17 @@ public class UserController {
 	// 마이페이지 마일리지 적립현황 명세템플릿
 	@GetMapping("/mypage")
 	public ResponseEntity<ApiResponse<UserMileageRequestDto>> findAllMileageHistory(@RequestParam(name="page", defaultValue ="1")int page,
-																				@RequestParam(name="size") int size,
-																				@AuthenticationPrincipal CustomUserDetails user){
+																					@RequestParam(name="size") int size,
+																					@AuthenticationPrincipal CustomUserDetails user){
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("마일리지 조회에 성공했습니다.", userService.findAllMileageHistory(new PageInfo(page, size), user)));
 	}
 	
-	//관리자 
-	
+	// 차량 이용정보 등록
+	@PostMapping("/drivingHistory")
+	public ResponseEntity<ApiResponse<Void>> saveDrivingHistory(@AuthenticationPrincipal CustomUserDetails user, @RequestBody @Valid DrivingHistory drivingHistory){
+		userService.saveDrivingHistory(user, drivingHistory);
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("마일리지 적립에 성공했습니다.", null));
+	}
 	
 	
 }

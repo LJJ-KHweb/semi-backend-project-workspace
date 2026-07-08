@@ -117,7 +117,9 @@ public enum CustomHttpStatus {
     
     // 07/02 재준 추가 
     RASP_CRUD_FAILED(500),
-    INVALID_PAGE_REQUEST(400);
+    INVALID_PAGE_REQUEST(400),
+    CAR_HISTORY_CREATE_FAILED(400);
+	
 	
 	
 	
