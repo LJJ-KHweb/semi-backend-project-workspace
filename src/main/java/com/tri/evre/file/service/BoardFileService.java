@@ -67,11 +67,12 @@ public class BoardFileService implements FileManagementService {
 	
 	@Override
 	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long boardNo) {
-		
+		if(files == null && deleteOrder == null) {
+			return;
+		}
 		// 앞단에서 삭제한 파일 DB에서 삭제
 		if (deleteOrder != null && !deleteOrder.isEmpty()) {
 			for(Integer order : deleteOrder) {
-				log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@{}", order);
 				fileMapper.deleteBoardFile(boardNo, order);
 			}
 		}

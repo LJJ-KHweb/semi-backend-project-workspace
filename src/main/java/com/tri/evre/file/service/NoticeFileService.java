@@ -53,37 +53,31 @@ public class NoticeFileService implements FileManagementService {
 	
 
 	@Override
-	public void updateFile(List<MultipartFile> files, Long noticeNo) {
-		int result = 0;
-		if(files.isEmpty()) {
-			return;
-		}
-		
-		int boardFileCounts = countNoticeFiles(noticeNo);
-		
-		int count = 1;
-		for(MultipartFile file : files) {
-			if(count >5) {
-				throw new BoardFileCreateException("파일이 너무 많습니다.");
+	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long noticeNo) {
+		if (deleteOrder != null && !deleteOrder.isEmpty()) {
+			for(Integer order : deleteOrder) {
+				fileMapper.deleteBoardFile(noticeNo, order);
 			}
-			String filePath = fileStorageService.store(file);
-			NoticeFile fileEntity = NoticeFile.builder()
-								.filePath(filePath)
-								.fileOrder(count)
-								.originalName(file.getOriginalFilename())
-								.noticeNo(noticeNo)
-								.build();
-			updateNoticeFile(fileEntity);
-			
-			count++;
 		}
-		// 한 게시글의 저장되어있는 파일의 수가 업데이트의 파일수보다 크다면 더있는 파일들을 삭제해줌
-		if(boardFileCounts > (count-1)) {
-			deleteNoticeFiles(noticeNo, count-1);
+		
+		int maxOrder = fileMapper.findBoardFileCounts(noticeNo);
+		int count = maxOrder+1;
+		if(files != null&& !files.isEmpty()) {
+			if(files.size() > 0) {
+				for(MultipartFile file : files) {
+					String filePath = fileStorageService.store(file);
+					NoticeFile fileEntity = NoticeFile.builder()
+							.filePath(filePath)
+							.fileOrder(count++)
+							.originalName(file.getOriginalFilename())
+							.noticeNo(noticeNo)
+							.build();
+					saveNoticeFile(fileEntity);
+				}
+			}
 		}
+	
 	}
-	
-	
 	//공지사항 테이블에 저장해주는 메소드 
 	private void saveNoticeFile(NoticeFile file) {
 		int result = fileMapper.saveNoticeFile(file);
