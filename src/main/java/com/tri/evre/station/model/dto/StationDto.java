@@ -2,6 +2,8 @@ package com.tri.evre.station.model.dto;
 
 import java.sql.Date;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +26,8 @@ public class StationDto {
 	private String region;
 	@Pattern(regexp="^[a-zA-Z0-9가-힣\\s.,()/-]{2,100}$", message="충전소 주소의 형식이 잘못되었습니다.")
 	private String address;
+	@Min(value = 0, message = "충전기 갯수가 음수일 수 없습니다.")
+	@Max(value = 99, message = "충전기 갯수는 99개 까지만 등록 가능합니다.")
 	private int chargerCount;
 	private double lat;
 	private double lng;
