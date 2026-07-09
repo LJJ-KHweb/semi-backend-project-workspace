@@ -9,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.answer.model.dao.AnswerMapper;
 import com.tri.evre.answer.model.vo.ResponseAnswer;
+import com.tri.evre.board.model.dto.BoardDto;
+import com.tri.evre.board.model.vo.Board;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponse;
 import com.tri.evre.file.service.FileManagementService;
@@ -57,7 +59,8 @@ public class RequireService {
 		    fileService.saveFile(files, requireEntity.getRequireNo());
 		}
 	}
-
+	
+	
 	
 	// 문의사항 전체보기
 	public RequireListResponse findAll(PageInfo pageInfo, String user) {
