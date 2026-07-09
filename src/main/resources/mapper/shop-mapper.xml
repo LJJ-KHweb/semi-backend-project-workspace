@@ -6,8 +6,7 @@
 
 
 
-	<select id="findAll" resultType="ProductListDto">
-			
+	<select id="findAll" resultType="ProductListDto">	
 		SELECT
 					P.PRODUCT_NO
 				  , P.PRODUCT_NAME
@@ -27,10 +26,8 @@
 			  		P.STATUS='Y'
 			  	ORDER
 			  	   BY
-			  	   	P.PRODUCT_NO
-			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-			  	
-			  	
+			  	   	P.PRODUCT_NO DESC
+			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY	
 	</select>
 
 	
@@ -45,6 +42,9 @@
 						PRODUCT	  		
 				WHERE
 					 	PRODUCT_NO = #{productNo}
+			    ORDER
+			       BY
+			       		PRODUCT_NO DESC
 	</select>
 		
 	<select id="findByInventory" resultType="InventoryDto">
@@ -68,6 +68,17 @@
 				PRODUCT_NO = #{productNo}
 		
 	</update>
+	
+	<select id="findProductCounts">
+		SELECT 
+				COUNT(*)
+		  FROM
+		  		PRODUCT
+		 WHERE 
+			  	PRICE &lt; 0
+		   AND
+		 		STATUS = 'Y'
+	</select>
 	
 	<insert id="insertHistoryMileage">
 		INSERT

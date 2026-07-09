@@ -34,7 +34,7 @@ public class ShopService {
 	public ProductListResponse findAll(int page, int size) {
 		
 		PageInfo pageInfo = new PageInfo(page, size);
-		
+		pageInfo.setBoardCounts(shopMapper.findProductCounts());
 		List<ProductListDto> products = shopMapper.findAll(pageInfo);
 		
 		if(products == null||products.isEmpty()) {

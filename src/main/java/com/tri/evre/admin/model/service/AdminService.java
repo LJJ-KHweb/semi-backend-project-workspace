@@ -124,11 +124,11 @@ public class AdminService {
 		
 		List<ProductListDto> products = shopMapper.findAllProductAdmin(pageInfo);
 		
-		
 		// 테이블에 아무것도 없을때
 		if(products==null || products.isEmpty()) {
 			throw new ProductNotFoundException("상품을 하나도 찾을 수 없습니다.");
 		}
+		
 		
 		return new ProductListResponse(pageInfo, products);
 	}

@@ -47,5 +47,7 @@ public interface ShopMapper {
 	// admin용 상품 조회 메소드
 	List<ProductListDto> findAllProductAdmin(PageInfo pageInfo);
 
+	int findProductCounts();
+
 
 }
