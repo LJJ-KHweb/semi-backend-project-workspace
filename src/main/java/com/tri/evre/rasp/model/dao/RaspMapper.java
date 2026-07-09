@@ -19,6 +19,6 @@ public interface RaspMapper {
 
 	List<RaspDayOfWeek> findMyRaspAll(String userId);
 
-	int findByDrivinHistory(DrivingHistory drivingHistory);
+	Integer findByDrivinHistory(DrivingHistory drivingHistory);
 
 }

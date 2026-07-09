@@ -2,7 +2,8 @@ package com.tri.evre.user.model.dto;
 
 import java.sql.Timestamp;
 
-import jakarta.validation.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,12 +15,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DrivingHistory {
-	
-	@NotBlank
+	@NotNull
 	private String carNo;
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Timestamp startTime;
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Timestamp finishTime;
 	//@NotBlank는 문자열 검증용임
 	//@NotNull Timestamp 타입이기때문에 문자열 검증을 할수없음 따라서 @NotNull로 검증

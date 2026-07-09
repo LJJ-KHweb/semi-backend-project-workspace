@@ -133,7 +133,10 @@ public class UserService {
 	private void addMileage(DrivingHistory drivingHistory, String userId) {
 		
 		// 라즈베리파이 데이터에서 차량번호와 운행 시작/종료 시간 사이의 누적 주행거리(kmSum) 조회
-		int drivingKmSum = raspMapper.findByDrivinHistory(drivingHistory);
+		Integer drivingKmSum = raspMapper.findByDrivinHistory(drivingHistory);
+		if (drivingKmSum == null) {
+			return;
+		}
 		
 		int result = userMapper.addMileage(drivingKmSum * 2, userId);
 		if(result < 1) {
