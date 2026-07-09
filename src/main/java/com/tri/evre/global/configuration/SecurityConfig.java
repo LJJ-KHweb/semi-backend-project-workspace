@@ -68,13 +68,13 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/charger/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/charger/**").hasRole("ADMIN");
 					
+					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/products/{productNo}/restore").hasRole("ADMIN");
 					
 					// 07/02 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/admin/products").hasRole("ADMIN");
 					// 07/03 선겸
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/products/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/products/**").hasRole("ADMIN");
-					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/products/{productNo}/restore").hasRole("ADMIN");
 					
 					// 07/06 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();
