@@ -37,7 +37,7 @@
 			SELECT
 					  BOARD_NO
 					, BOARD_TITLE
-					, USER_NAME
+					, USER_ID
 					, BOARD.CREATE_DATE
 					, VIEWS
 	</sql>
@@ -62,6 +62,7 @@
 		<include refid="boardColumn"/>
 				 ,	USER_ID
 				 ,	BOARD_CONTENT
+				 ,  BOARD.STATUS
 				  FROM
 				  		BOARD
 				  JOIN
@@ -139,7 +140,7 @@
 		  		SEMI_USER USING(USER_ID)
 		 ORDER
 			BY
-			    BOARD.CREATE_DATE ASC
+			    BOARD.CREATE_DATE DESC
 	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>	
 	

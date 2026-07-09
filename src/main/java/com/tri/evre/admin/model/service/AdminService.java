@@ -2,7 +2,6 @@ package com.tri.evre.admin.model.service;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,15 +18,14 @@ import com.tri.evre.charger.model.dto.ChargerDto;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.file.model.dao.FileMapper;
+import com.tri.evre.file.model.dto.FileDto;
 import com.tri.evre.file.model.dto.RequireListResponseAdmin;
 import com.tri.evre.file.service.FileStorageService;
-import com.tri.evre.global.api.model.vo.ApiResponse;
-import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
-import com.tri.evre.global.exception.charger.ChargerCreateException;
 import com.tri.evre.global.exception.charger.ChargerNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
@@ -83,6 +81,11 @@ public class AdminService {
 	//-- 07/06 심영도 --
 	private final ChargerMapper chargerMapper;
 	
+	
+	// 07/09
+	private final FileMapper fileMapper;
+	
+	
 	@Transactional
 	public BoardListResponse findAll(PageInfo pageInfo) {
 		
@@ -104,6 +107,11 @@ public class AdminService {
 		if(board == null) {
 			throw new BoardNotFoundException("게시글 정보가 없습니다.");
 		}
+		
+		List<FileDto> files =  fileMapper.findBoardFileAll(boardNo);
+		
+		board.setFiles(files);
+		
 		return board;
 	}
 
