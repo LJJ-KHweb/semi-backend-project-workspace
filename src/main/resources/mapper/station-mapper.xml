@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tri.evre.station.model.dao.StationMapper">
+
+	<select id="findAll" parameterType="com.tri.evre.station.model.dto.StationSearchRequest" resultType="com.tri.evre.station.model.dto.StationDto">
+		SELECT
+			   STATION_NO,
+			   STATION_NAME,
+			   STATUS,
+			   REGION,
+			   ADDRESS,
+			   LAT,
+			   LNG
+		  FROM (
+				SELECT
+					   STATION_NO,
+					   STATION_NAME,
+					   STATUS,
+					   REGION,
+					   ADDRESS,
+					   LAT,
+					   LNG,
+					   (
+						6371 * ACOS(
+						COS(#{searchInfo.lat} * ACOS(-1) / 180)
+						* COS(LAT * ACOS(-1) / 180)
+						* COS((LNG - #{searchInfo.lng}) * ACOS(-1) / 180)
+						+ SIN(#{searchInfo.lat} * ACOS(-1) / 180)
+						* SIN(LAT * ACOS(-1) / 180)
+						)
+					   ) AS DISTANCE_KM
+				FROM STATION
+				)
+		 WHERE 
+		 	   DISTANCE_KM &lt;= #{searchInfo.distance}
+		   AND
+			   STATUS = 'Y'
+		 ORDER 
+			BY 
+			   DISTANCE_KM
+		OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	</select>
+
+	<select id="findStationCount" parameterType="com.tri.evre.station.model.dto.StationSearchRequest" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM (
+				SELECT
+					   STATUS,
+					   LAT,
+					   LNG,
+					   (
+						6371 * ACOS(
+						COS(#{searchInfo.lat} * ACOS(-1) / 180)
+						* COS(LAT * ACOS(-1) / 180)
+						* COS((LNG - #{searchInfo.lng}) * ACOS(-1) / 180)
+						+ SIN(#{searchInfo.lat} * ACOS(-1) / 180)
+						* SIN(LAT * ACOS(-1) / 180)
+						)
+					   ) AS DISTANCE_KM
+				FROM STATION
+				)
+		 WHERE 
+		 	   DISTANCE_KM &lt;= #{searchInfo.distance}
+		   AND
+			   STATUS = 'Y'
+		 ORDER 
+			BY 
+			   DISTANCE_KM   
+	</select>
+
+	<select id="findChargerCount" parameterType="long" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION S
+		  JOIN
+			   CHARGER C ON S.STATION_NO = C.STATION_NO
+		 WHERE
+			   S.STATION_NO = #{stationNo}
+	</select>
+
+	<select id="findByStationNo" parameterType="long" resultType="com.tri.evre.station.model.dto.StationDto">
+		SELECT
+			   STATION_NO
+			 , STATION_NAME
+			 , REGION
+			 , ADDRESS
+			 , STATION_DESC
+			 , LAT
+			 , LNG
+			 , CREATE_DATE
+		  FROM
+			   STATION
+		 WHERE
+			   STATUS = 'Y'
+		   AND
+			   STATION_NO = #{stationNo}
+	</select>
+
+	<select id="findAllStationCount" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION
+	</select>
+
+	<select id="findAllStation" parameterType="com.tri.evre.common.model.dto.PageInfo" resultType="com.tri.evre.station.model.dto.StationDto">
+		SELECT
+			   STATION_NO
+			 , STATION_NAME
+			 , REGION
+			 , ADDRESS
+			 , STATION_DESC
+			 , LAT
+			 , LNG
+			 , CREATE_DATE
+			 , STATUS
+		  FROM
+			   STATION
+		 ORDER
+			BY
+			   STATION_NO DESC
+		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+
+	<select id="findUnableCharger" parameterType="long" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION S
+		  JOIN
+			   CHARGER C ON S.STATION_NO = C.STATION_NO
+		 WHERE
+			   S.STATION_NO = #{stationNo}
+		   AND
+			   C.STATUS = 'N'
+	</select>
+
+	<insert id="insertStation" parameterType="com.tri.evre.station.model.vo.Station">
+
+		<selectKey keyProperty="stationNo" resultType="long" order="BEFORE">
+	        SELECT SEQ_STATION.NEXTVAL FROM DUAL
+	    </selectKey>
+	
+		INSERT
+		  INTO
+			   STATION
+			   (
+			   STATION_NO
+			 , STATION_NAME
+			 , REGION
+			 , ADDRESS
+			 , STATION_DESC
+			 , LAT
+			 , LNG
+			   )
+		VALUES
+			   (
+				#{stationNo}
+			  , #{stationName}
+			  , #{region}
+			  , #{address}
+			  , #{stationDesc}
+			  , #{lat}
+			  , #{lng}
+			   )
+	</insert>
+
+	<select id="checkDuplicate" parameterType="com.tri.evre.station.model.dto.SearchInfo" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION
+		 WHERE
+			   LAT = #{lat}
+		   AND
+			   LNG = #{lng}
+	</select>
+
+	<update id="updateStation" parameterType="com.tri.evre.station.model.vo.Station">
+		UPDATE
+			   STATION
+		   SET
+			   STATION_NAME = #{stationName}
+			 , STATION_DESC = #{stationDesc}
+			 , REGION = #{region}
+			 , ADDRESS = #{address}
+			 , LAT = #{lat}
+			 , LNG = #{lng}
+			 , STATUS = #{status}
+		 WHERE
+			   STATION_NO = #{stationNo}
+	</update>
+
+	<select id="checkDuplicateByNo" parameterType="com.tri.evre.station.model.dto.StationDto" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION
+		 WHERE
+			   LAT = #{lat}
+		   AND
+			   LNG = #{lng}
+		   AND
+			   STATION_NO != #{stationNo}
+	</select>
+
+	<update id="deleteStation" parameterType="long">
+		UPDATE
+			   STATION
+		   SET
+			   STATUS = 'N'
+		 WHERE
+			   STATION_NO = #{stationNo}
+	</update>
+
+	<select id="findDeletedStation" parameterType="long" resultType="int">
+		SELECT
+			   COUNT(*)
+		  FROM
+			   STATION
+		 WHERE
+			   STATION_NO = #{stationNo}
+		   AND
+			   STATUS = 'N'
+	</select>
+
+</mapper>
