@@ -51,7 +51,8 @@ public class RequireFileService implements FileManagementService {
 	}
 
 	@Override
-	public void updateFile(List<MultipartFile> files,List<Integer> deleteOrder, Long requireNo) {
+	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long requireNo) {
+
 		int result = 0;
 		if(files.isEmpty()) {
 			return;
