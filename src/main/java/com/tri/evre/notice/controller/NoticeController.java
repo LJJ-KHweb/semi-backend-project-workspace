@@ -20,6 +20,7 @@ import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.notice.model.dto.NoticeDto;
+import com.tri.evre.notice.model.dto.NoticeListResponse;
 import com.tri.evre.notice.model.service.NoticeService;
 
 import jakarta.validation.Valid;
@@ -46,7 +47,7 @@ public class NoticeController {
 
 	// 공지사항 전체조회
 	@GetMapping
-	public ResponseEntity<ApiResponse<List<NoticeDto>>> findAll(@RequestParam(name = "page") int page,
+	public ResponseEntity<ApiResponse<NoticeListResponse>> findAll(@RequestParam(name = "page") int page,
 																@RequestParam(name = "size") int size) {
 
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())

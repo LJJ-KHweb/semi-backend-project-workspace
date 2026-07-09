@@ -56,11 +56,11 @@ public class NoticeFileService implements FileManagementService {
 	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long noticeNo) {
 		if (deleteOrder != null && !deleteOrder.isEmpty()) {
 			for(Integer order : deleteOrder) {
-				fileMapper.deleteBoardFile(noticeNo, order);
+				fileMapper.deleteNoticeFile(noticeNo, order);
 			}
 		}
 		
-		int maxOrder = fileMapper.findBoardFileCounts(noticeNo);
+		int maxOrder = fileMapper.findNoticeFileCounts(noticeNo);
 		int count = maxOrder+1;
 		if(files != null&& !files.isEmpty()) {
 			if(files.size() > 0) {
@@ -86,41 +86,26 @@ public class NoticeFileService implements FileManagementService {
 		}
 	}
 	
-	// 공지사항 테이블에 update를 해주는 메소드
-	private void updateNoticeFile(NoticeFile file) {
-		int result = fileMapper.updateNoticeFile(file);
-		if(result < 1) {
-			throw new BoardFileCreateException("파일이 이상합니다.");
-		}
-	}
-	
-	// 공지사항 테이블에 delete를 해주는 메소드
-	private void deleteNoticeFiles(Long boardNo, int maxOrder) {
-		int result = fileMapper.deleteNoticeFile(boardNo, maxOrder);
-		if(result < 1) {
-			throw new BoardFileCreateException("파일 삭제에 실패했습니다.");
-		}
-	}
 	
 	// 공지사항 테이블에 file이 있는지 없는지 검증
-	private int  countNoticeFiles(Long boardNo) {
-		int boardFileCounts =fileMapper.findNoticeFileCounts(boardNo);
-		if(boardFileCounts < 1) {
+	private int  countNoticeFiles(Long noticeNo) {
+		int noticeFileCounts =fileMapper.findNoticeFileCounts(noticeNo);
+		if(noticeFileCounts < 1) {
 			throw new BoardFileCreateException("파일이 이상합니다.");
 		}
-		return boardFileCounts;
+		return noticeFileCounts;
 	}
 	// 공지사항 테이블에 file 전체조회
-	private List<FileDto> findNoticeFiles(Long boardNo) {
-		List<FileDto> files= fileMapper.findNoticeFileAll(boardNo);
+	private List<FileDto> findNoticeFiles(Long noticeNo) {
+		List<FileDto> files= fileMapper.findNoticeFileAll(noticeNo);
 		return files;
 		// 예외 처리 안한이유 파일이 없을수도 있음
 		
 	}
 	
-	public void deleteFile(Long boardNo) {
-		countNoticeFiles(boardNo);
-		int result = fileMapper.deleteFile(boardNo);
+	public void deleteFile(Long noticeNo) {
+		countNoticeFiles(noticeNo);
+		int result = fileMapper.deleteFile(noticeNo);
 		if(result < 1) {
 			throw new BoardFileCreateException("파일 삭제 실패했습니다.");
 		}

@@ -51,7 +51,7 @@
 					 USER_ID = #{userId}
 			    ORDER
 			       BY
-			       	  CREATE_DATE ASC
+			       	  CREATE_DATE DESC
 	        OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
 	</select>
 	
@@ -63,6 +63,8 @@
 		  		REQUIRE
 		 WHERE
 		 		STATUS = 'Y'
+		 AND
+		 		USER_ID = #{userId}
 	</select>
 	
 	

@@ -70,7 +70,7 @@ public class RequireService {
 			throw new BoardNotFoundException("조회 결과가 없습니다.");
 		}
 		
-		pageInfo.setBoardCounts(requireMapper.findRequiresCount());
+		pageInfo.setBoardCounts(requireMapper.findRequiresCount(user));
 		
 		return RequireListResponse.builder()
 								  .pageInfo(pageInfo)

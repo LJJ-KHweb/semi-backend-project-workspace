@@ -33,7 +33,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public ResponseEntity<?> signup(@RequestBody @Valid UserDto user){
+	public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Valid UserDto user){
 	
 		userService.signup(user);
 		return ResponseEntity.status(200).body(ApiResponse.created("회원가입에 성공했습니다.",null));
@@ -56,7 +56,8 @@ public class UserController {
 	
 	// 차량 이용정보 등록
 	@PostMapping("/drivingHistory")
-	public ResponseEntity<ApiResponse<Void>> saveDrivingHistory(@AuthenticationPrincipal CustomUserDetails user, @RequestBody @Valid DrivingHistory drivingHistory){
+	public ResponseEntity<ApiResponse<Void>> saveDrivingHistory(@AuthenticationPrincipal CustomUserDetails user, 
+																@RequestBody @Valid DrivingHistory drivingHistory){
 		userService.saveDrivingHistory(user, drivingHistory);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("마일리지 적립에 성공했습니다.", null));
 	}
