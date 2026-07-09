@@ -41,5 +41,7 @@ public interface StationMapper {
 	int deleteStation(Long stationNo);
 
 	int findDeletedStation(Long stationNo);
+
+	StationDto findByAdminStationNo(Long stationNo);
 	
 }
