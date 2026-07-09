@@ -60,6 +60,7 @@
 	<!-- 게시글 상세 보기 -->
 	<select id="findByBoardNo" resultType="BoardDto">
 		<include refid="boardColumn"/>
+				 ,	USER_ID
 				 ,	BOARD_CONTENT
 				  FROM
 				  		BOARD

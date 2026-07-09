@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class ProductDto {
 	private Long productNo;
 	private String userId;
-	@NotBlank(message="상품 이름은 공백일 수 없습니다.")
 	@Size(max=20, message="상품 명은 20글자를 넘길 수 없습니다.")
 	private String productName;
 	@NotNull(message="가격은 필수로 입력해야합니다.")
