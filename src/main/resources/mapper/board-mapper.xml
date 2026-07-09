@@ -139,7 +139,7 @@
 		 ORDER
 			BY
 			    BOARD.CREATE_DATE ASC
-	    OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>	
 	
 	<!-- 게시글 삭제 포함 전체 갯수 조회 -->
