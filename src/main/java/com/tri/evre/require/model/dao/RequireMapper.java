@@ -18,7 +18,7 @@ public interface RequireMapper {
 
 	List<RequireResponse> findAll(@Param("pageInfo")PageInfo pageInfo,@Param("userId") String userId);
 
-	int findRequiresCount();
+	int findRequiresCount(String userId);
 
 	List<Require> adminFindAllRequires(PageInfo pageInfo);
 
