@@ -49,5 +49,7 @@ public interface ShopMapper {
 
 	int findProductCounts();
 
+	void restoreProduct(Long productNo);
+
 
 }

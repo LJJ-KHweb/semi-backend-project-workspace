@@ -81,7 +81,6 @@ public class AdminController {
 	@GetMapping("/products")
 	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page") int page
 																   		  ,@RequestParam(name="size") int size){
-		log.info("이거 사진올릴려고쓴거임 ㅋ쓰지마셈");
 		ProductListResponse response = adminService.findAllProduct(new PageInfo(page, size));
 		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("사용내역 전체 조회 성공", response));
@@ -141,6 +140,12 @@ public class AdminController {
 	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정 성공", null));
 	}
 	
+	
+	@PatchMapping("products/{productNo}/restore")
+	public ResponseEntity<ApiResponse<Void>> restoreProduct(@PathVariable(name="productNo") Long productNo){
+		adminService.restoreProduct(productNo);
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 복구 성공", null));
+	}
 	// ======================== 07/06 김선겸
 	// 문의사항 전체조회
 	

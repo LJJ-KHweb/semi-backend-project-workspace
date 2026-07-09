@@ -205,7 +205,14 @@
 	</select>
 	
 	
-	
+	<update id="restoreProduct">
+		UPDATE
+				PRODUCT
+		   SET
+		   		STATUS = 'Y'
+		 WHERE
+		 		PRODUCT_NO = #{productNo}
+	</update>
 	
 	
 </mapper>
