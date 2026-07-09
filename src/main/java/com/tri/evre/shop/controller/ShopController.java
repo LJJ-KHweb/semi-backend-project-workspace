@@ -32,6 +32,7 @@ public class ShopController {
 	@GetMapping
 	public ResponseEntity<ApiResponse<ProductListResponse>> findAll(@RequestParam("page") int page,
 																	@RequestParam("size") int size){
+		
 		ProductListResponse productResponse = shopService.findAll(page, size);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", productResponse));
 	}
