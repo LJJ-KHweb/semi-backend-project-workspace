@@ -58,11 +58,11 @@ public class UserService {
 		ensureUserIdNotExists(user.getUsername());
 		
 		// 회원까지는 맞음 비밀번호가 일치하는지 
-		checkPwd(updateUser.getUserPwd(), user.getPassword());
+		checkPwd(updateUser.getRawPwd(), user.getPassword());
 		
 		//비밀번호까지 일치함 그럼 db에서 회원 정보 수정하기 (이메일과 비번)
 		User userEntity = User.builder().userId(user.getUsername())
-									.userPwd(passwordEncoder.encode(updateUser.getRawPwd()))
+									.userPwd(passwordEncoder.encode(updateUser.getUserPwd()))
 									.email(updateUser.getEmail())
 									.build();
 		
