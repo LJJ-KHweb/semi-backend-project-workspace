@@ -278,7 +278,7 @@ public class AdminService {
 		@Transactional
 		public StationDto findByStationNo(Long stationNo) {
 			
-			StationDto station = stationMapper.findByStationNo(stationNo);
+			StationDto station = stationMapper.findByAdminStationNo(stationNo);
 			if(station == null) {
 				throw new StationReadException("충전소 조회에 실패했습니다.");
 			}
@@ -308,7 +308,7 @@ public class AdminService {
 					   .status(station.getStatus())
 					   .build();
 			
-			StationDto stationDto = stationMapper.findByStationNo(stationNo);
+			StationDto stationDto = stationMapper.findByAdminStationNo(stationNo);
 			if(stationDto == null) {
 				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 			}
@@ -389,7 +389,6 @@ public class AdminService {
 		public void insertCharger(Long stationNo) {
 			
 			StationDto station = findByStationNo(stationNo);
-			log.info("station: {}", station);
 			if(station == null) {
 				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
 			}
