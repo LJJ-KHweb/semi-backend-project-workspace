@@ -254,6 +254,7 @@ public class AdminService {
 										   .stationDesc(station.getStationDesc())
 										   .region(station.getRegion())
 										   .address(station.getAddress())
+										   .chargerCount(station.getChargerCount())
 										   .lat(station.getLat())
 										   .lng(station.getLng())
 										   .build();
@@ -266,6 +267,11 @@ public class AdminService {
 			}
 			
 			stationMapper.insertStation(stationEntity);
+			
+			for(int i = 0; i < stationEntity.getChargerCount(); i++) {
+				chargerMapper.insertCharger(stationEntity.getStationNo());
+			}
+			
 		}
 
 		// 07/04 심영도 충전소 상세보기
@@ -379,16 +385,17 @@ public class AdminService {
 			return new RequireListResponseAdmin(pageInfo,boards);
 		}
 
+		@Transactional
 		public void insertCharger(Long stationNo) {
-
+			
 			StationDto station = findByStationNo(stationNo);
+			log.info("station: {}", station);
 			if(station == null) {
 				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
 			}
 			if(station.getStatus().equals("N")) {
 				throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
 			}
-			
 			
 			chargerMapper.insertCharger(stationNo);
 		}
