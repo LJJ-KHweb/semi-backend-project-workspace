@@ -227,5 +227,22 @@
 		   AND
 			   STATUS = 'N'
 	</select>
+	
+	<select id="findByAdminStationNo"  parameterType="long" resultType="com.tri.evre.station.model.dto.StationDto">
+		SELECT
+			   STATION_NO
+			 , STATION_NAME
+			 , REGION
+			 , ADDRESS
+			 , STATION_DESC
+			 , LAT
+			 , LNG
+			 , CREATE_DATE
+			 , STATUS
+		  FROM
+			   STATION
+		 WHERE
+			   STATION_NO = #{stationNo}
+	</select>
 
 </mapper>
