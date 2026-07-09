@@ -11,4 +11,5 @@ public class ProductListDto {
 	private int amount;
 	private int price;
 	private String image;
+	private String status;
 }

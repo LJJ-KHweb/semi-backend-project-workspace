@@ -74,6 +74,7 @@ public class SecurityConfig {
 					// 07/03 선겸
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/products/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/products/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/products/{productNo}/restore").hasRole("ADMIN");
 					
 					// 07/06 선겸
 					requests.requestMatchers(HttpMethod.POST,"/api/requires").authenticated();

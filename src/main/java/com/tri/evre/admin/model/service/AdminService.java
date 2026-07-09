@@ -128,7 +128,7 @@ public class AdminService {
 		if(products==null || products.isEmpty()) {
 			throw new ProductNotFoundException("상품을 하나도 찾을 수 없습니다.");
 		}
-		
+		pageInfo.setBoardCounts(shopMapper.findProductCounts());
 		
 		return new ProductListResponse(pageInfo, products);
 	}
@@ -493,6 +493,11 @@ public class AdminService {
 
 		public int sumUsers() {
 			return userMapper.sumUsers();
+		}
+
+		public void restoreProduct(Long productNo) {
+			shopMapper.restoreProduct(productNo);
+			
 		}
 
 }
