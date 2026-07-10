@@ -13,13 +13,15 @@ public class UserMaskedDto {
 	private String email;
 	private String role;
 	private Date createDate;
+	private String originalUserId;
 	
-	public UserMaskedDto(String userId, String userName, String email, String role, Date createDate){
+	public UserMaskedDto(String userId, String userName, String email, String role, Date createDate, String originalUserId){
 	    this.userId = maskId(userId);
 	    this.userName =maskName(userName);
 	    this.email = maskEmail(email);
 	    this.role = role;
 	    this.createDate = createDate;
+	    this.originalUserId = originalUserId;
 
 	}
 	

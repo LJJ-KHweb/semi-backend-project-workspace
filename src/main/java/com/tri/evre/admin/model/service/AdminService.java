@@ -522,6 +522,7 @@ public class AdminService {
 													.email(user.getEmail())
 													.role(user.getRole())
 													.createDate(user.getCreateDate())
+													.originalUserId(user.getUserId())
 													.build());
 			}
 			log.info("{}",userList);
