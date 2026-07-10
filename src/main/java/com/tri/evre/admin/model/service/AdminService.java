@@ -332,9 +332,9 @@ public class AdminService {
 
 		
 		@Transactional
-		public List<UserDto> findAllUser(PageInfo pageInfo) {
+		public List<UserDto> findAllUser(PageInfo pageInfo, String role) {
 			
-			return userMapper.findAllUser(pageInfo);
+			return userMapper.findAllUser(pageInfo, role);
 		}
 
 		
@@ -345,6 +345,7 @@ public class AdminService {
 			if(userCount  < 1) {
 				throw new  UserNotFoundException("일치하는 회원이 없습니다.");
 			}
+			
 			
 			userMapper.updateUserRole(user);
 			

@@ -218,15 +218,15 @@ public class AdminController {
 	// 회원 관리페이지 회원 정보 전체 조회
 	@GetMapping("/users")
 	public ResponseEntity<ApiResponse<List<UserDto>>> findAllUser(@RequestParam(name="page")int page, 
-																	@RequestParam(name="size")int size){ 
+																	@RequestParam(name="size")int size,
+																	@RequestParam(name="role")String role){ 
 		
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 전체 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size))));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 전체 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size),role)));
 	}
 	
 	@PatchMapping("users")
 	public ResponseEntity<ApiResponse<Void>> updateUserRole(@RequestBody @Valid UserRoleRequestDto user){ 
-
 		adminService.updateUserRole(user);
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 권한 수정에 성공했습니다.", null));
 	}	
