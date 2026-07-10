@@ -426,10 +426,6 @@ public class AdminService {
 		
 		// 7.7 심영도 삭제된 충전소 찾기
 		private void validateStation(Long stationNo) {
-			if(stationMapper.findDeletedStation(stationNo) > 0) {
-				throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
-			}
-			// 합침 ㅋㅋ
 			if(findByStationNo(stationNo) == null) {
 				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 			}
