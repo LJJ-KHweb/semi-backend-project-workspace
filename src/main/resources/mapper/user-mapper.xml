@@ -83,7 +83,12 @@
 			 ,	STATUS
 		  FROM
 		  		SEMI_USER
-	  OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	 <where>
+    	<if test="role != null and role != 'ALL'">
+          ROLE = #{role}
+    	</if>
+	</where>
+	  OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
 	</select>
 	
 	<update id="updateUserRole">

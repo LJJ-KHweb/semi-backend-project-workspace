@@ -24,7 +24,7 @@ public interface UserMapper {
 
 	List<MileageHistoryResponseDto> findAllMileageHistory(@Param(value = "pageInfo") PageInfo pageInfo,@Param(value = "username") String username);
 
-	List<UserDto> findAllUser(PageInfo pageInfo);
+	List<UserDto> findAllUser(@Param(value="pageInfo") PageInfo pageInfo, @Param(value="role")String role);
 
 	void updateUserRole(UserRoleRequestDto user);
 
