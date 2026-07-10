@@ -52,6 +52,7 @@ import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
 import com.tri.evre.user.model.dao.UserMapper;
+import com.tri.evre.user.model.dto.AllUserResponseDto;
 import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserMaskedDto;
 import com.tri.evre.user.model.dto.UserRoleRequestDto;
@@ -335,11 +336,14 @@ public class AdminService {
 
 		
 		@Transactional
-		public List<UserMaskedDto> findAllUser(PageInfo pageInfo, String role) {
+		public AllUserResponseDto findAllUser(PageInfo pageInfo, String role) {
 			
 			
 			 List<UserDto> users = userMapper.findAllUser(pageInfo, role);
-			return maskingUser(users);
+			 pageInfo.setBoardCounts(userMapper.findAllUserCounts());
+			return AllUserResponseDto.builder().pageInfo(pageInfo)
+												.users(maskingUser(users))
+												.build();
 			
 		}
 

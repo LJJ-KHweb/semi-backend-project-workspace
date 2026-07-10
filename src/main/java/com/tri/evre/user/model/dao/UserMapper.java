@@ -36,4 +36,6 @@ public interface UserMapper {
 
 	int addMileage(@Param(value = "mileage") int mileage, @Param(value = "userId") String userId);
 
+	int findAllUserCounts();
+
 }
