@@ -92,6 +92,7 @@
 			 , LAT
 			 , LNG
 			 , CREATE_DATE
+			 , STATUS
 		  FROM
 			   STATION
 		 WHERE
