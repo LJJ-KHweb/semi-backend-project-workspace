@@ -61,12 +61,12 @@ public class SecurityConfig {
 					// 07/06 심영도 관리자 충전소 수정, 삭제 | 충전기 전체조회, 추가
 					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/chargeStations/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/chargeStations/**").hasRole("ADMIN");
-					requests.requestMatchers(HttpMethod.GET,"/api/admin/charger/**").hasRole("ADMIN");
-					requests.requestMatchers(HttpMethod.POST,"/api/admin/charger/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.GET,"/api/admin/chargers/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.POST,"/api/admin/chargers/**").hasRole("ADMIN");
 					
 					// 7.7 심영도 관리자 충전기 수정, 삭제
-					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/charger/**").hasRole("ADMIN");
-					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/charger/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.PATCH,"/api/admin/chargers/**").hasRole("ADMIN");
+					requests.requestMatchers(HttpMethod.DELETE,"/api/admin/chargers/**").hasRole("ADMIN");
 					
 					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/products/{productNo}/restore").hasRole("ADMIN");
 					
