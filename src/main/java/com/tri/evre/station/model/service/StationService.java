@@ -47,6 +47,8 @@ public class StationService {
 		for(StationDto station : stations) {
 			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
 			station.setChargerCount(chargerCount);
+			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+			station.setUnableChargerCount(unableChargers);
 		}
 		searchResponse.setStations(stations);
 		
@@ -67,6 +69,8 @@ public class StationService {
 			throw new ChargerReadException("충전기 조회에 실패했습니다.");
 		}
 		
+		int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+		station.setUnableChargerCount(unableChargers);
 		station.setChargerCount(chargerCount);
 		
 		return station;

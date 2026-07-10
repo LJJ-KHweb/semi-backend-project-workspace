@@ -269,20 +269,23 @@ public class AdminController {
 												  							   , @RequestParam(name="size") int size) {
 			StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
 			
-			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
+					.body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
 		}
 		
 		// 07/03 심영도 충전소 작성
 		@PostMapping("/chargeStations")
 		public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid StationDto station) {
 			adminService.insertStation(station);
-			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 작성 성공", null));
+			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
+					.body(ApiResponse.created("충전소 작성 성공", null));
 		}
 		
 		// 07/04 심영도 충전기 상세보기
 		@GetMapping("/chargeStations/{stationNo}")
 		public ResponseEntity<ApiResponse<StationDto>> findByStationNo(@PathVariable(name="stationNo") Long stationNo){
-			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 조회 성공", adminService.findByStationNo(stationNo)));
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
+					.body(ApiResponse.success("충전소 조회 성공", adminService.findByStationNo(stationNo)));
 		}
 		
 		// 07/04 심영도 충전소 수정
@@ -290,26 +293,37 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> updateStation(@PathVariable(name="stationNo") Long stationNo,
 															   @RequestBody @Valid StationDto station) {
 			adminService.updateStation(stationNo, station);
-			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.created("충전소 수정 성공", null));
+			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
+					.body(ApiResponse.created("충전소 수정 성공", null));
 		}
 		
 		// 07/06 심영도 충전소 삭제
 		@DeleteMapping("/chargeStations/{stationNo}")
 		public ResponseEntity<ApiResponse<Void>> deleteStation(@PathVariable(name="stationNo") Long stationNo) {
 			adminService.deleteStation(stationNo);
-			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("충전소 삭제 성공", null));
+			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode())
+					.body(ApiResponse.success("충전소 삭제 성공", null));
 		}
 		
 		// 07/06 심영도 충전기 전체조회
-		@GetMapping("/charger")
+		@GetMapping("/chargers")
 		public ResponseEntity<ApiResponse<ChargerResponse>> findAllCharger(@RequestParam(name="page") int page
 												  		   				 , @RequestParam(name="size") int size) {
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
 					.body(ApiResponse.success("충전기 조회 성공", adminService.findAllCharger(new PageInfo(page, size))));
 		}
 		
+		// 07/10 심영도 충전기 충전소 번호로 조회
+		@GetMapping("/chargers/{stationNo}")
+		public ResponseEntity<ApiResponse<ChargerResponse>> findChargerByStationNo(@PathVariable(name="stationNo") Long stationNo
+																			     , @RequestParam(name="page") int page
+																  		   	     , @RequestParam(name="size") int size) {
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 조회 성공", adminService.findChargerByStationNo(stationNo, new PageInfo(page, size))));
+		}
+		
 		// 07/06 심영도 충전기 추가
-		@PostMapping("/charger")
+		@PostMapping("/chargers")
 		public ResponseEntity<ApiResponse<Void>> insertCharger(@RequestParam(name="stationNo") Long stationNo){
 			adminService.insertCharger(stationNo);
 			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
@@ -317,7 +331,7 @@ public class AdminController {
 		}
 		
 		// 07/07 심영도 충전기 수정
-		@PatchMapping("/charger/{chargerNo}")
+		@PatchMapping("/chargers/{chargerNo}")
 		public ResponseEntity<ApiResponse<Void>> updateCharger(@PathVariable(name="chargerNo") Long chargerNo,
 															   @RequestBody @Valid ChargerDto charger) {
 			adminService.updateCharger(chargerNo, charger);
@@ -326,7 +340,7 @@ public class AdminController {
 		}
 		
 		// 7.7 심영도 충전기 삭제
-		@DeleteMapping("/charger/{chargerNo}")
+		@DeleteMapping("/chargers/{chargerNo}")
 		public ResponseEntity<ApiResponse<Void>> deleteCharger(@PathVariable(name="chargerNo") Long chargerNo) {
 			adminService.deleteCharger(chargerNo);
 			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode())

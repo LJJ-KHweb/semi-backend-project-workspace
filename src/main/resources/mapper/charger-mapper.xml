@@ -28,18 +28,27 @@
 		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
-	<select id="findByStationNo">
+	<select id="findChargerByStationNo">
 		SELECT
-			   STATION_NAME
-			 , S.STATUS AS STATION_STATUS
+			   CHARGER_NO
+			 , STATUS
+			 , STATION_NO
 		  FROM
-		  	   CHARGER C
-		  JOIN
-		  	   STATION S USING(STATION_NO)
+		  	   CHARGER
 		 WHERE
 		 	   STATION_NO = #{stationNo}
-		   AND
-		   	   ROWNUM = 1;
+		OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
+	</select>
+	
+	<select id="findByStationNo">
+		SELECT
+			   CHARGER_NO
+			 , STATUS
+			 , STATION_NO
+		  FROM
+		  	   CHARGER
+		 WHERE
+		 	   STATION_NO = #{stationNo}
 	</select>
 	
 	<insert id="insertCharger">
@@ -87,5 +96,14 @@
 		 WHERE
 		 	   CHARGER_NO = #{chargerNo}
 	</update>
+	
+	<select id="stationChargerCount">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   CHARGER
+		 WHERE
+		 	   STATION_NO = #{stationNo}
+	</select>
 	
 </mapper>

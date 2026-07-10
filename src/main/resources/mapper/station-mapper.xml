@@ -169,15 +169,23 @@
 			   )
 	</insert>
 
-	<select id="checkDuplicate" parameterType="com.tri.evre.station.model.dto.SearchInfo" resultType="int">
-		SELECT
-			   COUNT(*)
-		  FROM
-			   STATION
-		 WHERE
-			   LAT = #{lat}
-		   AND
-			   LNG = #{lng}
+	<select id="checkDuplicate" parameterType="com.tri.evre.station.model.dto.StationDto" resultType="int">
+	    SELECT 
+	    	   COUNT(*)
+	      FROM (
+	            SELECT
+	                   6371000 * ACOS(
+	                     LEAST(1, GREATEST(-1,
+	                       SIN(#{lat} * ACOS(-1) / 180) * SIN(LAT * ACOS(-1) / 180)
+	                       + COS(#{lat} * ACOS(-1) / 180) * COS(LAT * ACOS(-1) / 180)
+	                         * COS((LNG - #{lng}) * ACOS(-1) / 180)
+	                     ))
+	                   ) AS DISTANCE_M
+	              FROM 
+	              	   STATION
+	           )
+	     WHERE 
+	     	   DISTANCE_M &lt;= 30
 	</select>
 
 	<update id="updateStation" parameterType="com.tri.evre.station.model.vo.Station">
@@ -196,16 +204,25 @@
 	</update>
 
 	<select id="checkDuplicateByNo" parameterType="com.tri.evre.station.model.dto.StationDto" resultType="int">
-		SELECT
-			   COUNT(*)
-		  FROM
-			   STATION
-		 WHERE
-			   LAT = #{lat}
-		   AND
-			   LNG = #{lng}
-		   AND
-			   STATION_NO != #{stationNo}
+		SELECT 
+	    	   COUNT(*)
+	      FROM (
+	            SELECT
+	            	   STATION_NO,
+	                   6371000 * ACOS(
+	                     LEAST(1, GREATEST(-1,
+	                       SIN(#{lat} * ACOS(-1) / 180) * SIN(LAT * ACOS(-1) / 180)
+	                       + COS(#{lat} * ACOS(-1) / 180) * COS(LAT * ACOS(-1) / 180)
+	                         * COS((LNG - #{lng}) * ACOS(-1) / 180)
+	                     ))
+	                   ) AS DISTANCE_M
+	              FROM 
+	              	   STATION
+	           )
+	     WHERE 
+	     	   DISTANCE_M &lt;= 30
+	       AND 
+	       	   STATION_NO != #{stationNo}
 	</select>
 
 	<update id="deleteStation" parameterType="long">
