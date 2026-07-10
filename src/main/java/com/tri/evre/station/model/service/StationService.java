@@ -24,15 +24,13 @@ public class StationService {
 	private final StationMapper stationMapper;
 	
 	public StationSearchRequest findAll(PageInfo pageInfo, double lat, double lng, int dist) {
-		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
-		
 		StationSearchRequest searchResponse = new StationSearchRequest();
 		searchResponse.setPageInfo(pageInfo);
 		SearchInfo searchInfo = new SearchInfo(lat,lng,dist);
 		searchResponse.setSearchInfo(searchInfo);
 		
 		List<StationDto> stations = stationMapper.findAll(searchResponse);
-		if(stations == null) {
+		if(stations.isEmpty()) {
 			throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 		}
 		

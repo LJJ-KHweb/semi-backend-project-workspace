@@ -23,6 +23,7 @@ import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dto.ChargerDto;
+import com.tri.evre.charger.model.dto.ChargerRequest;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponseAdmin;
@@ -39,7 +40,6 @@ import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
-import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserMaskedDto;
 import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
@@ -338,15 +338,6 @@ public class AdminController {
 			adminService.updateCharger(chargerNo, charger);
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
 					.body(ApiResponse.success("충전기 수정 성공", null));
-		}
-		
-		// 07/10 심영도 충전기 충전소 번호로 조회
-		@GetMapping("/chargers/{stationNo}")
-		public ResponseEntity<ApiResponse<ChargerResponse>> findChargerByStationNo(@PathVariable(name="stationNo") Long stationNo
-																			     , @RequestParam(name="page") int page
-																  		   	     , @RequestParam(name="size") int size) {
-			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-					.body(ApiResponse.success("충전기 조회 성공", adminService.findChargerByStationNo(stationNo, new PageInfo(page, size))));
 		}
 		
 		// 7.7 심영도 충전기 삭제

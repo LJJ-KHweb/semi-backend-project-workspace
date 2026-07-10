@@ -26,12 +26,12 @@ public class StationController {
 	private final StationService stationService;
 	
 	@GetMapping
-	public ResponseEntity<ApiResponse<StationSearchRequest>> findAll(@RequestParam("page") int page,
-																	 @RequestParam("size") int size,
+	public ResponseEntity<ApiResponse<StationSearchRequest>> findAll(@RequestParam("size") int size,
+																	 @RequestParam("page") int page,
 																	 @RequestParam("lat") double lat,
 																	 @RequestParam("lng") double lng,
 																	 @RequestParam("dist") int dist) {
-		StationSearchRequest searchResponse = stationService.findAll(new PageInfo(size, page), lat, lng, dist);
+		StationSearchRequest searchResponse = stationService.findAll(new PageInfo(page, size), lat, lng, dist);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", searchResponse));
 	}
 	
