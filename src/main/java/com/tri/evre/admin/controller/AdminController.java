@@ -23,6 +23,7 @@ import com.tri.evre.answer.model.vo.Answer;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dto.ChargerDto;
+import com.tri.evre.charger.model.dto.ChargerRequest;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.file.model.dto.RequireListResponseAdmin;
@@ -39,7 +40,6 @@ import com.tri.evre.shop.model.dto.PurchaseProductDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
-import com.tri.evre.user.model.dto.UserDto;
 import com.tri.evre.user.model.dto.UserMaskedDto;
 import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
