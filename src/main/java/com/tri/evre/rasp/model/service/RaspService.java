@@ -25,7 +25,7 @@ public class RaspService {
 
 	
 	// 탄소절감량 계산 공식
-	private List<RaspResponseDto> calculateCarbonReduction(List<RaspDayOfWeek> results) {
+	public List<RaspResponseDto> calculateCarbonReduction(List<RaspDayOfWeek> results) {
 		List<RaspResponseDto> responseResults = new ArrayList();
 		for (RaspDayOfWeek r : results) {
 			// 탄소 감축량 = 거리 * (내연기간 탄소배출량 - 전력생산 * 전비(전체거리 / 소비 전력량));

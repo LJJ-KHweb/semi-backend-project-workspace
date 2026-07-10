@@ -30,7 +30,7 @@ public class RaspController {
 	
 	
 	@PostMapping
-	public ResponseEntity<ApiResponse> save(@RequestBody RaspDto rasp){
+	public ResponseEntity<ApiResponse<Void>> save(@RequestBody RaspDto rasp){
 		raspService.save(rasp);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("라즈베리 저장 성공", null));
 	}

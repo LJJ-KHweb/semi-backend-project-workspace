@@ -18,6 +18,7 @@ import com.tri.evre.global.exception.user.PasswordMismatchException;
 import com.tri.evre.global.exception.user.UserNotFoundException;
 import com.tri.evre.mileage.model.dto.MileageHistoryResponseDto;
 import com.tri.evre.rasp.model.dao.RaspMapper;
+import com.tri.evre.rasp.model.dto.CarHistoryDto;
 import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.DrivingHistory;
 import com.tri.evre.user.model.dto.UserDto;
@@ -133,12 +134,13 @@ public class UserService {
 	private void addMileage(DrivingHistory drivingHistory, String userId) {
 		
 		// 라즈베리파이 데이터에서 차량번호와 운행 시작/종료 시간 사이의 누적 주행거리(kmSum) 조회
-		Integer drivingKmSum = raspMapper.findByDrivinHistory(drivingHistory);
-		if (drivingKmSum == null) {
+		CarHistoryDto carHistory = raspMapper.findByDrivinHistory(drivingHistory);
+		if (carHistory.getDistanceSum() == null) {
 			return;
 		}
-		
-		int result = userMapper.addMileage(drivingKmSum * 2, userId);
+		carHistory.setUserId(userId);
+		raspMapper.addDrivingHistory(carHistory);
+		int result = userMapper.addMileage(carHistory.getDistanceSum() * 2, userId);
 		if(result < 1) {
 			throw new MileageHistoryCreateException("마일리지 추가 실패했습니다.");
 		}

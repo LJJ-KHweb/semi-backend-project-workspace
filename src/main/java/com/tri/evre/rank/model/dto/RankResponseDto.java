@@ -1,4 +1,4 @@
-package com.tri.evre.rank.model.rank;
+package com.tri.evre.rank.model.dto;
 
 import java.util.List;
 
@@ -12,5 +12,6 @@ import lombok.Data;
 public class RankResponseDto {
 	private PageInfo pageInfo;
 	private List<RankDto> ranks;
+	private RankDto myRank;
 
 }

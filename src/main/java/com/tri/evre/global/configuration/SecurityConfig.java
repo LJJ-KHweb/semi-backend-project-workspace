@@ -109,7 +109,7 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/notices/admin/**").hasRole("ADMIN");
 					
 					
-					
+					requests.requestMatchers(HttpMethod.GET, "/api/ranks/ranking").permitAll();
 					
 					
 					requests.requestMatchers(HttpMethod.GET,"/api/notices").permitAll();

@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.rank.model.dao.RankMapper;
-import com.tri.evre.rank.model.rank.RankResponseDto;
+import com.tri.evre.rank.model.dto.RankResponseDto;
 import com.tri.evre.user.model.dao.UserMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -20,12 +20,13 @@ public class RankService {
 	private final UserMapper userMapper;
 		
 	@Transactional
-	public RankResponseDto findByUserRanking(PageInfo pageInfo) {
+	public RankResponseDto findByUserRanking(PageInfo pageInfo, String userId) {
 		
 		pageInfo.setBoardCounts(userMapper.sumUsers());
 		
 		return RankResponseDto.builder().pageInfo(pageInfo)
 										.ranks(rankMapper.findByUserRanking(pageInfo))
+										.myRank(rankMapper.findMyRank(userId))
 										.build();
 	}
 

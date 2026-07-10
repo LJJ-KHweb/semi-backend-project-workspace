@@ -77,7 +77,8 @@
 	
 	<select id="findByDrivinHistory">
 		SELECT
-				SUM(DISTANCE)
+				SUM(DISTANCE) AS DISTANCE_SUM
+			 ,	SUM(KILOWATT) AS KILOWATT_SUM
 		  FROM
 		  		RASP
 		 WHERE
@@ -85,5 +86,18 @@
 		   AND
 		   		CURRENT_TIME BETWEEN #{startTime} AND #{finishTime}
 	</select>
+	
+	<insert id="addDrivingHistory">
+		INSERT
+		  INTO
+		  		CAR_HISTORY
+		VALUES
+				(
+				#{distanceSum}
+			 ,	#{kilowattSum}
+			 ,	#{userId}
+			 ,	SYSDATE
+				)
+	</insert>
 	
 </mapper>
