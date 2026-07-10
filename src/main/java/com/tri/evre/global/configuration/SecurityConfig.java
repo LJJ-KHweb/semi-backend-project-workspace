@@ -102,10 +102,19 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.GET,"/api/users/mypage").authenticated();
 					// 공지사항
 					requests.requestMatchers(HttpMethod.POST,"/api/notices").hasRole("ADMIN");
-					requests.requestMatchers(HttpMethod.GET,"/api/notices").permitAll();
-					requests.requestMatchers(HttpMethod.GET, "/api/notices/**").permitAll();
 					requests.requestMatchers(HttpMethod.PATCH,"/api/notices/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.DELETE,"/api/notices/**").hasRole("ADMIN");
+					
+					
+					requests.requestMatchers(HttpMethod.GET,"/api/notices/admin/**").hasRole("ADMIN");
+					
+					
+					
+					
+					
+					requests.requestMatchers(HttpMethod.GET,"/api/notices").permitAll();
+					requests.requestMatchers(HttpMethod.GET, "/api/notices/**").permitAll();
+					
 					
 					requests.requestMatchers(HttpMethod.POST, "/api/users/drivingHistory").authenticated();
 					requests.requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasRole("ADMIN");
