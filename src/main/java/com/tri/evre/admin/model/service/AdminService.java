@@ -15,6 +15,7 @@ import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
 import com.tri.evre.charger.model.dao.ChargerMapper;
 import com.tri.evre.charger.model.dto.ChargerDto;
+import com.tri.evre.charger.model.dto.ChargerRequest;
 import com.tri.evre.charger.model.dto.ChargerResponse;
 import com.tri.evre.charger.model.vo.Charger;
 import com.tri.evre.common.model.dto.PageInfo;
@@ -271,7 +272,7 @@ public class AdminService {
 			
 			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
 			if(duplicateStation > 0) {
-				throw new StationReadException("충전소가 중복입니다.");
+				throw new StationReadException("이미 존재하는 충전소입니다.");
 			}
 			
 			stationMapper.insertStation(stationEntity);
@@ -321,7 +322,7 @@ public class AdminService {
 				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 			}
 			
-			StationDto stationInfo = new StationDto(station.getStationNo(), station.getLat(), station.getLng());
+			StationDto stationInfo = new StationDto(stationNo, station.getLat(), station.getLng());
 			int duplicateStation = stationMapper.checkDuplicateByNo(stationInfo);
 			if(duplicateStation > 0) {
 				throw new StationReadException("이미 존재하는 충전소입니다.");
@@ -414,9 +415,6 @@ public class AdminService {
 			if(charger == null) { 
 				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
 			}
-			if(charger.getStatus().equals("N")) {
-				throw new StationNotFoundException("이미 고장 처리된 충전기입니다.");
-			}
 			return charger;
 		}
 		
@@ -434,14 +432,13 @@ public class AdminService {
 		// 7.7 심영도 충전기 업데이트
 		public void updateCharger(Long chargerNo, ChargerDto charger) {
 			
-			// 삭제된거 포함 충전기 조회(삭제된것도 관리자는 update할수 있어야함)
 			findByChargerNo(chargerNo);
 			
 			Charger chargerEntity = Charger.builder()
-										   .chargerNo(chargerNo)
-										   .status(charger.getStatus())
-										   .stationNo(charger.getStationNo())
-										   .build();
+					.chargerNo(chargerNo)
+					.status(charger.getStatus())
+					.stationNo(charger.getStationNo())
+					.build();
 			
 			validateStation(chargerEntity.getStationNo());
 			
@@ -505,6 +502,14 @@ public class AdminService {
 		public void restoreProduct(Long productNo) {
 			shopMapper.restoreProduct(productNo);
 			
+		}
+
+		
+		
+		// 7.10 심영도 충전소번호로 충전기 조회
+		public List<ChargerResponse> findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
+			ChargerRequest charger = new ChargerRequest(pageInfo, stationNo);
+			return chargerMapper.findChargerByStationNo(charger); 
 		}
 
 }
