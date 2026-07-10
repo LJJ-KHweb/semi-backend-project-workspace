@@ -44,6 +44,8 @@ public interface NoticeMapper {
 
 	NoticeDto findByNoticeNoAdmin(Long noticeNo);
 
+	int restoreNotice(Long noticeNo);
+
 	
 	
 

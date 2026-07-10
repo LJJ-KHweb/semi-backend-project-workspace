@@ -85,8 +85,6 @@ public class NoticeController {
 	
 	
 	
-	
-	
 	// 게시글 수정
 	@PatchMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<Void>> update(@ModelAttribute @Valid NoticeDto notice,
@@ -99,6 +97,25 @@ public class NoticeController {
 				.body(ApiResponse.success("업데이트 성공", null));
 	}
 
+	
+	// 공지사항 복구
+	@PatchMapping("/restore/{noticeNo}")
+	public ResponseEntity<ApiResponse<Void>> restore(@AuthenticationPrincipal CustomUserDetails user,
+													@PathVariable(name = "noticeNo") Long noticeNo) {
+		noticeService.restoreNotice(noticeNo);
+		
+		
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
+				.body(ApiResponse.success("복구 성공", null));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	// 게시글 삭제
 	@DeleteMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(name = "noticeNo") Long noticeNo,

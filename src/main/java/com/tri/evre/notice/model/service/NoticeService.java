@@ -142,10 +142,6 @@ public class NoticeService {
 	@Transactional
 	public void delete(Long noticeNo, CustomUserDetails user) {
 		validateNoticeExists(noticeNo);
-		List<FileDto> files = fileService.findAll(noticeNo);
-		if(files != null && !files.isEmpty()) {
-			fileService.deleteFile(noticeNo);			
-		}
 		NoticeDeleteDto notice = NoticeDeleteDto.builder().noticeNo(noticeNo)
 															.userId(user.getUsername())
 															.build();
@@ -153,6 +149,13 @@ public class NoticeService {
 		if(result < 1) {
 			throw new BoardDeleteException("공지사항 삭제 실패했습니다.");
 		}
+	}
+	
+	
+	@Transactional
+	public void restoreNotice(Long noticeNo) {
+		validateNoticeExists(noticeNo);
+		noticeMapper.restoreNotice(noticeNo);
 	}
 	
 	//조회수 증가 책임분리함
@@ -169,6 +172,5 @@ public class NoticeService {
 			throw new BoardReadException("해당 번호의 공지사항이 존재하지 않습니다.");
 		}
 	}
-	
 
 }

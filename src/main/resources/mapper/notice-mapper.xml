@@ -96,6 +96,7 @@
 	<select id="findByNoticeNoAdmin" resultType="noticeDto">
 		<include refid="noticeColumn"/>
 				 ,	NOTICE_CONTENT
+				 ,  N.STATUS
 			  FROM
 					NOTICE N
 			  JOIN
@@ -119,6 +120,11 @@
 					N.USER_ID = U.USER_ID
 			 WHERE
 			 		PUBLIC_YN = 'Y'
+			 	AND
+			 		N.STATUS = 'Y'
+			 ORDER
+			 	BY
+			 		NOTICE_NO DESC
 	</select>
 
 	<!-- 공지사항 수정 -->
@@ -145,6 +151,20 @@
 			WHERE
 				NOTICE_NO = #{noticeNo}
 	</update>
+
+
+	<!-- 공지사항 복구-->
+
+	<update id="restoreNotice">
+		UPDATE
+				NOTICE
+			SET
+				STATUS = 'Y'
+			WHERE
+				NOTICE_NO = #{noticeNo}
+	</update>
+
+
 
 	
 	<!-- 공지사항 전체 갯수 조회 -->
