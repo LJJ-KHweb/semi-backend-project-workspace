@@ -37,7 +37,7 @@
 		  	   CHARGER
 		 WHERE
 		 	   STATION_NO = #{stationNo}
-		OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		OFFSET #{pageInfo.offset} ROWS FETCH NEXT #{pageInfo.size} ROWS ONLY
 	</select>
 	
 	<select id="findByStationNo">
@@ -96,5 +96,14 @@
 		 WHERE
 		 	   CHARGER_NO = #{chargerNo}
 	</update>
+	
+	<select id="stationChargerCount">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   CHARGER
+		 WHERE
+		 	   STATION_NO = #{stationNo}
+	</select>
 	
 </mapper>

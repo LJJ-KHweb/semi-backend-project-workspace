@@ -529,9 +529,17 @@ public class AdminService {
 		
 		
 		// 7.10 심영도 충전소번호로 충전기 조회
-		public List<ChargerResponse> findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
-			ChargerRequest charger = new ChargerRequest(pageInfo, stationNo);
-			return chargerMapper.findChargerByStationNo(charger); 
+		public ChargerResponse findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
+			pageInfo.setBoardCounts(chargerMapper.stationChargerCount(stationNo));
+			if(pageInfo.getBoardCounts() < 1) {
+				throw new StationNotFoundException("충전기가 없습니다.");
+			}
+			
+			ChargerRequest chargerRequest = new ChargerRequest(pageInfo, stationNo);
+			
+			List<ChargerDto> chargers = chargerMapper.findChargerByStationNo(chargerRequest);
+			
+			return new ChargerResponse(pageInfo, chargers); 
 		}
 
 }

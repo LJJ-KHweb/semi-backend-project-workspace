@@ -19,7 +19,7 @@ public interface ChargerMapper {
 
 	ChargerDto findByStationNo(Long stationNo);
 	
-	List<ChargerResponse> findChargerByStationNo(ChargerRequest charger);
+	List<ChargerDto> findChargerByStationNo(ChargerRequest chargerRequest);
 
 	void insertCharger(Long stationNo);
 
@@ -28,5 +28,7 @@ public interface ChargerMapper {
 	void updateCharger(Charger chargerEntity);
 
 	void deleteCharger(Long chargerNo);
+
+	int stationChargerCount(Long stationNo);
 
 }
