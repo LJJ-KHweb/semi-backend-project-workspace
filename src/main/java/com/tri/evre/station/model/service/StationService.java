@@ -23,11 +23,8 @@ public class StationService {
 	
 	private final StationMapper stationMapper;
 	
-	public StationSearchRequest findAll(int page, double lat, double lng, int dist) {
-		PageInfo pageInfo = new PageInfo();
-		pageInfo.setPage(page);
-		pageInfo.setSize(3);
-		pageInfo.setOffset((page - 1) * pageInfo.getSize());
+	public StationSearchRequest findAll(PageInfo pageInfo, double lat, double lng, int dist) {
+		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
 		
 		StationSearchRequest searchResponse = new StationSearchRequest();
 		searchResponse.setPageInfo(pageInfo);

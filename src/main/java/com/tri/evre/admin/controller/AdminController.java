@@ -326,6 +326,15 @@ public class AdminController {
 					.body(ApiResponse.success("충전기 수정 성공", null));
 		}
 		
+		// 07/10 심영도 충전기 충전소 번호로 조회
+		@GetMapping("/chargers/{stationNo}")
+		public ResponseEntity<ApiResponse<ChargerResponse>> findChargerByStationNo(@PathVariable(name="stationNo") Long stationNo
+																			     , @RequestParam(name="page") int page
+																  		   	     , @RequestParam(name="size") int size) {
+			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
+					.body(ApiResponse.success("충전기 조회 성공", adminService.findChargerByStationNo(stationNo, new PageInfo(page, size))));
+		}
+		
 		// 7.7 심영도 충전기 삭제
 		@DeleteMapping("/charger/{chargerNo}")
 		public ResponseEntity<ApiResponse<Void>> deleteCharger(@PathVariable(name="chargerNo") Long chargerNo) {
