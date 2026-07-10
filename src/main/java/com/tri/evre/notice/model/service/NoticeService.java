@@ -1,5 +1,6 @@
 package com.tri.evre.notice.model.service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.common.model.dto.PageInfo;
+import com.tri.evre.file.model.dto.FileDto;
 import com.tri.evre.file.service.FileManagementService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
@@ -67,6 +69,22 @@ public class NoticeService {
 											.notices(notices)
 											.build();
 	}
+	
+	
+	public NoticeListResponse findAllAdmin(PageInfo pageInfo) {
+		List<NoticeDto> notices = noticeMapper.findAllAdmin(pageInfo);
+		if (notices.isEmpty()) {
+			throw new BoardReadException("일치하는 공지사항게시글이 없습니다");
+		}
+		pageInfo.setBoardCounts(noticeMapper.findNoticesCount());
+		
+		
+		return NoticeListResponse.builder().pageInfo(pageInfo)
+											.notices(notices)
+											.build();
+	}
+	
+	
 
 	// 공지사항 상세 조회
 	@Transactional
@@ -79,6 +97,20 @@ public class NoticeService {
 		notice.setFiles(fileService.findAll(noticeNo));
 		return notice;
 	}
+	
+	@Transactional
+	public NoticeDto findByNoticeNoAdmin(Long noticeNo) {
+		NoticeDto notice = noticeMapper.findByNoticeNoAdmin(noticeNo);
+		if(notice == null) {
+			throw new BoardReadException("해당번호의 공지사항 게시글이 존재하지 않습니다.");
+		}
+		notice.setFiles(fileService.findAll(noticeNo));
+		return notice;
+	}
+
+	
+	
+	
 	
 	
 	//공지사항 publicYN = Y (일반게시판에서도 볼수 있는 공지사항)
@@ -110,7 +142,10 @@ public class NoticeService {
 	@Transactional
 	public void delete(Long noticeNo, CustomUserDetails user) {
 		validateNoticeExists(noticeNo);
-		fileService.deleteFile(noticeNo);
+		List<FileDto> files = fileService.findAll(noticeNo);
+		if(files != null && !files.isEmpty()) {
+			fileService.deleteFile(noticeNo);			
+		}
 		NoticeDeleteDto notice = NoticeDeleteDto.builder().noticeNo(noticeNo)
 															.userId(user.getUsername())
 															.build();

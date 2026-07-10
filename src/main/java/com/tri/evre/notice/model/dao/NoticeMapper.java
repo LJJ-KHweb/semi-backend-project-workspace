@@ -40,6 +40,10 @@ public interface NoticeMapper {
 	// Integer로 반환타입을 지정한 이유는 null이 반환될때도 대비해서 설정함
 	Integer existsByNoticeNo(Long noticeNo);
 
+	List<NoticeDto> findAllAdmin(PageInfo pageInfo);
+
+	NoticeDto findByNoticeNoAdmin(Long noticeNo);
+
 	
 	
 
