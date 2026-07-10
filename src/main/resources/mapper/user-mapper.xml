@@ -140,6 +140,18 @@
 				)
 	</insert>
 	
+	<select id="findAllUserCounts">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		SEMI_USER
+	<where>
+    	<if test="role != null and role != 'ALL'">
+          ROLE = #{role}
+    	</if>
+	</where>
+	</select>
+	
 	
 	
 	
