@@ -1,5 +1,6 @@
 package com.tri.evre.admin.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -52,6 +53,7 @@ import com.tri.evre.station.model.dto.StationSearchRequest;
 import com.tri.evre.station.model.vo.Station;
 import com.tri.evre.user.model.dao.UserMapper;
 import com.tri.evre.user.model.dto.UserDto;
+import com.tri.evre.user.model.dto.UserMaskedDto;
 import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
 import lombok.RequiredArgsConstructor;
@@ -333,9 +335,12 @@ public class AdminService {
 
 		
 		@Transactional
-		public List<UserDto> findAllUser(PageInfo pageInfo) {
+		public List<UserMaskedDto> findAllUser(PageInfo pageInfo, String role) {
 			
-			return userMapper.findAllUser(pageInfo);
+			
+			 List<UserDto> users = userMapper.findAllUser(pageInfo, role);
+			return maskingUser(users);
+			
 		}
 
 		
@@ -346,6 +351,7 @@ public class AdminService {
 			if(userCount  < 1) {
 				throw new  UserNotFoundException("일치하는 회원이 없습니다.");
 			}
+			
 			
 			userMapper.updateUserRole(user);
 			
@@ -502,6 +508,22 @@ public class AdminService {
 		public void restoreProduct(Long productNo) {
 			shopMapper.restoreProduct(productNo);
 			
+		}
+		
+		private List<UserMaskedDto> maskingUser(List<UserDto> users){
+			log.info("user = {}",users);
+			List<UserMaskedDto> userList = new ArrayList();
+			for(UserDto user : users) {
+				userList.add(UserMaskedDto.builder().userId(user.getUserId())
+													.userName(user.getUserName())
+													.email(user.getEmail())
+													.role(user.getRole())
+													.createDate(user.getCreateDate())
+													.originalUserId(user.getUserId())
+													.build());
+			}
+			log.info("{}",userList);
+			return userList;
 		}
 
 		
