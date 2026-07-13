@@ -36,6 +36,6 @@ public interface CarMapper {
 			   	   AND 
 			   	   		FINISH_TIME >= #{startTime}
 			""")
-	int validateCarUsagePeriod(DrivingHistory drivingHistory);
+	int validateCarUsagePeriod(DrivingHistory drivingHistory);  
 
 }
