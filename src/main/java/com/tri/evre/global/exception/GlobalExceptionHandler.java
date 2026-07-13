@@ -40,6 +40,7 @@ import com.tri.evre.global.exception.board.file.BoardFileReadException;
 import com.tri.evre.global.exception.board.file.BoardFileUpdateException;
 import com.tri.evre.global.exception.board.file.InvalidBoardFileFormatException;
 import com.tri.evre.global.exception.car.InvalidVehicleUsageException;
+import com.tri.evre.global.exception.car.UsagePeriodConflictException;
 import com.tri.evre.global.exception.charger.ChargerCreateException;
 import com.tri.evre.global.exception.charger.ChargerDeleteException;
 import com.tri.evre.global.exception.charger.ChargerNotFoundException;
@@ -691,6 +692,12 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ApiResponse> InvalidVehicleUsage(InvalidVehicleUsageException e) {
 		return ResponseEntity.status(CustomHttpStatus.CAR_HISTORY_CREATE_FAILED.getCode())
 				.body(new ApiResponse(9002, e.getMessage(), null));
+	}
+	
+	@ExceptionHandler(UsagePeriodConflictException.class)
+	public ResponseEntity<ApiResponse> UsagePeriodConflict(UsagePeriodConflictException e) {
+		return ResponseEntity.status(CustomHttpStatus.CAR_USAGE_PERIOD_CONFLICT.getCode())
+				.body(new ApiResponse(9003, e.getMessage(), null));
 	}
 
 }
