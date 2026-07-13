@@ -53,6 +53,7 @@ import com.tri.evre.global.exception.page.InvalidPagingParameterException;
 import com.tri.evre.global.exception.product.InvalidProductFormatException;
 import com.tri.evre.global.exception.product.MissingInventoryFieldException;
 import com.tri.evre.global.exception.product.ProductCreateException;
+import com.tri.evre.global.exception.product.ProductDeleteFailException;
 import com.tri.evre.global.exception.rasp.RaspNotFoundException;
 import com.tri.evre.global.exception.shop.InsufficientInventoryException;
 import com.tri.evre.global.exception.shop.InsufficientMileageException;
@@ -700,4 +701,10 @@ public class GlobalExceptionHandler {
 				.body(new ApiResponse(9003, e.getMessage(), null));
 	}
 
+	@ExceptionHandler(ProductDeleteFailException.class)
+	public ResponseEntity<ApiResponse> ProductDeleteFail(ProductDeleteFailException e) {
+		return ResponseEntity.status(CustomHttpStatus.PRODUCT_DELETE_FAILED.getCode())
+				.body(new ApiResponse(9004, e.getMessage(), null));
+	}
+	
 }

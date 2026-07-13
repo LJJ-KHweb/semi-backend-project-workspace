@@ -40,7 +40,7 @@ public interface ShopMapper {
 												   @Param("user") CustomUserDetails user);
 
 	// ---07/02 이재준-----------------------------------------------------
-	List<PurchaseProductDto> findAllPurchaseProduct();
+	List<PurchaseProductDto> findAllPurchaseProduct(PageInfo pageInfo);
 
 	List<WeeklyProductPurchaseDto> findByPurchaseCount();
 
@@ -49,7 +49,9 @@ public interface ShopMapper {
 
 	int findProductCounts();
 
-	void restoreProduct(Long productNo);
+	int restoreProduct(Long productNo);
+
+	int findAllProductCounts();
 
 
 }

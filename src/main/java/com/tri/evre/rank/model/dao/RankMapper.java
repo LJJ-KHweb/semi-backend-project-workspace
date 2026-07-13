@@ -3,6 +3,7 @@ package com.tri.evre.rank.model.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.tri.evre.common.model.dto.PageInfo;
@@ -51,6 +52,7 @@ public interface RankMapper {
 			             )
 			     )
 			ORDER BY RANKING
+			OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 						""")
 	List<RankDto> findByUserRanking(PageInfo pageInfo);
 
