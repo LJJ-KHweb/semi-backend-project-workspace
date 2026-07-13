@@ -35,7 +35,7 @@ import com.tri.evre.product.model.dto.UpdateProductDto;
 import com.tri.evre.require.model.service.RequireService;
 import com.tri.evre.require.model.vo.RequireDetailResponse;
 import com.tri.evre.shop.model.dto.ProductListResponse;
-import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.PurchaseResponseDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dto.StationDto;
 import com.tri.evre.station.model.dto.StationSearchRequest;
@@ -44,7 +44,6 @@ import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -198,9 +197,10 @@ public class AdminController {
 
 	
 	@GetMapping("/ranking")
-	public ResponseEntity<ApiResponse<List<PurchaseProductDto>>> findAllPurchaseProduct(){
+	public ResponseEntity<ApiResponse<PurchaseResponseDto>> findAllPurchaseProduct(@RequestParam(name="page", defaultValue = "1")int page, 
+																						@RequestParam(name="size")int size){
 		
-		List<PurchaseProductDto> response = adminService.findAllPurchaseProduct();
+		PurchaseResponseDto response = adminService.findAllPurchaseProduct(new PageInfo(page,size));
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 랭킹 조회에 성공했습니다.", response));
 	}
 	

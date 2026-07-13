@@ -28,7 +28,7 @@ public interface AnswerMapper {
 						(
 							SEQ_ANS.NEXTVAL
 						  , #{answerContent}
-						  , #{requiredNo}
+						  , #{requireNo}
 						  , #{userId}
 						  , 'Y'
 						)

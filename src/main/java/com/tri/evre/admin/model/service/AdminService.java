@@ -47,6 +47,7 @@ import com.tri.evre.require.model.vo.Require;
 import com.tri.evre.shop.model.dao.ShopMapper;
 import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.dto.PurchaseProductDto;
+import com.tri.evre.shop.model.dto.PurchaseResponseDto;
 import com.tri.evre.shop.model.dto.WeeklyProductPurchaseDto;
 import com.tri.evre.station.model.dao.StationMapper;
 import com.tri.evre.station.model.dto.SearchInfo;
@@ -211,12 +212,15 @@ public class AdminService {
 
 	// ---07/02 이재준-----------------------------------------------------
 	@Transactional(readOnly = true)
-	public List<PurchaseProductDto> findAllPurchaseProduct() {
-		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct();
+	public PurchaseResponseDto findAllPurchaseProduct(PageInfo pageInfo) {
+		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct(pageInfo);
 		if (rankings.isEmpty()) {
 			throw new ProductNotFoundException("사용가 상품 구매 랭킹 조회 실패했습니다.");
 		}
-		return rankings;
+		pageInfo.setBoardCounts(shopMapper.findAllProductCounts());
+		return PurchaseResponseDto.builder().ranks(rankings)
+											.pageInfo(pageInfo)
+											.build();
 	}
 
 	@Transactional(readOnly = true)
