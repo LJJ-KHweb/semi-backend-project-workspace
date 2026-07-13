@@ -1,6 +1,5 @@
 package com.tri.evre.global.auth.model.service;
 
-import java.util.Date;
 import java.util.Map;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +14,6 @@ import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.CustomAuthenticationException;
 import com.tri.evre.token.model.service.TokenService;
 
-import io.jsonwebtoken.Jwts;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService {	
 
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
