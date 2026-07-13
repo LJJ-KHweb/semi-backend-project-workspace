@@ -30,6 +30,8 @@ import com.tri.evre.global.exception.board.BoardDeleteException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerNotFoundException;
 import com.tri.evre.global.exception.charger.ChargerReadException;
+import com.tri.evre.global.exception.product.ProductCreateException;
+import com.tri.evre.global.exception.product.ProductDeleteFailException;
 import com.tri.evre.global.exception.shop.ProductNotFoundException;
 import com.tri.evre.global.exception.station.StationDeleteException;
 import com.tri.evre.global.exception.station.StationNotFoundException;
@@ -68,478 +70,449 @@ public class AdminService {
 	private final BoardMapper boardMapper;
 	private final ShopMapper shopMapper;
 	private final StationMapper stationMapper;
-	//---- 07/02 선겸--
+	// ---- 07/02 선겸--
 	private final ProductMapper productMapper;
 	private final FileStorageService fileService;
 	private final UserMapper userMapper;
-	
-	
+
 	// == 07/06 김선겸
 	private final RequireMapper requireMapper;
-	
-	
-	// 07/07 김선겸 
+
+	// 07/07 김선겸
 	private final AnswerMapper answerMapper;
-	
-	
-	//-- 07/06 심영도 --
+
+	// -- 07/06 심영도 --
 	private final ChargerMapper chargerMapper;
-	
-	
+
 	// 07/09
 	private final FileMapper fileMapper;
-	
-	
-	@Transactional
+
+	@Transactional(readOnly = true)
 	public BoardListResponse findAll(PageInfo pageInfo) {
-		
+
 		pageInfo.setBoardCounts(boardMapper.findAllBoardsCount());
-		
+
 		List<BoardDto> boards = boardMapper.adminFindAll(pageInfo);
-		
-		if(boards == null) {
+
+		if (boards.isEmpty()) {
 			throw new BoardNotFoundException("전체 게시글 조회 실패");
 		}
-		
-		return new BoardListResponse(pageInfo,boards);
+
+		return new BoardListResponse(pageInfo, boards);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public BoardDto findByBoard(Long boardNo) {
-		
+
 		BoardDto board = boardMapper.findByBoardNo(boardNo);
-		if(board == null) {
+		if (board == null) {
 			throw new BoardNotFoundException("게시글 정보가 없습니다.");
 		}
-		
-		List<FileDto> files =  fileMapper.findBoardFileAll(boardNo);
-		
+
+		List<FileDto> files = fileMapper.findBoardFileAll(boardNo);
+
 		board.setFiles(files);
-		
+
 		return board;
 	}
 
-	public void deleteBoard(Long boardNo,CustomUserDetails user) {
-		
+	@Transactional
+	public void deleteBoard(Long boardNo, CustomUserDetails user) {
+
 		BoardDeleteDto board = new BoardDeleteDto(boardNo, user.getUsername(), user.getRole());
-		
-		
+
 		int result = boardMapper.delete(board);
-		if(result < 1) {
+		if (result < 1) {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
 	}
 
-	
-	//------------------07/01 김선겸---------
+	@Transactional(readOnly = true)
 	public ProductListResponse findAllProduct(PageInfo pageInfo) {
-		
+
 		List<ProductListDto> products = shopMapper.findAllProductAdmin(pageInfo);
-		
+
 		// 테이블에 아무것도 없을때
-		if(products==null || products.isEmpty()) {
+		if (products.isEmpty()) {
 			throw new ProductNotFoundException("상품을 하나도 찾을 수 없습니다.");
 		}
 		pageInfo.setBoardCounts(shopMapper.findProductCounts());
-		
+
 		return new ProductListResponse(pageInfo, products);
 	}
 
-	//-------------------------------07/02
+	// -------------------------------07/02
 	@Transactional
 	public void insertProduct(CustomUserDetails user, ProductDto product, MultipartFile file) {
-		
-		Product productEntity = Product.builder()
-									   .userId(user.getUsername())
-									   .productName(product.getProductName())
-									   .price(product.getPrice())
-									   .amount(product.getAmount())
-									   .build();
-		
-		productMapper.insertProductTable(productEntity);
-		
-		String filePath =  fileService.store(file);
-		
-		productMapper.insertInventoryTable(productEntity, filePath);
-		
-		
-	} 
+
+		Product productEntity = Product.builder().userId(user.getUsername()).productName(product.getProductName())
+				.price(product.getPrice()).amount(product.getAmount()).build();
+
+		int result = productMapper.insertProductTable(productEntity);
+		if (result < 1) {
+			throw new ProductCreateException("상품 등록에 실패");
+		}
+
+		String filePath = fileService.store(file);
+
+		result = productMapper.insertInventoryTable(productEntity, filePath);
+		if (result < 1) {
+			throw new ProductCreateException("상품 수량 등록 실패");
+		}
+
+	}
+
 	// ------------------ 07/03 김선겸
 	// --- 상품 삭제
 	@Transactional
 	public void deleteProduct(Long productNo) {
-		
-		if(shopMapper.findByProductNo(productNo) == null) throw new ProductNotFoundException("존재하지 않는 상품입니다.");
-		
-		if(shopMapper.findByProductNo(productNo).getStatus().equals("N")) throw new ProductNotFoundException("이미 삭제된 상품입니다.");
-		
-		productMapper.deleteProduct(productNo);
-	} 
-	
-	
-	
+		ProductDto product = shopMapper.findByProductNo(productNo);
+		if (product == null)
+			throw new ProductNotFoundException("존재하지 않는 상품입니다.");
+
+		if (product.getStatus().equals("N"))
+			throw new ProductNotFoundException("이미 삭제된 상품입니다.");
+
+		int result = productMapper.deleteProduct(productNo);
+		if (result < 1) {
+			throw new ProductDeleteFailException("삭제에 실패했습니다.");
+		}
+	}
+
 	// 상품 수정
 	@Transactional
 	public void updateProduct(Long productNo, UpdateProductDto product, MultipartFile file) {
-		
-		
+
 		// 앞단을 생각 못하고 뒷단만 생각하다보니 값을 입력하지 않은 필드가 있을 경우 udpate실행 안함
 		// 원래 앞단에서 확인하는 건데 여기다 만들어버렸음
 		// 수정할 때 앞단에서 상품의 정보를 가지고 있을 것이고 앞단에서 이미 있는 정보와 업데이트시 보내는 정보를 비교해서 값이 넘어올것이다.
-	    boolean isProductUpdate =
-	            (product.getProductName() != null && !product.getProductName().isBlank())
-	            || product.getPrice() != null;
+		boolean isProductUpdate = (product.getProductName() != null && !product.getProductName().isBlank())
+				|| product.getPrice() != null;
+		int result = 0;
+		if (isProductUpdate) {
+			result = productMapper.updateProduct(productNo, product);
+			if (result < 1) {
+				throw new ProductCreateException("상품 수정에 실패했습니다.");
+			}
+		}
 
-	    if (isProductUpdate) {
-	        productMapper.updateProduct(productNo, product);
-	    }
+		String filePath = (file != null && !file.isEmpty()) ? fileService.store(file) : null;
 
-	    String filePath = (file != null && !file.isEmpty())
-	            ? fileService.store(file)
-	            : null;
-	    
-	    
-	    boolean isInventoryUpdate =
-	            product.getAmount() != null
-	            || filePath != null;
-	    
-	    
-	    if (isInventoryUpdate) {
-	        productMapper.updateInventory(productNo, product.getAmount(), filePath);
-	    }
+		boolean isInventoryUpdate = product.getAmount() != null || filePath != null;
+
+		if (isInventoryUpdate) {
+			result = productMapper.updateInventory(productNo, product.getAmount(), filePath);
+
+			if (result < 1) {
+				throw new ProductCreateException("상품 재고 수정에 실패했습니다.");
+			}
+		}
 	}
-	
-	
-	
-	
 
 	// ---07/02 이재준-----------------------------------------------------
+	@Transactional(readOnly = true)
 	public List<PurchaseProductDto> findAllPurchaseProduct() {
 		List<PurchaseProductDto> rankings = shopMapper.findAllPurchaseProduct();
-		if(rankings.isEmpty()) {
+		if (rankings.isEmpty()) {
 			throw new ProductNotFoundException("사용가 상품 구매 랭킹 조회 실패했습니다.");
 		}
 		return rankings;
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<WeeklyProductPurchaseDto> findByPurchaseCount() {
-		List<WeeklyProductPurchaseDto>  weeklyPurchaseList = shopMapper.findByPurchaseCount();
-		if(weeklyPurchaseList.isEmpty()) {
+		List<WeeklyProductPurchaseDto> weeklyPurchaseList = shopMapper.findByPurchaseCount();
+		if (weeklyPurchaseList.isEmpty()) {
 			throw new ProductNotFoundException("요일별 상품 구매수량 조회 실패했습니다.");
 		}
 		return weeklyPurchaseList;
 	}
-	
-	
 
-	
-	
-	
 	// -----------------07/03 심영도 충전소 전체 조회ㅋㅋ
-		@Transactional
-		public StationSearchRequest findAllStations(PageInfo pageInfo) {
-			
-			pageInfo.setBoardCounts(stationMapper.findAllStationCount());
-			if(pageInfo.getBoardCounts() < 1) {
-				throw new StationNotFoundException("충전소가 없습니다.");
-			}
-			
-			List<StationDto> stations = stationMapper.findAllStation(pageInfo);
-			
-			for(StationDto station : stations) {
-				int chargerCount = stationMapper.findChargerCount(station.getStationNo());
-				station.setChargerCount(chargerCount);
-				int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
-				station.setUnableChargerCount(unableChargers);
-			}
-			
-			StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
-			
-			return searchResponse;
+	@Transactional
+	public StationSearchRequest findAllStations(PageInfo pageInfo) {
+
+		pageInfo.setBoardCounts(stationMapper.findAllStationCount());
+		if (pageInfo.getBoardCounts() < 1) {
+			throw new StationNotFoundException("충전소가 없습니다.");
 		}
 
-		@Transactional
-		public void insertStation(StationDto station) {
-			Station stationEntity = Station.builder()
-										   .stationName(station.getStationName())
-										   .stationDesc(station.getStationDesc())
-										   .region(station.getRegion())
-										   .address(station.getAddress())
-										   .chargerCount(station.getChargerCount())
-										   .lat(station.getLat())
-										   .lng(station.getLng())
-										   .build();
-			
-			SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
-			
-			int duplicateStation = stationMapper.checkDuplicate(stationInfo);
-			if(duplicateStation > 0) {
-				throw new StationReadException("이미 존재하는 충전소입니다.");
-			}
-			
-			stationMapper.insertStation(stationEntity);
-			
-			for(int i = 0; i < stationEntity.getChargerCount(); i++) {
-				chargerMapper.insertCharger(stationEntity.getStationNo());
-			}
-			
-		}
+		List<StationDto> stations = stationMapper.findAllStation(pageInfo);
 
-		// 07/04 심영도 충전소 상세보기
-		@Transactional
-		public StationDto findByStationNo(Long stationNo) {
-			
-			StationDto station = stationMapper.findByAdminStationNo(stationNo);
-			if(station == null) {
-				throw new StationReadException("충전소 조회에 실패했습니다.");
-			}
-			
-			int chargerCount = stationMapper.findChargerCount(station.getStationNo()); 
-			if(chargerCount < 0) {
-				throw new ChargerReadException("충전기 조회에 실패했습니다.");
-			}
-			
-			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+		for (StationDto station : stations) {
+			int chargerCount = stationMapper.findChargerCount(station.getStationNo());
 			station.setChargerCount(chargerCount);
+			int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
 			station.setUnableChargerCount(unableChargers);
-			
-			return station;
 		}
 
-		// 07/04 충전소 수정
-		public void updateStation(Long stationNo, StationDto station) {
-			Station stationEntity = Station.builder()
-					   .stationNo(stationNo)
-					   .stationName(station.getStationName())
-					   .stationDesc(station.getStationDesc())
-					   .region(station.getRegion())
-					   .address(station.getAddress())
-					   .lat(station.getLat())
-					   .lng(station.getLng())
-					   .status(station.getStatus())
-					   .build();
-			
-			StationDto stationDto = stationMapper.findByAdminStationNo(stationNo);
-			if(stationDto == null) {
-				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
-			}
-			
-			StationDto stationInfo = new StationDto(stationNo, station.getLat(), station.getLng());
-			int duplicateStation = stationMapper.checkDuplicateByNo(stationInfo);
-			if(duplicateStation > 0) {
-				throw new StationReadException("이미 존재하는 충전소입니다.");
-			}
-			
-			stationMapper.updateStation(stationEntity);
+		StationSearchRequest searchResponse = new StationSearchRequest(pageInfo, stations);
+
+		return searchResponse;
+	}
+
+	@Transactional
+	public void insertStation(StationDto station) {
+		Station stationEntity = Station.builder().stationName(station.getStationName())
+				.stationDesc(station.getStationDesc()).region(station.getRegion()).address(station.getAddress())
+				.chargerCount(station.getChargerCount()).lat(station.getLat()).lng(station.getLng()).build();
+
+		SearchInfo stationInfo = new SearchInfo(station.getLat(), station.getLng());
+
+		int duplicateStation = stationMapper.checkDuplicate(stationInfo);
+		if (duplicateStation > 0) {
+			throw new StationReadException("이미 존재하는 충전소입니다.");
 		}
 
-		
-		@Transactional
-		public AllUserResponseDto findAllUser(PageInfo pageInfo, String role) {
-			
-			
-			 List<UserDto> users = userMapper.findAllUser(pageInfo, role);
-			 pageInfo.setBoardCounts(userMapper.findAllUserCounts());
-			return AllUserResponseDto.builder().pageInfo(pageInfo)
-												.users(maskingUser(users))
-												.build();
-			
+		int result = stationMapper.insertStation(stationEntity);
+		if(result < 1) {
+		    throw new StationReadException("충전소 등록에 실패했습니다.");
 		}
 
-		
-		
-		public void updateUserRole(UserRoleRequestDto user) {
-			
-			int userCount  = userMapper.countByUserId(user.getUserId());
-			if(userCount  < 1) {
-				throw new  UserNotFoundException("일치하는 회원이 없습니다.");
-			}
-			
-			
-			userMapper.updateUserRole(user);
-			
-		} 
-		
-		//07/06 심영도 충전소 삭제
-		public void deleteStation(Long stationNo) {
-			
-			if(stationMapper.findByStationNo(stationNo) == null) {
-				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
-			}
-			
-			if(stationMapper.deleteStation(stationNo) < 1) {
-				throw new StationDeleteException("충전소 삭제에 실패했습니다.");
-			}
+		for (int i = 0; i < stationEntity.getChargerCount(); i++) {
+			chargerMapper.insertCharger(stationEntity.getStationNo());
 		}
 
-		// 7.6 심영도 충전기 전체 조회
-		public ChargerResponse findAllCharger(PageInfo pageInfo) {
-			
-			pageInfo.setBoardCounts(chargerMapper.findAllChargerCount());
-			if(pageInfo.getBoardCounts() < 1) {
-				throw new StationNotFoundException("충전기가 없습니다.");
-			}
-			
-			List<ChargerDto> chargers = chargerMapper.findAllCharger(pageInfo);
-			
-			ChargerResponse chargerResponse = new ChargerResponse(pageInfo, chargers);
-			
-			return chargerResponse;
-			
-		}
-		
-		// === 07/06 김선겸 문의사항 전체 조회
+	}
 
-		public RequireListResponseAdmin findAllRequires(PageInfo pageInfo) {
-			
-			pageInfo.setBoardCounts(boardMapper.findAllBoardsCount());
-			
-			List<Require> boards = requireMapper.adminFindAllRequires(pageInfo);
-			
-			if(boards.isEmpty()) {
-				throw new BoardNotFoundException("전체 문의사항 조회 실패");
-			}
-			
-			return new RequireListResponseAdmin(pageInfo,boards);
+	// 07/04 심영도 충전소 상세보기
+	@Transactional
+	public StationDto findByStationNo(Long stationNo) {
+
+		StationDto station = stationMapper.findByAdminStationNo(stationNo);
+		if (station == null) {
+			throw new StationReadException("충전소 조회에 실패했습니다.");
 		}
 
-		@Transactional
-		public void insertCharger(Long stationNo) {
-			
-			StationDto station = findByStationNo(stationNo);
-			if(station == null) {
-				throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
-			}
-			if(station.getStatus().equals("N")) {
-				throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
-			}
-			
-			chargerMapper.insertCharger(stationNo);
-		}
-		
-		// 7.7 심영도 충전기 단일 조회(예외처리용)
-		private ChargerDto findByChargerNo(Long chargerNo) { // 예외처리라서 COUNT(*)로 int 형만 받아오려고 했는데 삭제할때 staionNo 필요해서 Long으로 받음
-			ChargerDto charger =  chargerMapper.findByChargerNo(chargerNo);
-			// Long인데 sql에서 chargerNo로 조회된 값이 없으면 null 반환해요 그래서 null 이면 예외를 터트린다고 한 겁니다.(0 이 올 수가 없음)
-			if(charger == null) { 
-				throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
-			}
-			return charger;
-		}
-		
-		// 7.7 심영도 삭제된 충전소 찾기
-		private void validateStation(Long stationNo) {
-			if(findByStationNo(stationNo) == null) {
-				throw new StationNotFoundException("일치하는 충전소가 없습니다.");
-			}
-		}
-		
-		// 7.7 심영도 충전기 업데이트
-		public void updateCharger(Long chargerNo, ChargerDto charger) {
-			
-			findByChargerNo(chargerNo);
-			
-			Charger chargerEntity = Charger.builder()
-					.chargerNo(chargerNo)
-					.status(charger.getStatus())
-					.stationNo(charger.getStationNo())
-					.build();
-			
-			validateStation(chargerEntity.getStationNo());
-			
-			chargerMapper.updateCharger(chargerEntity);
-			
-		}
-		
-		
-		// 문의사항 응답하기
-		public void insertAnswer(Answer answer) {
-			
-			int result = answerMapper.insertAnswer(answer);
-			
-			if(result < 1) {
-				throw new BoardCreateException("문의사항 응답 작성에 실패했습니다.");
-			}
-			
-		}
-		
-
-		// 7.7 심영도 충전소 삭제
-		public void deleteCharger(Long chargerNo) {
-			ChargerDto charger = findByChargerNo(chargerNo);
-			validateStation(charger.getStationNo());
- 			chargerMapper.deleteCharger(chargerNo);
-		}
-		
-		
-		
-		
-		public AdminPage adminPage() {
-			
-			int total = sumRequires();
-			int finish = finishRequires();
-			int notFinish = total - finish;
-			
-			AdminPage adminPage =  AdminPage.builder()
-					 						.sumRequires(total)
-					 						.finishRequires(finish)
-					 						.notFinishRequires(notFinish)
-					 						.sumUsers(sumUsers())
-					 						.build();
-			return adminPage;
-		}
-		
-		
-		
-	
-		public int sumRequires() {
-			return requireMapper.sumRequires();
+		int chargerCount = stationMapper.findChargerCount(station.getStationNo());
+		if (chargerCount < 0) {
+			throw new ChargerReadException("충전기 조회에 실패했습니다.");
 		}
 
-		public int finishRequires() {
-			return requireMapper.finishRequires();
+		int unableChargers = stationMapper.findUnableCharger(station.getStationNo());
+		station.setChargerCount(chargerCount);
+		station.setUnableChargerCount(unableChargers);
+
+		return station;
+	}
+
+	// 07/04 충전소 수정
+	public void updateStation(Long stationNo, StationDto station) {
+		Station stationEntity = Station.builder().stationNo(stationNo).stationName(station.getStationName())
+				.stationDesc(station.getStationDesc()).region(station.getRegion()).address(station.getAddress())
+				.lat(station.getLat()).lng(station.getLng()).status(station.getStatus()).build();
+
+		StationDto stationDto = stationMapper.findByAdminStationNo(stationNo);
+		if (stationDto == null) {
+			throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 		}
 
-		public int sumUsers() {
-			return userMapper.sumUsers();
+		StationDto stationInfo = new StationDto(stationNo, station.getLat(), station.getLng());
+		int duplicateStation = stationMapper.checkDuplicateByNo(stationInfo);
+		if (duplicateStation > 0) {
+			throw new StationReadException("이미 존재하는 충전소입니다.");
 		}
 
-		public void restoreProduct(Long productNo) {
-			shopMapper.restoreProduct(productNo);
-			
+		int result = stationMapper.updateStation(stationEntity);
+
+		if(result < 1) {
+		    throw new StationReadException("충전소 수정에 실패했습니다.");
 		}
-		
-		private List<UserMaskedDto> maskingUser(List<UserDto> users){
-			log.info("user = {}",users);
-			List<UserMaskedDto> userList = new ArrayList();
-			for(UserDto user : users) {
-				userList.add(UserMaskedDto.builder().userId(user.getUserId())
-													.userName(user.getUserName())
-													.email(user.getEmail())
-													.role(user.getRole())
-													.createDate(user.getCreateDate())
-													.originalUserId(user.getUserId())
-													.build());
-			}
-			log.info("{}",userList);
-			return userList;
+	}
+
+	@Transactional
+	public AllUserResponseDto findAllUser(PageInfo pageInfo, String role) {
+
+		List<UserDto> users = userMapper.findAllUser(pageInfo, role);
+		pageInfo.setBoardCounts(userMapper.findAllUserCounts());
+		return AllUserResponseDto.builder().pageInfo(pageInfo).users(maskingUser(users)).build();
+
+	}
+
+	public void updateUserRole(UserRoleRequestDto user) {
+
+		int userCount = userMapper.countByUserId(user.getUserId());
+		if (userCount < 1) {
+			throw new UserNotFoundException("일치하는 회원이 없습니다.");
+		}
+		int result = userMapper.updateUserRole(user);
+
+		if(result < 1) {
+		    throw new UserNotFoundException("회원 권한 수정에 실패했습니다.");
 		}
 
-		
-		
-		// 7.10 심영도 충전소번호로 충전기 조회
-		public ChargerResponse findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
-			pageInfo.setBoardCounts(chargerMapper.stationChargerCount(stationNo));
-			if(pageInfo.getBoardCounts() < 1) {
-				throw new StationNotFoundException("충전기가 없습니다.");
-			}
-			
-			ChargerRequest chargerRequest = new ChargerRequest(pageInfo, stationNo);
-			
-			List<ChargerDto> chargers = chargerMapper.findChargerByStationNo(chargerRequest);
-			
-			return new ChargerResponse(pageInfo, chargers); 
+	}
+
+	// 07/06 심영도 충전소 삭제
+	public void deleteStation(Long stationNo) {
+
+		if (stationMapper.findByStationNo(stationNo) == null) {
+			throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
 		}
+
+		if (stationMapper.deleteStation(stationNo) < 1) {
+			throw new StationDeleteException("충전소 삭제에 실패했습니다.");
+		}
+	}
+
+	// 7.6 심영도 충전기 전체 조회
+	public ChargerResponse findAllCharger(PageInfo pageInfo) {
+
+		pageInfo.setBoardCounts(chargerMapper.findAllChargerCount());
+		if (pageInfo.getBoardCounts() < 1) {
+			throw new StationNotFoundException("충전기가 없습니다.");
+		}
+
+		List<ChargerDto> chargers = chargerMapper.findAllCharger(pageInfo);
+
+		ChargerResponse chargerResponse = new ChargerResponse(pageInfo, chargers);
+
+		return chargerResponse;
+
+	}
+
+	// === 07/06 김선겸 문의사항 전체 조회
+
+	public RequireListResponseAdmin findAllRequires(PageInfo pageInfo) {
+
+		pageInfo.setBoardCounts(requireMapper.findAllRequireCounts());
+
+		List<Require> boards = requireMapper.adminFindAllRequires(pageInfo);
+
+		if (boards.isEmpty()) {
+			throw new BoardNotFoundException("전체 문의사항 조회 실패");
+		}
+
+		return new RequireListResponseAdmin(pageInfo, boards);
+	}
+
+	@Transactional
+	public void insertCharger(Long stationNo) {
+
+		StationDto station = findByStationNo(stationNo);
+		if (station == null) {
+			throw new StationNotFoundException("충전소를 찾을 수 없습니다.");
+		}
+		if (station.getStatus().equals("N")) {
+			throw new StationNotFoundException("충전소가 운영 중이지 않습니다.");
+		}
+
+		int result = chargerMapper.insertCharger(stationNo);
+
+		if(result < 1) {
+		    throw new ChargerReadException("충전기 등록에 실패했습니다.");
+		}
+	}
+
+	// 7.7 심영도 충전기 단일 조회(예외처리용)
+	private ChargerDto findByChargerNo(Long chargerNo) { // 예외처리라서 COUNT(*)로 int 형만 받아오려고 했는데 삭제할때 staionNo 필요해서 Long으로
+															// 받음
+		ChargerDto charger = chargerMapper.findByChargerNo(chargerNo);
+		// Long인데 sql에서 chargerNo로 조회된 값이 없으면 null 반환해요 그래서 null 이면 예외를 터트린다고 한 겁니다.(0 이
+		// 올 수가 없음)
+		if (charger == null) {
+			throw new ChargerNotFoundException("일치하는 충전기를 찾을 수 없습니다.");
+		}
+		return charger;
+	}
+
+	// 7.7 심영도 삭제된 충전소 찾기
+	private void validateStation(Long stationNo) {
+		if (findByStationNo(stationNo) == null) {
+			throw new StationNotFoundException("일치하는 충전소가 없습니다.");
+		}
+	}
+
+	// 7.7 심영도 충전기 업데이트
+	public void updateCharger(Long chargerNo, ChargerDto charger) {
+
+		findByChargerNo(chargerNo);
+
+		Charger chargerEntity = Charger.builder().chargerNo(chargerNo).status(charger.getStatus())
+				.stationNo(charger.getStationNo()).build();
+
+		validateStation(chargerEntity.getStationNo());
+
+		int result = chargerMapper.updateCharger(chargerEntity);
+
+		if(result < 1) {
+		    throw new ChargerReadException("충전기 수정에 실패했습니다.");
+		}
+
+	}
+
+	// 문의사항 응답하기
+	public void insertAnswer(Answer answer) {
+
+		int result = answerMapper.insertAnswer(answer);
+
+		if (result < 1) {
+			throw new BoardCreateException("문의사항 응답 작성에 실패했습니다.");
+		}
+
+	}
+
+	// 7.7 심영도 충전소 삭제
+	public void deleteCharger(Long chargerNo) {
+		ChargerDto charger = findByChargerNo(chargerNo);
+		validateStation(charger.getStationNo());
+		chargerMapper.deleteCharger(chargerNo);
+	}
+
+	public AdminPage adminPage() {
+
+		int total = sumRequires();
+		int finish = finishRequires();
+		int notFinish = total - finish;
+
+		AdminPage adminPage = AdminPage.builder().sumRequires(total).finishRequires(finish).notFinishRequires(notFinish)
+				.sumUsers(sumUsers()).build();
+		return adminPage;
+	}
+
+	public int sumRequires() {
+		return requireMapper.sumRequires();
+	}
+
+	public int finishRequires() {
+		return requireMapper.finishRequires();
+	}
+
+	public int sumUsers() {
+		return userMapper.sumUsers();
+	}
+
+	public void restoreProduct(Long productNo) {
+		int result = shopMapper.restoreProduct(productNo);
+
+		if(result < 1) {
+		    throw new ProductCreateException("상품 복구에 실패했습니다.");
+		}
+
+	}
+
+	private List<UserMaskedDto> maskingUser(List<UserDto> users) {
+		List<UserMaskedDto> userList = new ArrayList<>();
+		for (UserDto user : users) {
+			userList.add(UserMaskedDto.builder().userId(user.getUserId()).userName(user.getUserName())
+					.email(user.getEmail()).role(user.getRole()).createDate(user.getCreateDate())
+					.originalUserId(user.getUserId()).build());
+		}
+		return userList;
+	}
+
+	// 7.10 심영도 충전소번호로 충전기 조회
+	public ChargerResponse findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
+		pageInfo.setBoardCounts(chargerMapper.stationChargerCount(stationNo));
+		if (pageInfo.getBoardCounts() < 1) {
+			throw new StationNotFoundException("충전기가 없습니다.");
+		}
+
+		ChargerRequest chargerRequest = new ChargerRequest(pageInfo, stationNo);
+
+		List<ChargerDto> chargers = chargerMapper.findChargerByStationNo(chargerRequest);
+
+		return new ChargerResponse(pageInfo, chargers);
+	}
 
 }

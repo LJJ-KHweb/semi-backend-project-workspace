@@ -46,7 +46,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -56,22 +55,22 @@ public class AdminController {
 	private final RequireService requireService;
 
 	@GetMapping("/boards")
-	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam(name = "page", defaultValue = "0") int page,
+	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam(name = "page", defaultValue = "1") int page,
 												@RequestParam(name = "size", defaultValue = "3") int size) {
 		BoardListResponse boardListResponse = adminService.findAll(new PageInfo(page, size));
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)게시글 조회 성공", boardListResponse));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시글 목록 조회에 성공했습니다.", boardListResponse));
 	}
 	
 	@GetMapping("/boards/{boardNo}")
 	public ResponseEntity<ApiResponse<BoardDto>> findByBoard(@PathVariable(name="boardNo") Long boardNo){
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시판 상세조회 성공", adminService.findByBoard(boardNo)));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시글 상세 조회에 성공했습니다.", adminService.findByBoard(boardNo)));
 	}
 	
 	@DeleteMapping("/boards/{boardNo}")
 	public ResponseEntity<ApiResponse<Void>> deleteBoard(@PathVariable(name="boardNo") Long boardNo, @AuthenticationPrincipal CustomUserDetails user){
 		adminService.deleteBoard(boardNo,user);
-		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("게시글 삭제 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("게시글 삭제에 성공했습니다.", null));
 	}
 	
 	
@@ -79,15 +78,14 @@ public class AdminController {
 	
 	// -------------07-01--김선겸-- 상품관리 기능중 전체 조회------------------------------- 
 	@GetMapping("/products")
-	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page") int page
+	public ResponseEntity<ApiResponse<ProductListResponse>> findAllProduct(@RequestParam(name="page", defaultValue = "1") int page
 																   		  ,@RequestParam(name="size") int size){
 		ProductListResponse response = adminService.findAllProduct(new PageInfo(page, size));
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("사용내역 전체 조회 성공", response));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 목록 조회에 성공했습니다.", response));
 		
 	}
 	
-	// -------------07-02--김선겸--
 	//--------------상품 추가 기능---
 	
 	@PostMapping("/products")
@@ -96,18 +94,17 @@ public class AdminController {
 														   @AuthenticationPrincipal CustomUserDetails user){
 
 		if (file == null || file.isEmpty()) {
-		    throw new MissingInventoryFieldException("파일이 없어요");
+		    throw new MissingInventoryFieldException("파일이 없습니다.");
 		}
 		
 		
 		adminService.insertProduct(user, product, file);
 		
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
-							 .body(ApiResponse.created("상품 추가에 성공했습니다.", null));
+							 .body(ApiResponse.created("상품 등록에 성공했습니다.", null));
 		
 	}
 	
-	//----------------------07/03 김선겸
 	// 상품 삭제
 	
 	@DeleteMapping("/products/{productNo}")
@@ -115,7 +112,7 @@ public class AdminController {
 		
 		adminService.deleteProduct(productNo);
 		
-		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("상품 삭제 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("상품 삭제에 성공했습니다.", null));
 	}
 	
 	// 상품 수정
@@ -137,14 +134,14 @@ public class AdminController {
 	    
 	    adminService.updateProduct(productNo, product, file);
 
-	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정 성공", null));
+	    return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 수정에 성공했습니다.", null));
 	}
 	
 	
-	@PatchMapping("products/{productNo}/restore")
+	@PatchMapping("/products/{productNo}/restore")
 	public ResponseEntity<ApiResponse<Void>> restoreProduct(@PathVariable(name="productNo") Long productNo){
 		adminService.restoreProduct(productNo);
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 복구 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 복구에 성공했습니다.", null));
 	}
 	// ======================== 07/06 김선겸
 	// 문의사항 전체조회
@@ -153,33 +150,33 @@ public class AdminController {
 	public ResponseEntity<ApiResponse<RequireListResponseAdmin>> findAllRequires(@RequestParam(name = "page", defaultValue = "1") int page,
 												@RequestParam(name = "size", defaultValue = "3") int size) {
 		RequireListResponseAdmin requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("(관리자)문의사항 조회 성공", requireListResponse));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 목록 조회에 성공했습니다.", requireListResponse));
 	}
 	
 	
 	// 문의사항 답변하기	
-	@PostMapping("/requires/{requiredNo}")
-	public ResponseEntity<ApiResponse<Void>> insertAnswer( @PathVariable("requiredNo") Long requiredNo,
+	@PostMapping("/requires/{requireNo}")
+	public ResponseEntity<ApiResponse<Void>> insertAnswer( @PathVariable("requireNo") Long requireNo,
 														   @RequestBody() @Valid InsertAnswerDto answerContent,
 														   @AuthenticationPrincipal CustomUserDetails user){
 		
 		Answer answer = Answer.builder()
-							  .requiredNo(requiredNo)
+							  .requireNo(requireNo)
 							  .answerContent(answerContent.getAnswerContent())
 							  .userId(user.getUsername())
 							  .build();
 		
 		adminService.insertAnswer(answer);
 		
-		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.success("문의사항 응답 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("문의 답변 등록에 성공했습니다.", null));
 	}
 	// 문의사항 상세보기
-	@GetMapping("/requires/{requiredNo}")
-	public ResponseEntity<ApiResponse<RequireDetailResponse>> findByRequireNo(@PathVariable("requiredNo") Long requireNo) {
+	@GetMapping("/requires/{requireNo}")
+	public ResponseEntity<ApiResponse<RequireDetailResponse>> findByRequireNo(@PathVariable("requireNo") Long requireNo) {
 		
 		RequireDetailResponse response = requireService.findByRequireNoAdmin(requireNo);
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 개별조회 성공", response));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 상세 조회에 성공했습니다.", response));
 	}
 	
 	
@@ -191,7 +188,7 @@ public class AdminController {
 		
 		AdminPage adminPage = adminService.adminPage();
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("관리페이지 정보 조회 성공", adminPage));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("관리 페이지 정보 조회에 성공했습니다.", adminPage));
 	}
 	
 	
@@ -211,66 +208,38 @@ public class AdminController {
 	@GetMapping("/charts")
 	public ResponseEntity<ApiResponse<List<WeeklyProductPurchaseDto>>> findByPurchaseCount(){ 
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회 성공했습니다.", adminService.findByPurchaseCount()));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("요일별 상품 구매량 조회에 성공했습니다.", adminService.findByPurchaseCount()));
 	}
 	
 	
 	// 회원 관리페이지 회원 정보 전체 조회
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<AllUserResponseDto>> findAllUser(@RequestParam(name="page")int page, 
+	public ResponseEntity<ApiResponse<AllUserResponseDto>> findAllUser(@RequestParam(name="page", defaultValue = "1")int page, 
 																	@RequestParam(name="size")int size,
 																	@RequestParam(name="role")String role){ 
 		
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 전체 조회 성공했습니다.", adminService.findAllUser(new PageInfo(page,size),role)));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("회원 목록 조회에 성공했습니다.", adminService.findAllUser(new PageInfo(page,size),role)));
 	}
 	
-	@PatchMapping("users")
+	@PatchMapping("/users")
 	public ResponseEntity<ApiResponse<Void>> updateUserRole(@RequestBody @Valid UserRoleRequestDto user){ 
 		adminService.updateUserRole(user);
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("[관리자] 회원 권한 수정에 성공했습니다.", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("회원 권한 수정에 성공했습니다.", null));
 	}	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
 	//------07/03---심영도 - 충전소 전체 조회
 		@GetMapping("/chargeStations")
-		public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page") int page
+		public ResponseEntity<ApiResponse<StationSearchRequest>> findAllStations(@RequestParam(name="page", defaultValue = "1") int page
 												  							   , @RequestParam(name="size") int size) {
 			StationSearchRequest stationRequest = adminService.findAllStations(new PageInfo(page, size));
 			
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-					.body(ApiResponse.success("충전소 목록 조회 성공", stationRequest));
+					.body(ApiResponse.success("충전소 목록 조회에 성공했습니다.", stationRequest));
 		}
 		
 		// 07/03 심영도 충전소 작성
@@ -278,14 +247,14 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> insertStation(@RequestBody @Valid StationDto station) {
 			adminService.insertStation(station);
 			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
-					.body(ApiResponse.created("충전소 작성 성공", null));
+					.body(ApiResponse.created("충전소 등록에 성공했습니다.", null));
 		}
 		
 		// 07/04 심영도 충전기 상세보기
 		@GetMapping("/chargeStations/{stationNo}")
 		public ResponseEntity<ApiResponse<StationDto>> findByStationNo(@PathVariable(name="stationNo") Long stationNo){
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-					.body(ApiResponse.success("충전소 조회 성공", adminService.findByStationNo(stationNo)));
+					.body(ApiResponse.success("충전소 상세 조회에 성공했습니다.", adminService.findByStationNo(stationNo)));
 		}
 		
 		// 07/04 심영도 충전소 수정
@@ -294,7 +263,7 @@ public class AdminController {
 															   @RequestBody @Valid StationDto station) {
 			adminService.updateStation(stationNo, station);
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-					.body(ApiResponse.created("충전소 수정 성공", null));
+					.body(ApiResponse.success("충전소 수정에 성공했습니다.", null));
 		}
 		
 		// 07/06 심영도 충전소 삭제
@@ -302,24 +271,24 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> deleteStation(@PathVariable(name="stationNo") Long stationNo) {
 			adminService.deleteStation(stationNo);
 			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode())
-					.body(ApiResponse.success("충전소 삭제 성공", null));
+					.body(ApiResponse.success("충전소 삭제에 성공했습니다.", null));
 		}
 		
 		// 07/06 심영도 충전기 전체조회
 		@GetMapping("/chargers")
-		public ResponseEntity<ApiResponse<ChargerResponse>> findAllCharger(@RequestParam(name="page") int page
+		public ResponseEntity<ApiResponse<ChargerResponse>> findAllCharger(@RequestParam(name="page", defaultValue = "1") int page
 												  		   				 , @RequestParam(name="size") int size) {
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-					.body(ApiResponse.success("충전기 조회 성공", adminService.findAllCharger(new PageInfo(page, size))));
+					.body(ApiResponse.success("충전기 목록 조회에 성공했습니다.", adminService.findAllCharger(new PageInfo(page, size))));
 		}
 		
 		// 07/10 심영도 충전기 충전소 번호로 조회
 		@GetMapping("/chargers/{stationNo}")
 		public ResponseEntity<ApiResponse<ChargerResponse>> findChargerByStationNo(@PathVariable(name="stationNo") Long stationNo
-																			     , @RequestParam(name="page") int page
+																			     , @RequestParam(name="page", defaultValue = "1") int page
 																  		   	     , @RequestParam(name="size") int size) {
 			return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-					.body(ApiResponse.success("충전기 조회 성공", adminService.findChargerByStationNo(stationNo, new PageInfo(page, size))));
+					.body(ApiResponse.success("충전소별 충전기 조회에 성공했습니다.", adminService.findChargerByStationNo(stationNo, new PageInfo(page, size))));
 		}
 		
 		// 07/06 심영도 충전기 추가
@@ -327,7 +296,7 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> insertCharger(@RequestParam(name="stationNo") Long stationNo){
 			adminService.insertCharger(stationNo);
 			return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
-					.body(ApiResponse.created("충전기 작성성공", null));
+					.body(ApiResponse.created("충전기 등록에 성공했습니다.", null));
 		}
 		
 		// 07/07 심영도 충전기 수정
@@ -336,7 +305,7 @@ public class AdminController {
 															   @RequestBody @Valid ChargerDto charger) {
 			adminService.updateCharger(chargerNo, charger);
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-					.body(ApiResponse.success("충전기 수정 성공", null));
+					.body(ApiResponse.success("충전기 수정에 성공했습니다.", null));
 		}
 		
 		// 7.7 심영도 충전기 삭제
@@ -344,6 +313,6 @@ public class AdminController {
 		public ResponseEntity<ApiResponse<Void>> deleteCharger(@PathVariable(name="chargerNo") Long chargerNo) {
 			adminService.deleteCharger(chargerNo);
 			return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode())
-					.body(ApiResponse.success("충전기 삭제 성공", null));
+					.body(ApiResponse.success("충전기 삭제에 성공했습니다.", null));
 		}
 }

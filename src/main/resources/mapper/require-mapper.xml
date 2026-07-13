@@ -125,5 +125,12 @@
 											REQUIRE_NO
 							  )
 	</select>
+	
+	<select id="findAllRequireCounts">
+		SELECT
+				COUNT(*)
+		  FROM
+		  		REQUIRE
+	</select>
 
 </mapper>

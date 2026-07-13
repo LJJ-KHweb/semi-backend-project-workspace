@@ -32,19 +32,19 @@ public class RaspController {
 	@PostMapping
 	public ResponseEntity<ApiResponse<Void>> save(@RequestBody RaspDto rasp){
 		raspService.save(rasp);
-		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("라즈베리 저장 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("주행 데이터 등록에 성공했습니다.", null));
 	}
 	
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<RaspResponseDto>>> findAll(){
 		List<RaspResponseDto> results = raspService.findAll(); 
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("라즈베리 조회에 성공했습니다.", results));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("라즈베리 데이터 조회에 성공했습니다.", results));
 	}
 	
 	@GetMapping("/mypage") // 사용자의 마이페이지 라즈베리파이 
 	public ResponseEntity<ApiResponse<List<RaspResponseDto>>> findMyRaspAll(@AuthenticationPrincipal CustomUserDetails user){
 		List<RaspResponseDto> results = raspService.findMyRaspAll(user);
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("마이페이지 라즈베리파이 조회 성공", results));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("마이페이지 라즈베리파이 조회 성공했습니다.", results));
 	}
 	
 

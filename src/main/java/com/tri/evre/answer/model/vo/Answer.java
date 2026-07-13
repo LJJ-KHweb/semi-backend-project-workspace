@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Answer {
-	private Long requiredNo;
+	private Long requireNo;
 	private String answerContent;
 	private String userId;
 }

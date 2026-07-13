@@ -17,7 +17,6 @@ import com.tri.evre.station.model.service.StationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/chargeStations")
@@ -26,17 +25,17 @@ public class StationController {
 	private final StationService stationService;
 	
 	@GetMapping
-	public ResponseEntity<ApiResponse<StationSearchRequest>> findAll(@RequestParam("size") int size,
-																	 @RequestParam("page") int page,
-																	 @RequestParam("lat") double lat,
-																	 @RequestParam("lng") double lng,
-																	 @RequestParam("dist") int dist) {
+	public ResponseEntity<ApiResponse<StationSearchRequest>> findAll(@RequestParam(name = "size") int size,
+																	 @RequestParam(name = "page") int page,
+																	 @RequestParam(name = "lat") double lat,
+																	 @RequestParam(name = "lng") double lng,
+																	 @RequestParam(name = "dist") int dist) {
 		StationSearchRequest searchResponse = stationService.findAll(new PageInfo(page, size), lat, lng, dist);
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", searchResponse));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 목록 조회에 성공했습니다.", searchResponse));
 	}
 	
 	@GetMapping("/{stationNo}")
 	public ResponseEntity<ApiResponse<StationDto>> findByStationNo(@PathVariable(name="stationNo") Long stationNo) {
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", stationService.findByStationNo(stationNo)));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("충전소 상세 조회에 성공했습니다.", stationService.findByStationNo(stationNo)));
 	}
 }

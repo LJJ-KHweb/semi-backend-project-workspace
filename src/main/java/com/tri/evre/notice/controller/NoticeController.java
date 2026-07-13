@@ -27,7 +27,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/notices")
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class NoticeController {
 													@RequestParam(name = "file", required = false) List<MultipartFile> file) {
 		noticeService.save(notice, user, file);
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
-				.body(ApiResponse.created("공지사항 작성에 성공하셨습니다.", null));
+				.body(ApiResponse.created("공지사항 등록에 성공했습니다.", null));
 	}
 
 	// 공지사항 전체조회
@@ -51,7 +50,7 @@ public class NoticeController {
 																@RequestParam(name = "size") int size) {
 
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-				.body(ApiResponse.success("공지사항 전체조회에 성공했습니다.", noticeService.findAll(new PageInfo(page, size))));
+				.body(ApiResponse.success("공지사항 목록 조회에 성공했습니다.", noticeService.findAll(new PageInfo(page, size))));
 	}
 	
 	
@@ -60,24 +59,24 @@ public class NoticeController {
 																		@RequestParam(name = "size") int size) {
 
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-				.body(ApiResponse.success("공지사항 전체조회에 성공했습니다.", noticeService.findAllAdmin(new PageInfo(page, size))));
+				.body(ApiResponse.success("공지사항 목록 조회에 성공했습니다.", noticeService.findAllAdmin(new PageInfo(page, size))));
 	}
 	
 
-	// 게시글 상세조회
+	// 공지사항 상세조회
 	@GetMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<NoticeDto>> findByNoticeNo(@PathVariable(name = "noticeNo") Long noticeNo) {
 		NoticeDto notice = noticeService.findByNoticeNo(noticeNo);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-				.body(ApiResponse.success("개별조회 성공", notice));
+				.body(ApiResponse.success("공지사항 상세 조회에 성공했습니다.", notice));
 	}
 
-	// 관리자 페이지 게시글 상세조회
+	// 관리자 페이지 공지사항 상세조회
 	@GetMapping("/admin/{noticeNo}")
 	public ResponseEntity<ApiResponse<NoticeDto>> findByNoticeNoAdmin(@PathVariable(name = "noticeNo") Long noticeNo) {
 		NoticeDto notice = noticeService.findByNoticeNoAdmin(noticeNo);
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode())
-				.body(ApiResponse.success("개별조회 성공", notice));
+				.body(ApiResponse.success("공지사항 상세 조회에 성공했습니다.", notice));
 	}
 	
 	
@@ -85,7 +84,7 @@ public class NoticeController {
 	
 	
 	
-	// 게시글 수정
+	// 공지사항 수정
 	@PatchMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<Void>> update(@ModelAttribute @Valid NoticeDto notice,
 													@RequestParam(name = "file", required = false) List<MultipartFile> files, 
@@ -94,33 +93,26 @@ public class NoticeController {
 		notice.setNoticeNo(noticeNo);
 		noticeService.update(notice, files, user);
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-				.body(ApiResponse.success("업데이트 성공", null));
+				.body(ApiResponse.success("공지사항 수정에 성공했습니다.", null));
 	}
 
 	
 	// 공지사항 복구
 	@PatchMapping("/restore/{noticeNo}")
-	public ResponseEntity<ApiResponse<Void>> restore(@AuthenticationPrincipal CustomUserDetails user,
-													@PathVariable(name = "noticeNo") Long noticeNo) {
+	public ResponseEntity<ApiResponse<Void>> restore(@PathVariable(name = "noticeNo") Long noticeNo) {
 		noticeService.restoreNotice(noticeNo);
 		
 		
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-				.body(ApiResponse.success("복구 성공", null));
+				.body(ApiResponse.success("공지사항 복구에 성공했습니다.", null));
 	}
+
 	
-	
-	
-	
-	
-	
-	
-	
-	// 게시글 삭제
+	// 공지사항 삭제
 	@DeleteMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(name = "noticeNo") Long noticeNo,
 													@AuthenticationPrincipal CustomUserDetails user) {
 		noticeService.delete(noticeNo, user);
-		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("삭제함ㅋ", null));
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("공지사항 삭제에 성공했습니다.", null));
 	}
 }
