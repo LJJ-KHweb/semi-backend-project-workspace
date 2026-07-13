@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LogoutRequest {
-	@NotBlank
+	@NotBlank(message = "리프레시 토큰은 필수입니다.")
 	private String refreshToken;
 }

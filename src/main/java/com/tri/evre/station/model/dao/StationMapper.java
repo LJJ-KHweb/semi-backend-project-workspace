@@ -30,11 +30,11 @@ public interface StationMapper {
 
 	int findUnableCharger(Long stationNo);
 
-	Long insertStation(Station stationEntity);
+	int insertStation(Station stationEntity);
 
 	int checkDuplicate(SearchInfo stationInfo);
 	
-	void updateStation(Station stationEntity);
+	int updateStation(Station stationEntity);
 
 	int checkDuplicateByNo(StationDto stationInfo);
 	

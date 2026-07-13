@@ -11,16 +11,16 @@ import com.tri.evre.product.model.vo.Product;
 public interface ProductMapper {
 	
 	
-	void insertProductTable(Product product);
+	int insertProductTable(Product product);
 	
-	void insertInventoryTable(@Param("product")Product product
+	int insertInventoryTable(@Param("product")Product product
 						   ,@Param("filePath") String filePath);
 
-	void deleteProduct(Long productNo);
+	int deleteProduct(Long productNo);
 
-	void updateProduct(@Param("productNo") Long productNo, @Param("product") UpdateProductDto product);
+	int updateProduct(@Param("productNo") Long productNo, @Param("product") UpdateProductDto product);
 
-	void updateInventory(@Param("productNo") Long productNo,@Param("amount") Integer amount,@Param("file") String file);
+	int updateInventory(@Param("productNo") Long productNo,@Param("amount") Integer amount,@Param("file") String file);
 
 
 }

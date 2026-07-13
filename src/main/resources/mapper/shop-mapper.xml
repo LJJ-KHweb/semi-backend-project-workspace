@@ -124,8 +124,8 @@
 			 FROM
 			 	HISTORY_MILEAGE H
 			 JOIN
-			 	PRODUCT P
 			   ON
+			 	PRODUCT P
 			   	H.PRODUCT_NO = P.PRODUCT_NO
 			WHERE
 				H.USER_ID = #{user.username}
@@ -179,6 +179,16 @@
 		 ORDER
 		 	BY
 		 		PURCHASE_COUNT DESC
+		 OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+	
+	<select id="findAllProductCounts">
+		SELECT 
+				COUNT(DISTINCT PRODUCT_NO)
+		  FROM 
+		  		HISTORY_MILEAGE
+		 WHERE 
+		 		PRODUCT_NO > 0
 	</select>
 	
 	<!-- 
