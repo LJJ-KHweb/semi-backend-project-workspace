@@ -11,6 +11,7 @@ import com.tri.evre.car.model.dao.CarMapper;
 import com.tri.evre.common.model.dto.PageInfo;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.car.InvalidVehicleUsageException;
+import com.tri.evre.global.exception.car.UsagePeriodConflictException;
 import com.tri.evre.global.exception.shop.MileageHistoryCreateException;
 import com.tri.evre.global.exception.user.ConcurrentUpdateException;
 import com.tri.evre.global.exception.user.DuplicateResourceException;
@@ -119,7 +120,7 @@ public class UserService {
 	public void saveDrivingHistory(CustomUserDetails user, DrivingHistory drivingHistory) {
 		//차량 번호 검증
 		validateCarNumber(drivingHistory.getCarNo());
-		
+		validateCarUsagePeriod(drivingHistory);
 		// Car테이블에 저장해줘야됨
 		int result = carMapper.save(drivingHistory, user.getUsername());
 		if(result < 1) {
@@ -127,6 +128,13 @@ public class UserService {
 		}
 		addMileage(drivingHistory, user.getUsername());
 		// 마일리지 히스토리 추가 메소드 호출하기
+	}
+	
+	private void validateCarUsagePeriod(DrivingHistory drivingHistory) {
+		int count = carMapper.validateCarUsagePeriod(drivingHistory);
+		if(count != 0) {
+			throw new UsagePeriodConflictException("이미 이용기록이 등록되어있는 차량입니다.");
+		}
 	}
 	
 	
