@@ -89,10 +89,9 @@ public class NoticeController {
 	@PatchMapping("/{noticeNo}")
 	public ResponseEntity<ApiResponse<Void>> update(@ModelAttribute @Valid NoticeDto notice,
 													@RequestParam(name = "file", required = false) List<MultipartFile> files, 
-													@AuthenticationPrincipal CustomUserDetails user,
 													@PathVariable(name = "noticeNo") Long noticeNo) {
 		notice.setNoticeNo(noticeNo);
-		noticeService.update(notice, files, user);
+		noticeService.update(notice, files);
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
 				.body(ApiResponse.success("업데이트 성공", null));
 	}

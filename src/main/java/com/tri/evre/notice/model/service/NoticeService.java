@@ -123,12 +123,11 @@ public class NoticeService {
 
 	// 공지사항 수정
 	@Transactional
-	public void update(NoticeDto notice, List<MultipartFile> files, CustomUserDetails user) {
+	public void update(NoticeDto notice, List<MultipartFile> files) {
 		validateNoticeExists(notice.getNoticeNo());
 		Notice noticeEntity = Notice.builder().noticeNo(notice.getNoticeNo())
 												.noticeTitle(notice.getNoticeTitle())
 												.noticeContent(notice.getNoticeContent())
-												.userId(user.getUsername())
 												.publicYN(notice.getPublicYN())
 												.build();
 		int result = noticeMapper.update(noticeEntity);
