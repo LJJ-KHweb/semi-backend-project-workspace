@@ -119,8 +119,11 @@ public enum CustomHttpStatus {
     RASP_CRUD_FAILED(500),
     INVALID_PAGE_REQUEST(400),
     CAR_HISTORY_CREATE_FAILED(400),
-    CAR_USAGE_PERIOD_CONFLICT(409);
+    CAR_USAGE_PERIOD_CONFLICT(409),
 	
+//	-------------------------------------
+	// 상품 삭제 실패
+	PRODUCT_DELETE_FAILED(500);
 	
 	
 	

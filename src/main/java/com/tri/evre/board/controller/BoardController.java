@@ -27,7 +27,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/boards")
@@ -42,7 +41,7 @@ public class BoardController {
 												@AuthenticationPrincipal CustomUserDetails user){
 		
 		boardService.save(board,files,user);
-		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("게시글 작성 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode()).body(ApiResponse.created("게시글 등록에 성공했습니다.", null));
 	}
 	
 	//게시글 전체조회
@@ -50,14 +49,14 @@ public class BoardController {
 	public ResponseEntity<ApiResponse<BoardListResponse>> findAll(@RequestParam(name="page",defaultValue = "1") int page,
 			 													@RequestParam(name="size") int size){
 		BoardListResponse boardsResponse = boardService.findAll(new PageInfo(page,size));
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", boardsResponse));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시글 목록 조회에 성공했습니다.", boardsResponse));
 	}
 	
 	// 게시글 상세조회
 	@GetMapping("/{boardNo}")
 	public ResponseEntity<ApiResponse<BoardDto>> findByBoardNo(@PathVariable(name="boardNo") Long boardNo){
 		BoardDto board = boardService.findByBoardNo(boardNo);
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("개별조회 성공", board));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("게시글 상세 조회에 성공했습니다.", board));
 	}
 	
 	// 게시글 수정
@@ -69,7 +68,7 @@ public class BoardController {
 		
 		board.setBoardNo(boardNo);
 		boardService.update(board,files,user);
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("업데이트 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("게시글 수정에 성공했습니다.", null));
 	}
 
 	//게시글 삭제
@@ -77,15 +76,7 @@ public class BoardController {
 	public ResponseEntity<ApiResponse<Void>> delete(@PathVariable(name="boardNo") Long boardNo,
 													@AuthenticationPrincipal CustomUserDetails user) {
 		boardService.delete(boardNo, user);
-		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("삭제함ㅋ", null));
+		return ResponseEntity.status(CustomHttpStatus.DELETE_SUCCESS.getCode()).body(ApiResponse.success("게시글 삭제에 성공했습니다.", null));
 	}
 
-	
-	//----------------------------------- 06/30 재준추가 --------------------------------------
-	
-	
-	
-	
-	
-	
 }

@@ -1,7 +1,5 @@
 package com.tri.evre.shop.controller;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +17,7 @@ import com.tri.evre.shop.model.dto.ProductListResponse;
 import com.tri.evre.shop.model.service.ShopService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/shop")
@@ -30,33 +26,30 @@ public class ShopController {
 	private final ShopService shopService;
 	
 	@GetMapping
-	public ResponseEntity<ApiResponse<ProductListResponse>> findAll(@RequestParam("page") int page,
-																	@RequestParam("size") int size){
+	public ResponseEntity<ApiResponse<ProductListResponse>> findAll(@RequestParam(name = "page") int page,
+																	@RequestParam(name = "size") int size){
 		
 		ProductListResponse productResponse = shopService.findAll(page, size);
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회성공", productResponse));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 목록 조회에 성공했습니다.", productResponse));
 	}
 		
 	@PatchMapping("/{productNo}")
-	public ResponseEntity<ApiResponse<Void>> purchase(@PathVariable(value = "productNo") Long productNo,
+	public ResponseEntity<ApiResponse<Void>> purchase(@PathVariable(name = "productNo") Long productNo,
 													  @AuthenticationPrincipal CustomUserDetails user){
 		
-		log.info("{}", productNo);
 		shopService.purchase(productNo, user);
 		
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("구매 성공", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 구매에 성공했습니다.", null));
 	}
 	
-	// ------------------------07/01--------------------------
-	
 	@GetMapping("/his-products")
-	public ResponseEntity<ApiResponse<HistoryPurchaseListDto>> findByHistoryPurchase(@RequestParam("page") int page
-																					  ,@RequestParam("size") int size
-																					  ,@AuthenticationPrincipal CustomUserDetails user){
+	public ResponseEntity<ApiResponse<HistoryPurchaseListDto>> findByHistoryPurchase(@RequestParam(name = "page") int page,
+																						@RequestParam(name = "size") int size,
+																						@AuthenticationPrincipal CustomUserDetails user){
 		
 		HistoryPurchaseListDto response = shopService.findByHistoryPurchase(page, size, user);
 		
-		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("조회 성공", response));
+		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("상품 구매 내역 조회에 성공했습니다.", response));
 	}
 	
 	
