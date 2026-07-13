@@ -136,8 +136,6 @@
 			   	 ,	NOTICE_CONTENT = #{noticeContent}
 			   	 ,	PUBLIC_YN = #{publicYN}
 	 	 	 WHERE
-	  		 		USER_ID = #{userId}
-	  		   AND
 	  		   		STATUS = 'Y'
 	  		   AND
 	  	   			NOTICE_NO = #{noticeNo}
