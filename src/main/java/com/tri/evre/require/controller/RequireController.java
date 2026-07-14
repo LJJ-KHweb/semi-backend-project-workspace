@@ -26,6 +26,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/requires")
@@ -37,6 +38,7 @@ public class RequireController {
 	public ResponseEntity<ApiResponse<Void>> writeRequire(@ModelAttribute @Valid RequireDto require,
 			@RequestParam(name = "file", required = false) List<MultipartFile> files,
 			@AuthenticationPrincipal CustomUserDetails user) {
+		
 		requireService.writeRequire(require, files, user);
 
 		return ResponseEntity.status(CustomHttpStatus.CREATE_SUCCESS.getCode())
