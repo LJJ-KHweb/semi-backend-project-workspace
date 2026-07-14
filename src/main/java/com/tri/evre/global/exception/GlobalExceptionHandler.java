@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.tri.evre.global.api.model.vo.ApiResponse;
 import com.tri.evre.global.api.model.vo.CustomHttpStatus;
@@ -77,6 +80,7 @@ import com.tri.evre.global.exception.user.PasswordMismatchException;
 import com.tri.evre.global.exception.user.RefreshTokenExprireException;
 import com.tri.evre.global.exception.user.UserNotFoundException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -218,7 +222,30 @@ public class GlobalExceptionHandler {
 	            .body(ApiResponse.fail(code, response.toString()));
 	}
 	
-	
+	@ExceptionHandler({
+        NoResourceFoundException.class,
+        NoHandlerFoundException.class
+})
+public ResponseEntity<ApiResponse<Void>> handleNotFoundException(
+        Exception exception,
+        HttpServletRequest request) {
+
+    log.warn(
+            "존재하지 않는 URL - method: {}, uri: {}, exception: {}",
+            request.getMethod(),
+            request.getRequestURI(),
+            exception.getClass().getSimpleName()
+    );
+
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(
+                    ApiResponse.fail(
+                            HttpStatus.NOT_FOUND.value(),
+                            "요청한 URL을 찾을 수 없습니다."
+                    )
+            );
+}
 	
 	// 회원 -----------------------------------------------------------------------
 
