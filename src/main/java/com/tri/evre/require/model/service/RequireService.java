@@ -45,7 +45,7 @@ public class RequireService {
 		
 		Require requireEntity = Require.builder()
 									   .requireTitle(require.getRequireTitle())
-									   .requireContent(require.getRequireContent())
+									   .createDate(require.getCreateDate())
 									   .userId(user.getUsername())
 									   .build();
 		
