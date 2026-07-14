@@ -263,7 +263,7 @@ public class AdminController {
 															   @RequestBody @Valid StationDto station) {
 			adminService.updateStation(stationNo, station);
 			return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-					.body(ApiResponse.success("충전소 수정에 성공했습니다.", null));
+					.body(ApiResponse.created("충전소 수정에 성공했습니다.", null));
 		}
 		
 		// 07/06 심영도 충전소 삭제
