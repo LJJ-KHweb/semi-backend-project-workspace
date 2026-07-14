@@ -124,8 +124,8 @@
 			 FROM
 			 	HISTORY_MILEAGE H
 			 JOIN
-			   ON
 			 	PRODUCT P
+			   ON
 			   	H.PRODUCT_NO = P.PRODUCT_NO
 			WHERE
 				H.USER_ID = #{user.username}
