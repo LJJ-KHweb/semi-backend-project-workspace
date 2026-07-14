@@ -107,7 +107,18 @@
 		   	    					 		USER_ID = #{userId}
 		   	    					)
 		   	    )
+		   AND
+		   	   	STATUS != 'N'
 	</update>
+	
+	<select id="checkUser">
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   SEMI_USER
+		 WHERE
+		 	   USER_ID = #{userId}
+	</select>
 	
 	<!-- 게시글 전체 갯수 조회 -->
 	<select id="findBoardsCount">

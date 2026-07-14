@@ -56,7 +56,7 @@ public class NoticeService {
 	}
 
 	// 공지사항 전체 조회
-	@Transactional
+	@Transactional(readOnly = true)
 	public NoticeListResponse findAll(PageInfo pageInfo) {
 		List<NoticeDto> notices = noticeMapper.findAll(pageInfo);
 		if (notices.isEmpty()) {
@@ -70,7 +70,7 @@ public class NoticeService {
 											.build();
 	}
 	
-	
+	@Transactional(readOnly = true)
 	public NoticeListResponse findAllAdmin(PageInfo pageInfo) {
 		List<NoticeDto> notices = noticeMapper.findAllAdmin(pageInfo);
 		if (notices.isEmpty()) {
@@ -87,18 +87,18 @@ public class NoticeService {
 	
 
 	// 공지사항 상세 조회
-	@Transactional
+	@Transactional(readOnly = true)
 	public NoticeDto findByNoticeNo(Long noticeNo) {
 		NoticeDto notice = noticeMapper.findByNoticeNo(noticeNo);
-		plusViews(noticeNo);
 		if(notice == null) {
 			throw new BoardReadException("해당번호의 공지사항 게시글이 존재하지 않습니다.");
 		}
+		plusViews(noticeNo);
 		notice.setFiles(fileService.findAll(noticeNo));
 		return notice;
 	}
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	public NoticeDto findByNoticeNoAdmin(Long noticeNo) {
 		NoticeDto notice = noticeMapper.findByNoticeNoAdmin(noticeNo);
 		if(notice == null) {
@@ -114,7 +114,7 @@ public class NoticeService {
 	
 	
 	//공지사항 publicYN = Y (일반게시판에서도 볼수 있는 공지사항)
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<NoticeDto> findPublicNotice(){
 		return noticeMapper.findPublicNotice();
 		//예외 처리를 안하는 이유는 publicYN = Y인 공지사항이 없어도
@@ -158,6 +158,7 @@ public class NoticeService {
 	}
 	
 	//조회수 증가 책임분리함
+	@Transactional
 	private void plusViews(Long noticeNo) {
 		int result = noticeMapper.plusViews(noticeNo);
 		if(result < 1) {
@@ -166,6 +167,7 @@ public class NoticeService {
 	}
 	
 	// 해당 번호의 공지사항의 존재 여부 확인하는 메소드 
+	@Transactional
 	private void validateNoticeExists(Long noticeNo) {
 		if(noticeMapper.existsByNoticeNo(noticeNo) == null) {
 			throw new BoardReadException("해당 번호의 공지사항이 존재하지 않습니다.");

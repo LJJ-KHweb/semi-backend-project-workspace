@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.rasp.RaspNotFoundException;
@@ -25,6 +26,7 @@ public class RaspService {
 
 	
 	// 탄소절감량 계산 공식
+	@Transactional
 	public List<RaspResponseDto> calculateCarbonReduction(List<RaspDayOfWeek> results) {
 		List<RaspResponseDto> responseResults = new ArrayList();
 		for (RaspDayOfWeek r : results) {
@@ -40,10 +42,12 @@ public class RaspService {
 		return responseResults;
 	}
 	
+	@Transactional
 	public void save(RaspDto rasp) {
 		int reuslt = raspMapper.save(rasp);
 	}
 
+	@Transactional(readOnly = true)
 	public List<RaspResponseDto> findAll() {
 
 		List<RaspDayOfWeek> results = raspMapper.findAll();
@@ -55,6 +59,7 @@ public class RaspService {
 		return responseResults;
 	}
 
+	@Transactional(readOnly = true)
 	public List<RaspResponseDto> findMyRaspAll(CustomUserDetails user) {
 		List<RaspDayOfWeek> results = raspMapper.findMyRaspAll(user.getUsername());
 		

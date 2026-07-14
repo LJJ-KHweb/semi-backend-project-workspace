@@ -42,6 +42,6 @@ public interface BoardMapper {
 	//게시글의 존재 여부 확인
 	int existsByBoardNo(Long boardNo);
 
-
+	int checkUser(String userId);
 	
 }

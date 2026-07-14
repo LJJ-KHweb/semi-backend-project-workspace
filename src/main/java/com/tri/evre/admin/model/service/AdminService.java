@@ -301,6 +301,7 @@ public class AdminService {
 	}
 
 	// 07/04 충전소 수정
+	@Transactional
 	public void updateStation(Long stationNo, StationDto station) {
 		Station stationEntity = Station.builder()
 									   .stationNo(stationNo)
@@ -341,6 +342,7 @@ public class AdminService {
 
 	}
 
+	@Transactional
 	public void updateUserRole(UserRoleRequestDto user) {
 
 		int userCount = userMapper.countByUserId(user.getUserId());
@@ -356,6 +358,7 @@ public class AdminService {
 	}
 
 	// 07/06 심영도 충전소 삭제
+	@Transactional
 	public void deleteStation(Long stationNo) {
 
 		if (stationMapper.findByStationNo(stationNo) == null) {
@@ -368,6 +371,7 @@ public class AdminService {
 	}
 
 	// 7.6 심영도 충전기 전체 조회
+	@Transactional(readOnly = true)
 	public ChargerResponse findAllCharger(PageInfo pageInfo) {
 
 		pageInfo.setBoardCounts(chargerMapper.findAllChargerCount());
@@ -384,7 +388,7 @@ public class AdminService {
 	}
 
 	// === 07/06 김선겸 문의사항 전체 조회
-
+	@Transactional(readOnly = true)
 	public RequireListResponseAdmin findAllRequires(PageInfo pageInfo) {
 
 		pageInfo.setBoardCounts(requireMapper.findAllRequireCounts());
@@ -417,6 +421,7 @@ public class AdminService {
 	}
 
 	// 7.7 심영도 충전기 단일 조회(예외처리용)
+	@Transactional(readOnly = true)
 	private ChargerDto findByChargerNo(Long chargerNo) { // 예외처리라서 COUNT(*)로 int 형만 받아오려고 했는데 삭제할때 staionNo 필요해서 Long으로
 															// 받음
 		ChargerDto charger = chargerMapper.findByChargerNo(chargerNo);
@@ -429,6 +434,7 @@ public class AdminService {
 	}
 
 	// 7.7 심영도 삭제된 충전소 찾기
+	@Transactional(readOnly = true)
 	private void validateStation(Long stationNo) {
 		if (findByStationNo(stationNo) == null) {
 			throw new StationNotFoundException("일치하는 충전소가 없습니다.");
@@ -436,6 +442,7 @@ public class AdminService {
 	}
 
 	// 7.7 심영도 충전기 업데이트
+	@Transactional
 	public void updateCharger(Long chargerNo, ChargerDto charger) {
 
 		findByChargerNo(chargerNo);
@@ -454,6 +461,7 @@ public class AdminService {
 	}
 
 	// 문의사항 응답하기
+	@Transactional
 	public void insertAnswer(Answer answer) {
 
 		int result = answerMapper.insertAnswer(answer);
@@ -465,12 +473,14 @@ public class AdminService {
 	}
 
 	// 7.7 심영도 충전소 삭제
+	@Transactional
 	public void deleteCharger(Long chargerNo) {
 		ChargerDto charger = findByChargerNo(chargerNo);
 		validateStation(charger.getStationNo());
 		chargerMapper.deleteCharger(chargerNo);
 	}
 
+	@Transactional
 	public AdminPage adminPage() {
 
 		int total = sumRequires();
@@ -494,6 +504,7 @@ public class AdminService {
 		return userMapper.sumUsers();
 	}
 
+	@Transactional
 	public void restoreProduct(Long productNo) {
 		int result = shopMapper.restoreProduct(productNo);
 
@@ -503,6 +514,7 @@ public class AdminService {
 
 	}
 
+	@Transactional
 	private List<UserMaskedDto> maskingUser(List<UserDto> users) {
 		List<UserMaskedDto> userList = new ArrayList<>();
 		for (UserDto user : users) {
@@ -514,6 +526,7 @@ public class AdminService {
 	}
 
 	// 7.10 심영도 충전소번호로 충전기 조회
+	@Transactional(readOnly = true)
 	public ChargerResponse findChargerByStationNo(Long stationNo, PageInfo pageInfo) {
 		pageInfo.setBoardCounts(chargerMapper.stationChargerCount(stationNo));
 		if (pageInfo.getBoardCounts() < 1) {

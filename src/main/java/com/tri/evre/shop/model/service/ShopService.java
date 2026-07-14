@@ -31,6 +31,7 @@ public class ShopService {
 	
 	private final ShopMapper shopMapper;
 	
+	@Transactional(readOnly = true)
 	public ProductListResponse findAll(int page, int size) {
 		
 		PageInfo pageInfo = new PageInfo(page, size);
@@ -101,6 +102,7 @@ public class ShopService {
 	
 	// 상품 구매 내역 조회하기
 
+	@Transactional(readOnly = true)
 	public HistoryPurchaseListDto findByHistoryPurchase(int page, int size, CustomUserDetails user) {
 		
 		PageInfo pageInfo = new PageInfo(page, size);
