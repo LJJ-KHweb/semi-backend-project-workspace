@@ -1,7 +1,6 @@
 package com.tri.evre.product.model.dto;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class ProductDto {
 	@NotNull(message="가격은 필수로 입력해야합니다.")
 	private Integer price;
 	@NotNull(message="수량은 필수로 입력해야합니다.")
-	@Min(value = 0, message = "재고는 0 이상이어야 합니다.")
+	@Min(value = 0, message = "수량은 0 이상이어야 합니다.")
 	private Integer amount;
 	private String status;
 }

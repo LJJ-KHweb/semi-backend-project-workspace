@@ -23,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.tri.evre.global.configuration.fliter.JwtFilter;
 import com.tri.evre.global.configuration.handler.CustomAccessDeniedHandler;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -39,6 +40,10 @@ public class SecurityConfig {
 
 		return http.formLogin(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults()).authorizeHttpRequests(requests -> {
+				    // 404, 500 오류 응답을 만드는 내부 처리 과정 허용
+				    requests.dispatcherTypeMatchers(
+				            DispatcherType.ERROR
+				    ).permitAll();
 					requests.requestMatchers(HttpMethod.POST, "/api/users", "/api/auth/login", "/api/auth/refresh")
 							.permitAll();
 					requests.requestMatchers(HttpMethod.DELETE, "/api/auth/logout", "/api/boards/**").authenticated();
@@ -117,6 +122,14 @@ public class SecurityConfig {
 					requests.requestMatchers(HttpMethod.POST, "/api/users/drivingHistory").authenticated();
 					requests.requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.PATCH, "/api/admin/users").hasRole("ADMIN");
+					
+					
+					
+					
+					
+					// url이 잘못되었을 때 예외를 터트리기 위해 globalExceptionHandler까지 가야해서
+					// 위에 만들어놓은 요청들은 알맞게 검사한 후 들어가고 나머지는 우리가 원하지 않은 url일테니까 일단 들여보내서 예외 터트림
+					requests.anyRequest().permitAll();
 
 				}).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler))
