@@ -187,6 +187,8 @@
 	           )
 	     WHERE 
 	     	   DISTANCE_M &lt;= 30
+	       AND 
+	      	   STATION_NO != #{stationNo}
 	</select>
 
 	<update id="updateStation" parameterType="com.tri.evre.station.model.vo.Station">
