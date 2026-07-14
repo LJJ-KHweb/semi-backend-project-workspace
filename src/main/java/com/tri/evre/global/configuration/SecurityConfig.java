@@ -22,6 +22,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.tri.evre.global.configuration.fliter.JwtFilter;
 import com.tri.evre.global.configuration.handler.CustomAccessDeniedHandler;
+import com.tri.evre.global.configuration.handler.CustomAuthenticationEntryPoint;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class SecurityConfig {
 	private final JwtFilter jwtFilter;
 	// 추가했음
 	private final CustomAccessDeniedHandler customAccessDeniedHandler;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -132,7 +134,10 @@ public class SecurityConfig {
 					requests.anyRequest().permitAll();
 
 				}).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler))
+				.exceptionHandling(exception -> exception
+				        .authenticationEntryPoint(customAuthenticationEntryPoint)
+				        .accessDeniedHandler(customAccessDeniedHandler)
+				)
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 
