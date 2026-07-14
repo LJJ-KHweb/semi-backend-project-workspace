@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -223,26 +224,39 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler({
+        NoHandlerFoundException.class,
         NoResourceFoundException.class,
-        NoHandlerFoundException.class
+        HttpRequestMethodNotSupportedException.class
 })
-public ResponseEntity<ApiResponse<Void>> handleNotFoundException(
+public ResponseEntity<ApiResponse<Void>> handleRequestException(
         Exception exception,
         HttpServletRequest request) {
 
+    HttpStatus status;
+    String message;
+
+    if (exception instanceof HttpRequestMethodNotSupportedException) {
+        status = HttpStatus.METHOD_NOT_ALLOWED;
+        message = "지원하지 않는 요청 방식입니다.";
+    } else {
+        status = HttpStatus.NOT_FOUND;
+        message = "요청한 URL을 찾을 수 없습니다.";
+    }
+
     log.warn(
-            "존재하지 않는 URL - method: {}, uri: {}, exception: {}",
+            "요청 처리 실패 - method: {}, uri: {}, status: {}, exception: {}",
             request.getMethod(),
             request.getRequestURI(),
+            status.value(),
             exception.getClass().getSimpleName()
     );
 
     return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
+            .status(status)
             .body(
                     ApiResponse.fail(
-                            HttpStatus.NOT_FOUND.value(),
-                            "요청한 URL을 찾을 수 없습니다."
+                            status.value(),
+                            message
                     )
             );
 }
