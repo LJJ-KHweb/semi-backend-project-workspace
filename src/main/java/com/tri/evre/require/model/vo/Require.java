@@ -12,4 +12,5 @@ public class Require {
 	private String requireTitle;
 	private Date createDate;
 	private String userId;
+	private String requireContent;
 }

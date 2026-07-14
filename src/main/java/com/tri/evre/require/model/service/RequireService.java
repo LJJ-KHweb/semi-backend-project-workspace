@@ -47,14 +47,15 @@ public class RequireService {
 									   .requireTitle(require.getRequireTitle())
 									   .createDate(require.getCreateDate())
 									   .userId(user.getUsername())
+									   .requireContent(require.getRequireContent())
 									   .build();
-		
+		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		int result = requireMapper.wirteRequire(requireEntity);
 		
 		if(result < 1) {
 			throw new BoardCreateException("문의사항 작성에 실패했습니다.");
 		}
-		
+		log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 		if (files != null && !files.isEmpty()) {
 		    fileService.saveFile(files, requireEntity.getRequireNo());
 		}

@@ -72,6 +72,7 @@
 	<select id="adminFindAllRequires" resultType="Require">
 		<include refid="requireColumn"/>
 				, USER_ID
+				, REQUIRE_CONTENT
 				  FROM
 				      REQUIRE
 			    ORDER
