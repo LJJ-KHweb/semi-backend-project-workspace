@@ -103,7 +103,7 @@ public class NoticeController {
 		
 		
 		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode())
-				.body(ApiResponse.success("공지사항 복구에 성공했습니다.", null));
+				.body(ApiResponse.created("공지사항 복구에 성공했습니다.", null));
 	}
 
 	

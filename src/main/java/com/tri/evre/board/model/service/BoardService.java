@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.board.model.dao.BoardMapper;
-import com.tri.evre.board.model.dto.BoardCreateRequest;
 import com.tri.evre.board.model.dto.BoardDeleteDto;
 import com.tri.evre.board.model.dto.BoardDto;
 import com.tri.evre.board.model.dto.BoardListResponse;
@@ -18,9 +17,11 @@ import com.tri.evre.file.service.FileManagementService;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
 import com.tri.evre.global.exception.board.BoardCreateException;
 import com.tri.evre.global.exception.board.BoardDeleteException;
+import com.tri.evre.global.exception.board.BoardDeleteForbiddenException;
 import com.tri.evre.global.exception.board.BoardNotFoundException;
 import com.tri.evre.global.exception.board.BoardReadException;
 import com.tri.evre.global.exception.board.BoardUpdateException;
+import com.tri.evre.global.exception.board.BoardUpdateForbiddenException;
 import com.tri.evre.notice.model.dto.NoticeDto;
 import com.tri.evre.notice.model.service.NoticeService;
 
@@ -71,7 +72,7 @@ public class BoardService {
 	
 	
 	//게시글 전체조회
-	@Transactional
+	@Transactional(readOnly = true)
 	public BoardListResponse findAll(PageInfo pageInfo) {
 		List<BoardDto> boards = boardMapper.findAll(pageInfo);	
 		if (boards.isEmpty()) {
@@ -89,13 +90,13 @@ public class BoardService {
 
 	
 	//게시글 상세 조회
-	@Transactional
+	@Transactional(readOnly = true)
 	public BoardDto findByBoardNo(Long boardNo) {
-		plusViews(boardNo);
 		BoardDto board = boardMapper.findByBoardNo(boardNo);
 		if (board == null) {
 			throw new BoardNotFoundException("조회 결과가 없습니다.");
 		}
+		plusViews(boardNo);
 		board.setFiles(fileService.findAll(boardNo));
 		return board;
 	}
@@ -111,7 +112,13 @@ public class BoardService {
 											.boardContent(board.getBoardContent())
 											.userId(user.getUsername())
 											.build();
-		int result = boardMapper.update(boardEntity);
+		
+		int result = boardMapper.checkUser(boardEntity.getUserId());
+		if (result > 0) {
+			throw new BoardUpdateForbiddenException("게시글 수정은 작성자 또는 관리자만 할 수 있습니다.");
+		}
+		
+		result = boardMapper.update(boardEntity);
 		if (result < 1) {
 			throw new BoardUpdateException("게시글 수정 실패");
 		}
@@ -119,12 +126,19 @@ public class BoardService {
 	}
 
 	//게시글 삭제
+	@Transactional
 	public void delete(Long boardNo, CustomUserDetails user) {
 		validateNoticeExists(boardNo);
 		BoardDeleteDto board = BoardDeleteDto.builder().boardNo(boardNo)
 														.userId(user.getUsername())
 														.build();
-		int result = boardMapper.delete(board);
+		
+		int result = boardMapper.checkUser(board.getUserId());
+		if(result > 0) {
+			throw new BoardDeleteForbiddenException("게시글 삭제는 작성자 또는 관리자만 할 수 있습니다.");
+		}
+		
+		result = boardMapper.delete(board);
 		if(result < 1) {
 			throw new BoardDeleteException("게시글 삭제 실패");
 		}
@@ -132,6 +146,7 @@ public class BoardService {
 	
 	
 	//조회수 증가 책임분리함
+	@Transactional
 	private void plusViews(Long boardNo) {
 		int result = boardMapper.plusViews(boardNo);
 		if(result < 1) {

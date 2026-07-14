@@ -41,6 +41,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 	private final CarMapper carMapper;
 
+	@Transactional
 	public void signup(UserDto user) {
 		//아이디가 중복인지 확인
 		validateDuplicateUserId(user.getUserId());
@@ -54,6 +55,7 @@ public class UserService {
 
 	}
 
+	@Transactional
 	public void update(@Valid UserUpdateRequestDto updateUser, CustomUserDetails user) {
 
 		// 아이디 중복체크(회원인지 확인)
@@ -78,6 +80,7 @@ public class UserService {
 	}
 
 	// 회원인지 확인하는 방법
+	@Transactional
 	private void ensureUserIdNotExists(String userId) {
 		if(userMapper.countByUserId(userId) == 0) {
 			throw new UserNotFoundException("일치하는 회원이 없습니다.");
@@ -85,6 +88,7 @@ public class UserService {
 	}
 	
 	// 아이디 중복은 여러군대에서 쓸거 같아서 책임 분리 해놈
+	@Transactional
 	private void validateDuplicateUserId(String userId) {
 		if (userMapper.countByUserId(userId) > 0) {
 			// 예외 처리 아이디가 중복됨
@@ -92,6 +96,7 @@ public class UserService {
 		}
 	}
 	// 비밀번호 검증 확인 나중에 삭제 같은거 할때 또 필요할거 같아서 분리 해놈
+	@Transactional
 	private void checkPwd(String rawPwd, String encodePassword) {
 		if(!passwordEncoder.matches(rawPwd, encodePassword)) {
 			throw new PasswordMismatchException("비밀번호가 일치하지 않습니다.");
@@ -100,7 +105,7 @@ public class UserService {
 
 	
 	// 마이페이지 마일리지 내역 조회
-	
+	@Transactional(readOnly = true)
 	public UserMileageRequestDto findAllMileageHistory(PageInfo pageInfo, CustomUserDetails user) {
 		List<MileageHistoryResponseDto> mileages =userMapper.findAllMileageHistory(pageInfo, user.getUsername());
 		pageInfo.setBoardCounts(userMapper.findAllMileageHistoryCounts(user.getUsername()));
@@ -130,6 +135,7 @@ public class UserService {
 		// 마일리지 히스토리 추가 메소드 호출하기
 	}
 	
+	@Transactional
 	private void validateCarUsagePeriod(DrivingHistory drivingHistory) {
 		int count = carMapper.validateCarUsagePeriod(drivingHistory);
 		if(count != 0) {
@@ -139,6 +145,7 @@ public class UserService {
 	
 	
 	// 회원 마일리지 적립 메소드
+	@Transactional
 	private void addMileage(DrivingHistory drivingHistory, String userId) {
 		
 		// 라즈베리파이 데이터에서 차량번호와 운행 시작/종료 시간 사이의 누적 주행거리(kmSum) 조회
@@ -156,6 +163,7 @@ public class UserService {
 	
 	
 	// 차량 번호 유효성 검증 메소드
+	@Transactional
 	private void validateCarNumber(String carNo) {
 		Set<String> carSet = Set.of(
 			    "52가 3108",
