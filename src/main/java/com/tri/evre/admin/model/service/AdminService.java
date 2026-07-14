@@ -302,16 +302,24 @@ public class AdminService {
 
 	// 07/04 충전소 수정
 	public void updateStation(Long stationNo, StationDto station) {
-		Station stationEntity = Station.builder().stationNo(stationNo).stationName(station.getStationName())
-				.stationDesc(station.getStationDesc()).region(station.getRegion()).address(station.getAddress())
-				.lat(station.getLat()).lng(station.getLng()).status(station.getStatus()).build();
+		Station stationEntity = Station.builder()
+									   .stationNo(stationNo)
+									   .stationName(station.getStationName())
+									   .stationDesc(station.getStationDesc())
+									   .region(station.getRegion())
+									   .address(station.getAddress())
+									   .lat(station.getLat())
+									   .lng(station.getLng())
+									   .status(station.getStatus())
+									   .build();
 
 		StationDto stationDto = stationMapper.findByAdminStationNo(stationNo);
 		if (stationDto == null) {
 			throw new StationNotFoundException("일치하는 충전소가 없습니다.");
 		}
 
-		StationDto stationInfo = new StationDto(stationNo, station.getLat(), station.getLng());
+		StationDto stationInfo = new StationDto(stationNo, stationEntity.getLat(), stationEntity.getLng());
+		log.info("stationNo: {}", stationInfo);
 		int duplicateStation = stationMapper.checkDuplicateByNo(stationInfo);
 		if (duplicateStation > 0) {
 			throw new StationReadException("이미 존재하는 충전소입니다.");
