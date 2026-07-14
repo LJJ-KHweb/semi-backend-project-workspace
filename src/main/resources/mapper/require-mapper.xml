@@ -87,6 +87,8 @@
 				  		REQUIRE
 				 WHERE
 				 		REQUIRE_NO = #{requireNo}
+				   AND
+				   		USER_ID = #{userId}
 	</select>
 	
 	
