@@ -23,6 +23,7 @@ public class TokenService {
 	private final JwtUtil tokenUtil;
 	private final TokenMapper tokenMapper;
 
+	@Transactional
 	public Map<String, String> getTokens(CustomUserDetails user) {
 		/*
 		 * String accessToken = tokenUtil.getAccessToken(user); log.info("이게토큰 : {} ",
@@ -37,6 +38,7 @@ public class TokenService {
 	}
 
 	// 토큰을 만들어서 반환해주는 메소드
+	@Transactional
 	private Map<String, String> createTokens(CustomUserDetails user) {
 		return Map.of("accessToken", tokenUtil.getAccessToken(user), "refreshToken", tokenUtil.getRefreshToken(user));
 	}
@@ -60,6 +62,7 @@ public class TokenService {
 	// 추후 AccessToken이 만료기간이 지나서 토큰 갱신 요청이 들어왔을때
 	// 사용자에게 전달받은 RefreshToken이 DB에 존재하면서 만료기간이 지나지 않았는지 검증하는 메소드
 
+	@Transactional
 	public Map<String, String> tokenRotation(String refreshToken) {
 		RefreshToken token = tokenMapper.findByToken(refreshToken);
 		if (token == null) {

@@ -3,6 +3,7 @@ package com.tri.evre.file.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.file.model.dao.FileMapper;
@@ -22,6 +23,7 @@ public class BoardFileService implements FileManagementService {
 	private final FileMapper fileMapper;
 
 	@Override
+	@Transactional
 	public void saveFile(List<MultipartFile> files, Long boardNo) {
 		if(files == null || files.isEmpty()) {
 			return;
@@ -44,6 +46,7 @@ public class BoardFileService implements FileManagementService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<FileDto> findAll(Long boardNo) {
 		// countBoardFiles(boardNo);
 		return findBoardFiles(boardNo);
@@ -66,6 +69,7 @@ public class BoardFileService implements FileManagementService {
 	// FOR문을 돌려서 existingFiles.size() 만큼 변수 선언후 
 	
 	@Override
+	@Transactional
 	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long boardNo) {
 		// 앞단에서 삭제한 파일 DB에서 삭제
 		if (deleteOrder != null && !deleteOrder.isEmpty()) {
@@ -125,6 +129,7 @@ public class BoardFileService implements FileManagementService {
 	
 	
 	// Board 게시글의 BoardType에 맞는 테이블에 저장해주는 메소드 
+	@Transactional
 	private void saveBoardFile( BoardFile file) {
 		int result = fileMapper.saveBoardFile(file);
 		
@@ -134,6 +139,7 @@ public class BoardFileService implements FileManagementService {
 	}
 	
 	// Board 게시글의 update를 해주는 메소드
+	@Transactional
 	private void updateBoardFile(BoardFile file) {
 		int result = fileMapper.updateBoardFile(file);
 		
@@ -143,6 +149,7 @@ public class BoardFileService implements FileManagementService {
 	}
 	
 	// Board 게시글의 delete를 해주는 메소드
+	@Transactional
 	private void deleteBoardFiles(Long boardNo, int maxOrder) {
 		int result =  fileMapper.deleteBoardFile(boardNo, maxOrder);
 			
@@ -152,6 +159,7 @@ public class BoardFileService implements FileManagementService {
 	}
 	
 	// Board 게시글의 file이 있는지 없는지 검증
+	@Transactional
 	private int  countBoardFiles(Long boardNo) {
 		int boardFileCounts =  fileMapper.findBoardFileCounts(boardNo);
 		
@@ -161,6 +169,7 @@ public class BoardFileService implements FileManagementService {
 		return boardFileCounts;
 	}
 	// Board 게시글의 파일 전체 조회
+	@Transactional(readOnly = true)
 	private List<FileDto> findBoardFiles(Long boardNo) {
 		List<FileDto> files= fileMapper.findBoardFileAll(boardNo);
 			
@@ -174,6 +183,7 @@ public class BoardFileService implements FileManagementService {
 	
 	
 	@Override
+	@Transactional
 	public void deleteFile(Long noticeNo) {
 		//삭제 할때 구현함
 		

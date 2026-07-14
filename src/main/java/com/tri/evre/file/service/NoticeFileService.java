@@ -3,6 +3,7 @@ package com.tri.evre.file.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.file.model.dao.FileMapper;
@@ -23,6 +24,7 @@ public class NoticeFileService implements FileManagementService {
 
 
 	@Override
+	@Transactional
 	public void saveFile(List<MultipartFile> files, Long noticeNo) {
 		if(files.isEmpty()) {
 			return;
@@ -45,6 +47,7 @@ public class NoticeFileService implements FileManagementService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<FileDto> findAll(Long noticeNo) {
 		return findNoticeFiles(noticeNo);
 	
@@ -53,6 +56,7 @@ public class NoticeFileService implements FileManagementService {
 	
 
 	@Override
+	@Transactional
 	public void updateFile(List<MultipartFile> files, List<Integer> deleteOrder, Long noticeNo) {
 		if (deleteOrder != null && !deleteOrder.isEmpty()) {
 			for(Integer order : deleteOrder) {
@@ -79,6 +83,7 @@ public class NoticeFileService implements FileManagementService {
 	
 	}
 	//공지사항 테이블에 저장해주는 메소드 
+	@Transactional
 	private void saveNoticeFile(NoticeFile file) {
 		int result = fileMapper.saveNoticeFile(file);
 		if(result < 1) {
@@ -88,6 +93,7 @@ public class NoticeFileService implements FileManagementService {
 	
 	
 	// 공지사항 테이블에 file이 있는지 없는지 검증
+	@Transactional
 	private int  countNoticeFiles(Long noticeNo) {
 		int noticeFileCounts =fileMapper.findNoticeFileCounts(noticeNo);
 		if(noticeFileCounts < 1) {
@@ -96,6 +102,7 @@ public class NoticeFileService implements FileManagementService {
 		return noticeFileCounts;
 	}
 	// 공지사항 테이블에 file 전체조회
+	@Transactional(readOnly = true)
 	private List<FileDto> findNoticeFiles(Long noticeNo) {
 		List<FileDto> files= fileMapper.findNoticeFileAll(noticeNo);
 		return files;

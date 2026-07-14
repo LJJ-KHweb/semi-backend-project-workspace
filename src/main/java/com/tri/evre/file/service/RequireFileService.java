@@ -3,6 +3,7 @@ package com.tri.evre.file.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tri.evre.file.model.dao.FileMapper;
@@ -23,6 +24,7 @@ public class RequireFileService implements FileManagementService {
 
 
 	@Override
+	@Transactional
 	public void saveFile(List<MultipartFile> files, Long requireNo) {
 		if(files.isEmpty()) {
 			return;
@@ -84,6 +86,7 @@ public class RequireFileService implements FileManagementService {
 	
 	
 	//공지사항 테이블에 저장해주는 메소드 
+	@Transactional
 	private void saveRequireFile(RequireFile file) {
 		int result = fileMapper.saveRequireFile(file);
 		if(result < 1) {
@@ -92,6 +95,7 @@ public class RequireFileService implements FileManagementService {
 	}
 	
 	// 공지사항 테이블에 update를 해주는 메소드
+	@Transactional
 	private void updateRequireFile(RequireFile file) {
 		int result = fileMapper.updateRequireFile(file);
 		if(result < 1) {
@@ -100,6 +104,7 @@ public class RequireFileService implements FileManagementService {
 	}
 	
 	// 공지사항 테이블에 delete를 해주는 메소드
+	@Transactional
 	private void deleteRequireFiles(Long boardNo, int maxOrder) {
 		int result = fileMapper.deleteRequireFile(boardNo, maxOrder);
 		if(result < 1) {
@@ -108,6 +113,7 @@ public class RequireFileService implements FileManagementService {
 	}
 	
 	// 공지사항 테이블에 file이 있는지 없는지 검증
+	@Transactional
 	private int  countRequireFiles(Long boardNo) {
 		int RequireFileCounts =fileMapper.findRequireFileCounts(boardNo);
 		if(RequireFileCounts < 1) {
@@ -115,14 +121,17 @@ public class RequireFileService implements FileManagementService {
 		}
 		return RequireFileCounts;
 	}
+	
 	// 공지사항 테이블에 file 전체조회
+	@Transactional(readOnly = true)
 	private List<FileDto> findRequireFiles(Long boardNo) {
 		List<FileDto> files= fileMapper.findRequireFileAll(boardNo);
 		return files;
 		// 예외 처리 안한이유 파일이 없을수도 있음
 		
 	}
-	
+
+	@Transactional
 	public void deleteFile(Long boardNo) {
 		countRequireFiles(boardNo);
 		int result = fileMapper.deleteFile(boardNo);

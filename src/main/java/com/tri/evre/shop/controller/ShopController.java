@@ -39,7 +39,7 @@ public class ShopController {
 		
 		shopService.purchase(productNo, user);
 		
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("상품 구매에 성공했습니다.", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.created("상품 구매에 성공했습니다.", null));
 	}
 	
 	@GetMapping("/his-products")
