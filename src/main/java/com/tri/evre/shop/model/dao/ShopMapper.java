@@ -49,6 +49,8 @@ public interface ShopMapper {
 
 	int findProductCounts();
 
+	int findProductCountsAdmin();
+	
 	int restoreProduct(Long productNo);
 
 	int findAllProductCounts();
