@@ -31,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		log.info("조회된 정보 : {}", user);
 		
 		if(user == null) {
-			throw new UsernameNotFoundException("요거 있다구요잇");
+			throw new UsernameNotFoundException("일치하는 회원이 없습니다.");
 		}
 		
 		return CustomUserDetails.builder().username(user.getUserId())

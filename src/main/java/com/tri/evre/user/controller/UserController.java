@@ -43,7 +43,7 @@ public class UserController {
 	@PatchMapping("/mypage")  
 	public ResponseEntity<ApiResponse<Void>> update(@RequestBody @Valid UserUpdateRequestDto updateUser, @AuthenticationPrincipal CustomUserDetails user){
 		userService.update(updateUser, user);
-		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.success("회원 정보 수정에 성공했습니다.", null));
+		return ResponseEntity.status(CustomHttpStatus.UPDATE_SUCCESS.getCode()).body(ApiResponse.update("회원 정보 수정에 성공했습니다.", null));
 	}
 	
 	// 마이페이지 마일리지 적립현황 명세템플릿

@@ -26,7 +26,7 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	private final TokenService tokenService;
 
-	public LoginResponse login(@Valid LoginRequestDto lrd) {
+	public LoginResponse login(LoginRequestDto lrd) {
 		// 로그인(인증/Authentication) 구현
 
 		// 1. 유효성 검증(아이디/ 비밀번호값이 들어왔는가? 영어 숫자인가? 글자수가 괜찮은가) -> @Vaild로 대체
