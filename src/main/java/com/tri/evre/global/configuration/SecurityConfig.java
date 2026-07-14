@@ -25,7 +25,7 @@ import com.tri.evre.global.configuration.fliter.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
 
-@RestControllerAdvice
+@Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
