@@ -10,6 +10,6 @@ import lombok.Value;
 public class Require {
 	private Long requireNo;
 	private String requireTitle;
-	private String requireContent;
+	private Date createDate;
 	private String userId;
 }
