@@ -11,10 +11,9 @@ import org.springframework.stereotype.Service;
 import com.tri.evre.global.auth.model.dto.LoginRequestDto;
 import com.tri.evre.global.auth.model.dto.LoginResponse;
 import com.tri.evre.global.auth.model.vo.CustomUserDetails;
-import com.tri.evre.global.exception.CustomAuthenticationException;
+import com.tri.evre.global.exception.user.UserNotFoundException;
 import com.tri.evre.token.model.service.TokenService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +39,7 @@ public class AuthService {
 			auth = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(lrd.getUserId(), lrd.getUserPwd()));
 		} catch (AuthenticationException e) {
-			throw new CustomAuthenticationException("아이디 또는 비밀번호가 이상합니다");
+			throw new UserNotFoundException("아이디 또는 비밀번호가 이상합니다");
 		}
 
 		//인증에 성공함
