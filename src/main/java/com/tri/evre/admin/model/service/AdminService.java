@@ -137,7 +137,7 @@ public class AdminService {
 		if (products.isEmpty()) {
 			throw new ProductNotFoundException("상품을 하나도 찾을 수 없습니다.");
 		}
-		pageInfo.setBoardCounts(shopMapper.findProductCounts());
+		pageInfo.setBoardCounts(shopMapper.findProductCountsAdmin());
 
 		return new ProductListResponse(pageInfo, products);
 	}

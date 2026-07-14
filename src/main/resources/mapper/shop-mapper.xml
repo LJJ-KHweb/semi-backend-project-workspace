@@ -156,7 +156,7 @@
 			  		P.PRICE &lt; 0
 			  	ORDER
 			  	   BY
-			  	   	P.PRODUCT_NO
+			  	   	P.PRODUCT_NO 
 			  	OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
 	</select>
 	
@@ -223,6 +223,17 @@
 		 WHERE
 		 		PRODUCT_NO = #{productNo}
 	</update>
+	
+	
+	
+		<select id="findProductCountsAdmin">
+		SELECT 
+				COUNT(*)
+		  FROM
+		  		PRODUCT
+		 WHERE 
+			  	PRICE &lt; 0
+	</select>
 	
 	
 </mapper>
