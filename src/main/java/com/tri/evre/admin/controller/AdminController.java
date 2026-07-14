@@ -44,7 +44,9 @@ import com.tri.evre.user.model.dto.UserRoleRequestDto;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -149,6 +151,9 @@ public class AdminController {
 	public ResponseEntity<ApiResponse<RequireListResponseAdmin>> findAllRequires(@RequestParam(name = "page", defaultValue = "1") int page,
 												@RequestParam(name = "size", defaultValue = "3") int size) {
 		RequireListResponseAdmin requireListResponse = adminService.findAllRequires(new PageInfo(page, size));
+		
+		
+		
 		return ResponseEntity.status(CustomHttpStatus.SELECT_SUCCESS.getCode()).body(ApiResponse.success("문의사항 목록 조회에 성공했습니다.", requireListResponse));
 	}
 	
