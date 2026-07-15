@@ -114,7 +114,7 @@ public class BoardService {
 											.build();
 		
 		int result = boardMapper.checkUser(boardEntity.getUserId());
-		if (result > 0) {
+		if (result < 1) {
 			throw new BoardUpdateForbiddenException("게시글 수정은 작성자 또는 관리자만 할 수 있습니다.");
 		}
 		
@@ -134,7 +134,7 @@ public class BoardService {
 														.build();
 		
 		int result = boardMapper.checkUser(board.getUserId());
-		if(result > 0) {
+		if(result < 1) {
 			throw new BoardDeleteForbiddenException("게시글 삭제는 작성자 또는 관리자만 할 수 있습니다.");
 		}
 		
