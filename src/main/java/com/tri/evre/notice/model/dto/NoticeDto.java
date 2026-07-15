@@ -19,12 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoticeDto {
 	private Long noticeNo;
-	@Pattern(regexp="[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?()/\\-]{2,30}", message="제목의 형식이 잘못되었습니다.")
+	@Pattern(regexp = "[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?()/\\-]{2,30}", message = "제목의 형식이 잘못되었습니다.")
 	private String noticeTitle;
-	@Pattern(regexp="[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?()/\\-]{2,500}", message="제목의 형식이 잘못되었습니다.")
+	@Pattern(regexp = "[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\\s.,!?:~()/'\"\\-]{2,500}", message = "형식이 잘못되었습니다.")
 	private String noticeContent;
-	
-	
+
 	private Date createDate;
 	private Long views;
 	// 공개범위를 어디로 할지 정해주는 필드임
@@ -34,7 +33,7 @@ public class NoticeDto {
 	private String userId;
 
 	private List<Integer> deleteOrder;
-	
+
 	private String userName;
 	private List<FileDto> files;
 }
